@@ -29,7 +29,9 @@ const Quizzes = ({ socket }) => {
               <Link to={`/quiz/detail/${quiz._id}`}>
                 <Card
                   title={quiz.name}
-                  extra={<Link to={`/quiz/start/${quiz.id}`}>Bắt đầu game</Link>}
+                  extra={
+                    <Link to={`/quiz/start/${quiz.id}`}>Bắt đầu game</Link>
+                  }
                   style={{ width: "100%", marginBottom: "15px" }}
                 >
                   <p>8 câu hỏi</p>
