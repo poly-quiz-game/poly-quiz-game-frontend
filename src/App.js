@@ -4,11 +4,13 @@ import io from "socket.io-client";
 
 import Quiz from "./features/quiz";
 import Room from "./features/room";
+import Auth from "./features/auth";
 
 import PrivateRoute from "./privateRoute";
-import MainLayout from "./layouts/main.layout";
+import AuthLayout from "./layouts/auth.layout";
 
 import "antd/dist/antd.min.css";
+import Report from "./features/report";
 
 const Private = () => {
   return "Private";
@@ -27,30 +29,18 @@ function App() {
     <BrowserRouter>
       {socket && (
         <Routes>
+          <Route path="/" element={<div>Home</div>} />
+          <Route path="/quiz/*" element={<Quiz socket={socket} />} />
+          <Route path="/report/*" element={<Report socket={socket} />} />
           <Route
-            path="/"
+            path="/auth/*"
             element={
-              <MainLayout>
-                <div>Home</div>
-              </MainLayout>
+              <AuthLayout>
+                <Auth socket={socket} />
+              </AuthLayout>
             }
           />
-          <Route
-            path="/quiz/*"
-            element={
-              <MainLayout>
-                <Quiz socket={socket} />
-              </MainLayout>
-            }
-          />
-          <Route
-            path="/room"
-            element={
-              <MainLayout>
-                <Room socket={socket} />
-              </MainLayout>
-            }
-          />
+          <Route path="/room" element={<Room socket={socket} />} />
           <Route exact path="/private" element={<PrivateRoute />}>
             <Route exact path="/private" element={<Private />} />
           </Route>

@@ -1,14 +1,22 @@
 import React from "react";
 import { Layout } from "antd";
 
+import "./styles.scss";
+import { Link } from "react-router-dom";
+
 const { Header, Footer, Content } = Layout;
 
-const AuthLayout = () => {
+const AuthLayout = ({ children }) => {
   return (
     <Layout>
-      <Header>Header</Header>
-      <Content>Content</Content>
-      <Footer>Footer</Footer>
+      <Header className="header">
+        <Link to="/quiz">
+          <div className="logo">Poly Quiz Game</div>{" "}
+        </Link>
+      </Header>
+      <Content>
+        <div className="site-layout-content">{children}</div>
+      </Content>
     </Layout>
   );
 };
