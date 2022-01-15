@@ -1,16 +1,17 @@
 import React, { useState, useEffect } from "react";
-import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import io from "socket.io-client";
 
-import ListQuizzes from "./features/listQuizzes";
-import CreateRoom from "./features/createRoom";
-import Lobby from "./features/lobby";
+import Quiz from "./features/quiz";
+import Room from "./features/room";
 
-import "./App.css";
-import "antd/dist/antd.css";
+import PrivateRoute from "./privateRoute";
+import MainLayout from "./layouts/main.layout";
 
-const JoinRoom = () => {
-  return "JoinRoom";
+import "antd/dist/antd.min.css";
+
+const Private = () => {
+  return "Private";
 };
 
 function App() {
@@ -24,36 +25,37 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div>
-        <nav>
-          <ul>
-            <li>
-              <Link to="/">Home</Link>
-            </li>
-            <li>
-              <Link to="/quizzes">ListQuizzes</Link>
-            </li>
-            <li>
-              <Link to="/join-room">JoinRoom</Link>
-            </li>
-          </ul>
-        </nav>
-        {socket && (
-          <Routes>
-            <Route path="/quizzes" element={<ListQuizzes socket={socket} />} />
-            <Route path="/join-room" element={<JoinRoom socket={socket} />} />
-            <Route
-              path="/create-room/quizId=:quizId"
-              element={<CreateRoom socket={socket} />}
-            />
-            <Route
-              path="/lobby/quizId=:quizId"
-              element={<Lobby socket={socket} />}
-            />
-            <Route path="/" element={<div>Home</div>} />
-          </Routes>
-        )}
-      </div>
+      {socket && (
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <MainLayout>
+                <div>Home</div>
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/quiz/*"
+            element={
+              <MainLayout>
+                <Quiz socket={socket} />
+              </MainLayout>
+            }
+          />
+          <Route
+            path="/room"
+            element={
+              <MainLayout>
+                <Room socket={socket} />
+              </MainLayout>
+            }
+          />
+          <Route exact path="/private" element={<PrivateRoute />}>
+            <Route exact path="/private" element={<Private />} />
+          </Route>
+        </Routes>
+      )}
     </BrowserRouter>
   );
 }
