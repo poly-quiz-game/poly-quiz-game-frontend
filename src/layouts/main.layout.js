@@ -16,7 +16,7 @@ const MainLayout = ({ children }) => {
           <Link to="/">Home</Link>
         </Menu.Item>
         <Menu.Item key="2">
-          <Link to="/quizzes">Library</Link>
+          <Link to="/quiz">Library</Link>
         </Menu.Item>
         <Menu.Item key="3">
           <Link to="/join-room">JoinRoom</Link>
