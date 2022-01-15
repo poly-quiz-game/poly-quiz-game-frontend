@@ -19,6 +19,8 @@
     ],
     "rules": {},
     "ignorePatterns": [
-        "webpack.config.js"
+        "webpack.config.js",
+        "/config",
+        "/scripts",
     ]
 }
