@@ -1,7 +1,10 @@
 import axios from "axios";
 
 const axiosClient = axios.create({
-  baseURL: "http://localhost:3005/api",
+  baseURL:
+    process.env.ENDPOINT ||
+    "http://165.22.53.167:3005/api/quiz" ||
+    "http://localhost:3005/api",
   headers: {
     "Content-Type": "application/json",
   },
