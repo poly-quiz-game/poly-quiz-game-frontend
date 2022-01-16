@@ -9,6 +9,14 @@ const quizApi = {
     const url = "/quiz/" + id;
     return axiosClient.get(url, {});
   },
+  update(id) {
+    const url = "/quiz/" + id;
+    return axiosClient.put(url, {});
+  },
+  delete(id) {
+    const url = "/quiz/" + id;
+    return axiosClient.delete(url);
+  },
 };
 
 export default quizApi;

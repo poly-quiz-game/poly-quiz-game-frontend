@@ -5,6 +5,7 @@ import io from "socket.io-client";
 import Quiz from "./features/quiz";
 import Room from "./features/room";
 import Auth from "./features/auth";
+import Sample from "./features/sample";
 
 import PrivateRoute from "./privateRoute";
 import AuthLayout from "layouts/auth.layout";
@@ -29,9 +30,10 @@ function App() {
     <BrowserRouter>
       {socket && (
         <Routes>
-          <Route path="/" element={<div>Home</div>} />
+          <Route path="/" element={<Sample />} />
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
+          <Route path="/room" element={<Room socket={socket} />} />
           <Route
             path="/auth/*"
             element={
@@ -40,7 +42,6 @@ function App() {
               </AuthLayout>
             }
           />
-          <Route path="/room" element={<Room socket={socket} />} />
           <Route exact path="/private" element={<PrivateRoute />}>
             <Route exact path="/private" element={<Private />} />
           </Route>
