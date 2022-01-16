@@ -1,13 +1,27 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import { Skeleton } from "antd";
+import { Skeleton, Button, Card, List, Avatar } from "antd";
 
-import MainLayout from "../../../layouts/main.layout";
+import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+
+import MainLayout from "layouts/main.layout";
+import { Link } from "react-router-dom";
 
 import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
 
 import "./styles.css";
+
+const CorrectIcon = (
+  <span style={{ color: "#52c41a" }}>
+    <CheckCircleFilled />
+  </span>
+);
+const IncorretIcocn = (
+  <span style={{ color: "#eb2f96" }}>
+    <CloseCircleFilled />
+  </span>
+);
 
 const DetailQuiz = ({ socket }) => {
   let params = useParams();
@@ -23,8 +37,44 @@ const DetailQuiz = ({ socket }) => {
   return (
     <MainLayout>
       <div className="start-quiz">
-        <h3>Detail quiz</h3>
-        {loading ? <Skeleton /> : <p>{JSON.stringify(quiz)}</p>}
+        {loading ? (
+          <Skeleton />
+        ) : (
+          <>
+            <h2>{quiz.name}</h2>
+            <div>
+              <Button type="primary">Bắt đầu game</Button>
+              <br />
+              <br />
+            </div>
+
+            {(quiz.questions || []).map((qt) => (
+              <Card
+                key={qt._id}
+                title={qt.question}
+                size="small"
+                style={{ marginBottom: "10px" }}
+              >
+                <List
+                  itemLayout="horizontal"
+                  dataSource={qt.answers}
+                  renderItem={(answer, index) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          qt.correctAnswer === index
+                            ? CorrectIcon
+                            : IncorretIcocn
+                        }
+                        title={<a href="https://ant.design">{answer}</a>}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </Card>
+            ))}
+          </>
+        )}
       </div>
     </MainLayout>
   );

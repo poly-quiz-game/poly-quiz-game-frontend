@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import quizApi from "../../api/quizApi";
+import quizApi from "api/quizApi";
 
 const initialState = {
   loading: false,
