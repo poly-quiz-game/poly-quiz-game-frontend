@@ -3,7 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import io from "socket.io-client";
 
 import Quiz from "./features/quiz";
-import Room from "./features/room";
+import HostScreen from "./features/hostScreen";
+import PlayerScreen from "./features/playerScreen";
 import Auth from "./features/auth";
 import Sample from "./features/sample";
 
@@ -23,6 +24,7 @@ function App() {
   useEffect(() => {
     const newSocket = io(`ws://localhost:3005`);
     setSocket(newSocket);
+
     return () => newSocket.close();
   }, [setSocket]);
 
@@ -33,7 +35,8 @@ function App() {
           <Route path="/" element={<Sample />} />
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
-          <Route path="/room" element={<Room socket={socket} />} />
+          <Route path="/game/*" element={<HostScreen socket={socket} />} />
+          <Route path="/play/*" element={<PlayerScreen socket={socket} />} />
           <Route
             path="/auth/*"
             element={

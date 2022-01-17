@@ -1,0 +1,33 @@
+.start-quiz__screen {
+  .quiz-info {
+    text-align: center;
+    padding: 24px 0;
+    h1 {
+      font-size: 30px;
+    }
+    .question-number {
+      font-size: 20px;
+    }
+    .create-room {
+      min-width: 300px;
+      width: 70%;
+      margin-top: 15px;
+      border-radius: 4px;
+    }
+  }
+  .room-settings {
+    background-color: #fff;
+    border-radius: 4px;
+    margin-bottom: 12px;
+
+    .setting-option {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px;
+
+      h3 {
+        margin: 0;
+      }
+    }
+  }
+}

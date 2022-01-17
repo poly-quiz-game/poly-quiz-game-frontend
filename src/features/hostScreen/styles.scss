@@ -1,0 +1,22 @@
+.lobby__screen {
+  background-color: #fff;
+  min-height: 100vh;
+  padding: 50px;
+  color: #fff;
+
+  .room-info {
+    text-align: center;
+
+    h3 {
+      color: #fff;
+    }
+
+    .room-pin,
+    .ant-statistic-content-value {
+      color: #444;
+      font-size: 80px;
+      font-weight: 500;
+      font-family: "Courier New", Courier, monospace;
+    }
+  }
+}

@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 
 import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
 
-import "./styles.css";
+import "./styles.scss";
 
 const CorrectIcon = (
   <span style={{ color: "#52c41a" }}>

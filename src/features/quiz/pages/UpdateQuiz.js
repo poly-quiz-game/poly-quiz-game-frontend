@@ -10,7 +10,7 @@ import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
 
 const { Content, Sider } = Layout;
 
-import "./styles.css";
+import "./styles.scss";
 
 const CorrectIcon = (
   <span style={{ color: "#52c41a" }}>

@@ -1,6 +1,6 @@
 import axiosClient from "./axiosClient";
 
-const path = "/quiz";
+const path = "/room";
 
 const quizApi = {
   getAll() {
@@ -10,14 +10,6 @@ const quizApi = {
   getOne(id) {
     const url = `${path}/${id}`;
     return axiosClient.get(url, {});
-  },
-  update(id) {
-    const url = `${path}/${id}`;
-    return axiosClient.put(url, {});
-  },
-  delete(id) {
-    const url = `${path}/${id}`;
-    return axiosClient.delete(url);
   },
 };
 

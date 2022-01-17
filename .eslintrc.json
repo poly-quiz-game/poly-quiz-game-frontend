@@ -19,7 +19,9 @@
     "plugins": [
         "react"
     ],
-    "rules": {},
+    "rules": {
+        "react/prop-types": 0
+    },
     "ignorePatterns": [
         "webpack.config.js",
         "/config",
