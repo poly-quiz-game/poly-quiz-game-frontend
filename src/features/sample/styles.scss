@@ -1,3 +1,60 @@
-.sample {
-  padding: 24px;
+.bg-gray-edit {
+  background: #e5e5e5;
+  padding: 4rem 0;
+}
+.bg-gray-edit > h3 {
+  text-align: center;
+  margin-right: 340px;
+  font-size: 18px;
+}
+.bg-white-form {
+  background: #fdfcfc;
+  width: 630px;
+  margin: 10px auto;
+  padding: 20px;
+  border-radius: 8px;
+}
+.form-edit {
+  margin: 10px 0;
+}
+.form-edit > label {
+  font-weight: 600;
+  font-size: 17px;
+}
+.form-padding {
+  padding: 10px 0;
+}
+.answer {
+  display: flex;
+  margin: 10px;
+}
+.answer__box-wrong {
+  background-color: red;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.answer__box-success {
+  background-color: rgba(42, 146, 53, 1);
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+}
+.answer-px {
+  margin-left: 10px;
+}
+.btn .btn-mx {
+  margin: 0 20px;
+}
+.btn button {
+  background: #c4c4c4;
+  border-radius: 4px;
+}
+.bg-gray-edit .add-answer {
+  text-align: center;
+  margin-top: 15px;
+}
+.add-answer button {
+  background: #c4c4c4;
+  border-radius: 4px;
 }
