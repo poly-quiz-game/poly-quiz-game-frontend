@@ -1,3 +1,52 @@
 .sample {
   padding: 24px;
+  background-color: #E5E5E5;
+}
+#span1{
+  padding-left: 30px;
+  margin-top: -2px;
+}
+.quiz{
+  background-color: #E8E8E8;
+  border: 1px solid #E8E8E8;
+  border-radius: 10px;
+}
+.quiz h2{
+  margin-top: 10px;
+  margin-left: 20px;
+}
+#filter{
+  float: right;
+}
+.quiz #fa{
+  margin-top: 20px;
+  margin-left: 20px;
+}
+
+.quiz-button{
+  margin-top: 20px;
+  margin-left: 20px;
+}
+.edit{
+  margin-left: 20px;
+  border: none;
+  background-color: white;
+  border-radius: 5px;
+}
+.delete{
+  margin-left: 20px;
+  border: none;
+  background-color: white;
+  border-radius: 5px;
+}
+.report{
+  margin-left: 20px;
+  border: none;
+  background-color: white;
+  border-radius: 5px;
+}
+.starr{
+  border: none;
+  background-color: green;
+  border-radius: 5px;
 }
