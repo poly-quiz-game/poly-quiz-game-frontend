@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { Row, Col, Statistic, Button } from "antd";
 
 import "../styles.scss";
@@ -12,27 +12,32 @@ const Lobby = ({ socket }) => {
 
   useEffect(() => {
     socket.emit("getRoom");
-    const roomListener = (room) => {
-      console.log(111, room);
+
+    socket.on("roomData", (room) => {
       if (!room) {
         return navigate(-1);
       }
       setRoomData(room);
-    };
+    });
 
-    const playerLobbyListener = (data) => {
+    socket.on("updatePlayerLobby", (data) => {
       setPlayers(data);
-    };
+    });
 
-    socket.on("roomData", roomListener);
-
-    socket.on("updatePlayerLobby", playerLobbyListener);
+    socket.on("roomStarted", function (id) {
+      console.log("id", id);
+      navigate(`/host/game/${id}`);
+    });
 
     return () => {
-      socket.off("updatePlayerLobby", playerLobbyListener);
-      socket.off("roomData", roomListener);
+      console.log("disconeect lobby");
+      socket.emit("disconnect", socket.id);
     };
   }, []);
+
+  const startGame = () => {
+    socket.emit("startRoom");
+  };
 
   return (
     <div className="lobby__screen">
@@ -45,7 +50,6 @@ const Lobby = ({ socket }) => {
               value={room.pin}
             />
           </div>
-          <Link to={`/play/enter-pin/${room.pin}`}>Bấm vào đây</Link>
           <br />
           <h3>Danh sách người chơi:</h3>
           <div>
@@ -53,6 +57,10 @@ const Lobby = ({ socket }) => {
               <Button key={p.name}>{p.name}</Button>
             ))}
           </div>
+          <br />
+          <Button type="primary" onClick={startGame}>
+            Bắt đầu game
+          </Button>
         </Col>
       </Row>
     </div>

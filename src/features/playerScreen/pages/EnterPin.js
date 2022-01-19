@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button } from "antd";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
 const EnterPin = ({ socket }) => {
   const [pin, setPin] = useState("");
@@ -9,6 +9,7 @@ const EnterPin = ({ socket }) => {
   const [room, setRoomData] = useState(null);
 
   let params = useParams();
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (params.pin) {
@@ -23,14 +24,13 @@ const EnterPin = ({ socket }) => {
     };
 
     socket.on("roomDataFromPin", roomListener);
+    () => {
+      socket.emit("disconnect");
+    };
   }, []);
 
   const checkRoom = (pin) => {
     socket.emit("getRoomByPin", pin);
-  };
-
-  const joinRoom = () => {
-    socket.emit("player-join", { name, pin });
   };
 
   return (
@@ -59,9 +59,9 @@ const EnterPin = ({ socket }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <Button type="primary" onClick={joinRoom}>
-              Bắt đầu
-            </Button>
+            <Link to={`/play/pre-start/${room.pin}&${name}`}>
+              <Button type="primary">Bắt đầu</Button>
+            </Link>
           </>
         )}
         <p>{error}</p>

@@ -42,7 +42,7 @@ const StartQuiz = ({ socket }) => {
   };
 
   if (roomPin) {
-    return <Navigate to={`/game/lobby?roomPin=${roomPin}`} />;
+    return <Navigate to={`/host/lobby?roomPin=${roomPin}`} />;
   }
 
   return (

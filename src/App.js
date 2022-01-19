@@ -35,7 +35,7 @@ function App() {
           <Route path="/" element={<Sample />} />
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
-          <Route path="/game/*" element={<HostScreen socket={socket} />} />
+          <Route path="/host/*" element={<HostScreen socket={socket} />} />
           <Route path="/play/*" element={<PlayerScreen socket={socket} />} />
           <Route
             path="/auth/*"
