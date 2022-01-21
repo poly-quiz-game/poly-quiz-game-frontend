@@ -1,5 +1,8 @@
 import React, { useState } from "react";
 import MainLayout from "../../../layouts/main.layout";
+import { Layout } from "antd";
+
+const { Header, Footer, Sider, Content } = Layout;
 import "../index.scss";
 const arr = [
   {
@@ -25,7 +28,7 @@ const Deltai = (props) => {
   return (
     <div>
       <MainLayout>
-        <div className="container">
+        <Layout className="container row">
           <form>
             <div className="header">
               <div className="title-top-deltai">
@@ -79,7 +82,7 @@ const Deltai = (props) => {
                         </ul>
                       </div>
                     ))}
-                    <button  onClick={() => deleteQuestion(index)}>
+                    <button onClick={() => deleteQuestion(index)}>
                       <i class="fas fa-history">
                         {" "}
                         <span>{item.time} giây</span>
@@ -90,7 +93,7 @@ const Deltai = (props) => {
               ))}
             </div>
           </form>
-        </div>
+        </Layout>
       </MainLayout>
     </div>
   );
