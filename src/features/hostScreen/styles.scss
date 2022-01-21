@@ -4,20 +4,23 @@
   padding: 50px;
   color: #fff;
 
-  .room-info {
+  .game-info {
     text-align: center;
 
     h3 {
       color: #fff;
     }
 
-    .room-pin,
+    .game-pin,
     .ant-statistic-content-value {
       color: #444;
       font-size: 80px;
       font-weight: 500;
       font-family: "Courier New", Courier, monospace;
     }
+  }
+  .player-name {
+    margin-right: 12px;
   }
 }
 

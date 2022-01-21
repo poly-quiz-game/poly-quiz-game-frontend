@@ -28,19 +28,26 @@ function reducer(state, action) {
 
 const Lobby = ({ socket }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+  const [players, setPlayers] = React.useState([]);
 
   const params = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.emit("host-join-room", { id: params.id });
+    socket.emit("host-join-game", { id: params.id });
 
-    socket.on("noRoomFound", function () {
+    socket.on("noGameFound", function () {
       navigate(`/quiz`);
     });
 
-    socket.on("roomQuestions", (question) => {
-      console.log(111, question);
+    socket.on("updatePlayerLobby", (data) => {
+      console.log("updatePlayerLobby: ", data);
+      setPlayers(data.length);
+    });
+
+    socket.on("gameQuestions", (question) => {
+      console.log(question);
+      setPlayers(question.playersInGame);
       dispatch({ type: "setQuestionResult", payload: [] });
       dispatch({ type: "setQuestion", payload: question });
     });
@@ -49,12 +56,11 @@ const Lobby = ({ socket }) => {
       dispatch({ type: "setQuestionResult", payload: data });
     });
 
-    socket.on("RoomOver", (data) => {
-      console.log("RoomOver: ", data);
+    socket.on("GameOver", (data) => {
       dispatch({ type: "setGameOver", payload: data });
     });
 
-    () => {
+    return () => {
       console.log("disconeect game");
       socket.emit("disconnect", socket.id);
     };
@@ -126,8 +132,8 @@ const Lobby = ({ socket }) => {
                   },
                 ]}
                 dataSource={questionResult
-                  .sort((a, b) => b.roomData.score - a.roomData.score)
-                  .map(({ name, roomData: { score } }) => ({ name, score }))}
+                  .sort((a, b) => b.gameData.score - a.gameData.score)
+                  .map(({ name, gameData: { score } }) => ({ name, score }))}
               />
             </div>
             <Button type="primary" onClick={nextQuestion}>
@@ -147,7 +153,7 @@ const Lobby = ({ socket }) => {
             <h1 className="question">{question.q1}</h1>
             <div className="player">
               <UserOutlined />
-              {question.playersInRoom}
+              {players}
             </div>
             <Row gutter={16}>
               <Col span={6}>

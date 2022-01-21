@@ -19,37 +19,35 @@ const Private = () => {
 };
 
 function App() {
-  const [socket, setSocket] = useState(null);
+  // const [socket, setSocket] = useState(null);
 
-  useEffect(() => {
-    const newSocket = io(`ws://localhost:3005`);
-    setSocket(newSocket);
+  // useEffect(() => {
+  //   const newSocket = io(`ws://localhost:3005`);
+  //   setSocket(newSocket);
 
-    return () => newSocket.close();
-  }, [setSocket]);
+  //   return () => newSocket.close();
+  // }, [setSocket]);
 
   return (
     <BrowserRouter>
-      {socket && (
-        <Routes>
-          <Route path="/" element={<Sample />} />
-          <Route path="/quiz/*" element={<Quiz socket={socket} />} />
-          <Route path="/report/*" element={<Report socket={socket} />} />
-          <Route path="/host/*" element={<HostScreen socket={socket} />} />
-          <Route path="/play/*" element={<PlayerScreen socket={socket} />} />
-          <Route
-            path="/auth/*"
-            element={
-              <AuthLayout>
-                <Auth socket={socket} />
-              </AuthLayout>
-            }
-          />
-          <Route exact path="/private" element={<PrivateRoute />}>
-            <Route exact path="/private" element={<Private />} />
-          </Route>
-        </Routes>
-      )}
+      <Routes>
+        <Route path="/" element={<Sample />} />
+        <Route path="/quiz/*" element={<Quiz />} />
+        <Route path="/report/*" element={<Report />} />
+        <Route path="/host/*" element={<HostScreen />} />
+        <Route path="/play/*" element={<PlayerScreen />} />
+        <Route
+          path="/auth/*"
+          element={
+            <AuthLayout>
+              <Auth />
+            </AuthLayout>
+          }
+        />
+        <Route exact path="/private" element={<PrivateRoute />}>
+          <Route exact path="/private" element={<Private />} />
+        </Route>
+      </Routes>
     </BrowserRouter>
   );
 }

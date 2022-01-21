@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Statistic, Button } from "antd";
+import { Row, Col, Statistic, Button, Popover } from "antd";
 
 import "../styles.scss";
 
 const Lobby = ({ socket }) => {
-  const [room, setRoomData] = useState({});
+  const [game, setGameData] = useState({});
   const [players, setPlayers] = useState([]);
 
   const navigate = useNavigate();
@@ -13,18 +13,19 @@ const Lobby = ({ socket }) => {
   useEffect(() => {
     socket.emit("getRoom");
 
-    socket.on("roomData", (room) => {
-      if (!room) {
+    socket.on("roomData", (game) => {
+      if (!game) {
         return navigate(-1);
       }
-      setRoomData(room);
+      setGameData(game);
     });
 
     socket.on("updatePlayerLobby", (data) => {
+      console.log("updatePlayerLobby: ", data);
       setPlayers(data);
     });
 
-    socket.on("roomStarted", function (id) {
+    socket.on("gameStarted", function (id) {
       console.log("id", id);
       navigate(`/host/game/${id}`);
     });
@@ -36,27 +37,39 @@ const Lobby = ({ socket }) => {
   }, []);
 
   const startGame = () => {
-    socket.emit("startRoom");
+    socket.emit("startGame");
+  };
+
+  const kickPlayer = (playerId) => {
+    socket.emit("host-kick-player", { hostId: socket.id, playerId });
   };
 
   return (
     <div className="lobby__screen">
       <Row>
         <Col span={12} offset={6}>
-          <div className="room-info">
+          <div className="game-info">
             <Statistic
               title="Mã trò chơi"
               formatter={(val) => val}
-              value={room.pin}
+              value={game.pin}
             />
           </div>
           <br />
           <h3>Danh sách người chơi:</h3>
           <div>
             {players.map((p) => (
-              <Button key={p.name}>{p.name}</Button>
+              <Popover content="Kick" key={p.name}>
+                <Button
+                  className="player-name"
+                  onClick={() => kickPlayer(p.playerId)}
+                >
+                  {p.name}
+                </Button>
+              </Popover>
             ))}
           </div>
+          <br />
           <br />
           <Button type="primary" onClick={startGame}>
             Bắt đầu game

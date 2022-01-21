@@ -30,7 +30,7 @@ const Quizzes = ({ socket }) => {
                 key={quiz._id}
                 title={quiz.name}
                 hoverable
-                extra={<Link to={`/quiz/start/${quiz._id}`}>Bắt đầu game</Link>}
+                extra={<Link to={`/host/start/${quiz._id}`}>Bắt đầu game</Link>}
                 actions={[
                   <Link key="detail" to={`/quiz/detail/${quiz._id}`}>
                     <span>Chi tiết</span>

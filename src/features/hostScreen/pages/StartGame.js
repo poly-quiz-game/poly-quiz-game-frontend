@@ -7,7 +7,7 @@ import MainLayout from "layouts/main.layout";
 
 import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
 
-import "./styles.scss";
+import "../styles.scss";
 
 const defaultConfig = {
   randomQuestion: true,
@@ -16,12 +16,13 @@ const defaultConfig = {
   autoPlay: false,
 };
 
-const StartQuiz = ({ socket }) => {
+const StartGame = ({ socket }) => {
   let params = useParams();
   const dispatch = useDispatch();
 
-  const [roomConfig, setRoomConfig] = useState(defaultConfig);
-  const [roomPin, setRoomPin] = useState(null);
+  // eslint-disable-next-line no-unused-vars
+  const [gameConfig, setGameConfig] = useState(defaultConfig);
+  const [gamePin, setGamePin] = useState(null);
 
   const quiz = useSelector(selectQuiz);
   const loading = useSelector(selectLoading);
@@ -29,20 +30,20 @@ const StartQuiz = ({ socket }) => {
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
 
-    const roomPinListener = (room) => {
-      console.log("roomPinListener: ", room);
-      setRoomPin(room.pin);
+    const pinListener = (game) => {
+      console.log("pinListener: ", game);
+      setGamePin(game.pin);
     };
 
-    socket.on("showRoomPin", roomPinListener);
+    socket.on("showGamePin", pinListener);
   }, [dispatch, params]);
 
-  const startRoom = () => {
+  const startGame = () => {
     socket.emit("host-join", { id: quiz._id });
   };
 
-  if (roomPin) {
-    return <Navigate to={`/host/lobby?roomPin=${roomPin}`} />;
+  if (gamePin) {
+    return <Navigate to={`/host/lobby?gamePin=${gamePin}`} />;
   }
 
   return (
@@ -63,7 +64,7 @@ const StartQuiz = ({ socket }) => {
                     type="primary"
                     size="large"
                     className="create-room"
-                    onClick={startRoom}
+                    onClick={startGame}
                   >
                     Tạo phòng
                   </Button>
@@ -72,22 +73,22 @@ const StartQuiz = ({ socket }) => {
                   <div className="setting-option">
                     <h3>Hiển thị câu hỏi, câu trả lời trên máy người chơi</h3>
                     <Switch
-                      checked={roomConfig.displayQuestionOnPlayerDevice}
-                      defaultChecked={roomConfig.displayQuestionOnPlayerDevice}
+                      checked={gameConfig.displayQuestionOnPlayerDevice}
+                      defaultChecked={gameConfig.displayQuestionOnPlayerDevice}
                     />
                   </div>
                   <div className="setting-option">
                     <h3>Xáo trộn câu hỏi</h3>
                     <Switch
-                      checked={roomConfig.randomQuestion}
-                      defaultChecked={roomConfig.randomQuestion}
+                      checked={gameConfig.randomQuestion}
+                      defaultChecked={gameConfig.randomQuestion}
                     />
                   </div>
                   <div className="setting-option">
                     <h3>Xáo trộn các câu trả lời</h3>
                     <Switch
-                      checked={roomConfig.randomAnswer}
-                      defaultChecked={roomConfig.randomAnswer}
+                      checked={gameConfig.randomAnswer}
+                      defaultChecked={gameConfig.randomAnswer}
                     />
                   </div>
                 </div>
@@ -95,8 +96,8 @@ const StartQuiz = ({ socket }) => {
                   <div className="setting-option">
                     <h3>Tự động chuyển câu hỏi</h3>
                     <Switch
-                      checked={roomConfig.autoPlay}
-                      defaultChecked={roomConfig.autoPlay}
+                      checked={gameConfig.autoPlay}
+                      defaultChecked={gameConfig.autoPlay}
                     />
                   </div>
                 </div>
@@ -110,4 +111,4 @@ const StartQuiz = ({ socket }) => {
   );
 };
 
-export default StartQuiz;
+export default StartGame;

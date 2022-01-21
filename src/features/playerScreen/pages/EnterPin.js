@@ -1,31 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button } from "antd";
-import { useParams, useNavigate, Link } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 
 const EnterPin = ({ socket }) => {
   const [pin, setPin] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const [room, setRoomData] = useState(null);
+  const [game, setRoomData] = useState(null);
 
   let params = useParams();
-  const navigate = useNavigate();
 
   useEffect(() => {
     if (params.pin) {
       setPin(params.pin);
       checkRoom(params.pin);
     }
-    const roomListener = (room) => {
-      if (!room) {
+    const roomListener = (game) => {
+      if (!game) {
         return setError("Phòng không tồn tại!");
       }
-      setRoomData(room);
+      setRoomData(game);
     };
 
     socket.on("roomDataFromPin", roomListener);
-    () => {
-      socket.emit("disconnect");
+
+    return () => {
+      socket.emit("disconnect", socket.id);
     };
   }, []);
 
@@ -36,7 +36,7 @@ const EnterPin = ({ socket }) => {
   return (
     <div className="join-room__screen">
       <div className="enter-pin-form">
-        {!room ? (
+        {!game ? (
           <>
             <p>Nhập mã game</p>
             <Input
@@ -59,7 +59,7 @@ const EnterPin = ({ socket }) => {
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-            <Link to={`/play/pre-start/${room.pin}&${name}`}>
+            <Link to={`/play/pre-start/${game.pin}&${name}`}>
               <Button type="primary">Bắt đầu</Button>
             </Link>
           </>

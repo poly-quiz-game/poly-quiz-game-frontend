@@ -1,5 +1,4 @@
-import React, { useState, useEffect } from "react";
-import { Input, Button } from "antd";
+import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
 const EnterPin = ({ socket }) => {
@@ -13,22 +12,23 @@ const EnterPin = ({ socket }) => {
 
     socket.emit("player-join", { name: params.name, pin: params.pin });
 
-    socket.on("noRoomFound", function () {
-      console.log("noRoomFound");
-      // navigate("/play/enter-pin");
+    socket.on("noGameFound", function () {
+      navigate("/play/enter-pin");
+    });
+
+    socket.on("kickedByHost", function () {
+      navigate("/play/enter-pin");
     });
 
     socket.on("hostDisconnect", function () {
-      console.log("hostDisconnect");
-      // navigate("/play/enter-pin");
+      navigate("/play/enter-pin");
     });
 
     socket.on("gameStartedPlayer", function () {
-      console.log("gameStartedPlayer");
       navigate(`/play/play-game/${socket.id}`);
     });
 
-    () => {
+    return () => {
       socket.emit("disconnect", socket.id);
     };
   }, []);
