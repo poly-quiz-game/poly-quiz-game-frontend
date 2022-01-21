@@ -20,8 +20,11 @@ const MainLayout = ({ children }) => {
           <Menu.Item key="2">
             <Link to="/report">Report</Link>
           </Menu.Item>
-          <Menu.Item key="2">
+          <Menu.Item key="3">
             <Link to="/private">Private</Link>
+          </Menu.Item>
+          <Menu.Item key="4">
+            <Link to="/play">Play</Link>
           </Menu.Item>
         </Menu>
       </Header>

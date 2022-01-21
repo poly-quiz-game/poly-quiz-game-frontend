@@ -6,7 +6,7 @@ import { Skeleton, Card } from "antd";
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 
-import "./styles.css";
+import "./styles.scss";
 
 const Quizzes = ({ socket }) => {
   const dispatch = useDispatch();
@@ -30,7 +30,7 @@ const Quizzes = ({ socket }) => {
                 key={quiz._id}
                 title={quiz.name}
                 hoverable
-                extra={<Link to={`/quiz/start/${quiz._id}`}>Bắt đầu game</Link>}
+                extra={<Link to={`/host/start/${quiz._id}`}>Bắt đầu game</Link>}
                 actions={[
                   <Link key="detail" to={`/quiz/detail/${quiz._id}`}>
                     <span>Chi tiết</span>
