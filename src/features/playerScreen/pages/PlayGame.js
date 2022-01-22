@@ -8,30 +8,32 @@ import "../styles.scss";
 // đã trả lời - đợi kết quả
 // đã trả lời - đã có kết quả
 
-const Choices = ({ playerAnswer }) => (
+const Choices = ({ playerAnswer, question }) => (
   <div className="question-info">
-    <br />
-    <br />
-    <br />
+    <h1 className="question">{question.q1}</h1>
     <Row gutter={16}>
       <Col span={6}>
         <div className="answer" onClick={() => playerAnswer(0)}>
           <div className="answer-index">1</div>
+          <h2>{question.a1}</h2>
         </div>
       </Col>
       <Col span={6}>
-        <div className="answer" onClick={() => playerAnswer(1)}>
+        <div className="answer" onClick={() => playerAnswer(0)}>
           <div className="answer-index">2</div>
+          <h2>{question.a2}</h2>
         </div>
       </Col>
       <Col span={6}>
-        <div className="answer" onClick={() => playerAnswer(2)}>
+        <div className="answer" onClick={() => playerAnswer(0)}>
           <div className="answer-index">3</div>
+          <h2>{question.a3}</h2>
         </div>
       </Col>
       <Col span={6}>
-        <div className="answer" onClick={() => playerAnswer(3)}>
+        <div className="answer" onClick={() => playerAnswer(0)}>
           <div className="answer-index">4</div>
+          <h2>{question.a4}</h2>
         </div>
       </Col>
     </Row>
@@ -44,6 +46,7 @@ const PlayGame = ({ socket }) => {
   const [showResult, setShowResult] = useState(false);
   const [gameOver, setGameOver] = useState(false);
   const [playerData, setPlayerData] = useState({});
+  const [question, setQuestion] = useState({});
 
   const params = useParams();
   const navigate = useNavigate();
@@ -123,7 +126,9 @@ const PlayGame = ({ socket }) => {
     <div className="game__screen">
       <Row>
         <Col span={20} offset={2}>
-          {!answered && <Choices playerAnswer={playerAnswer} />}
+          {!answered && (
+            <Choices playerAnswer={playerAnswer} question={question} />
+          )}
           {!showResult && answered && <h1>Submited. Waiting for others!</h1>}
           {showResult && <h1>{isCorrect ? "correct" : "incorrect"}</h1>}
         </Col>
