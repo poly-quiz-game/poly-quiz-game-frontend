@@ -12,6 +12,7 @@ import AuthLayout from "layouts/auth.layout";
 
 import "antd/dist/antd.min.css";
 import Report from "./features/report";
+import Deltai from "./features/quiz deltai/pages/deltai";
 
 const Private = () => {
   return "Private";
@@ -34,6 +35,7 @@ function App() {
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
           <Route path="/room" element={<Room socket={socket} />} />
+          <Route path='/deltai' element={<Deltai/>}/>
           <Route
             path="/auth/*"
             element={
