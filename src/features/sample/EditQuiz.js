@@ -35,17 +35,24 @@ const quizzes = [
 const EditQuiz = () => {
   const [state, setState] = useState(quizzes);
   const deleteQuiz = (abc) => {
-    const newQuiz = state.filter((quiz,i)=> abc !== i)
-    setState(newQuiz)
-  }
+    const newQuiz = state.filter((quiz, i) => abc !== i);
+    setState(newQuiz);
+  };
 
-  const double = (abc)=>{
-    const newQuiz = state.find((item,index) => index===abc);
+  const double = (abc) => {
+    const newQuiz = state.find((item, index) => index === abc);
 
     const newState = [...state];
-    newState.splice(abc,0,newQuiz);
-    setState(newState)
-  }
+    newState.splice(abc, 0, newQuiz);
+    setState(newState);
+  };
+
+  console.log(state[0].correct);
+  const checkSuccess = (a) => {
+    console.log(a);
+    state[0].correct;
+    setState(state)
+  };
 
   return (
     <div className="sample bg-gray-edit">
@@ -59,23 +66,29 @@ const EditQuiz = () => {
                   <div className="form-padding">
                     {question.answer.map((as, index) => {
                       return (
-                        <div className="answer"> 
-                            {question.correct == index ?   <div className="answer__box-success" /> 
-                            :    <div className="answer__box-wrong" /> }                                   
-                            <div className="answer-px">{as}</div>                       
+                        <div className="answer">
+                          {question.correct == index ? (
+                            <div className="answer__box-success" onClick={()=>checkSuccess(index)} />
+                          ) : (
+                            <div className="answer__box-wrong" onClick={()=>checkSuccess(index)}/>
+                          )}
+                          <div className="answer-px">{as}</div>
                         </div>
                       );
                     })}
-       
                   </div>
                   <div className="btn">
                     <button>
                       <i class="far fa-clock"></i> {question.time} giây
                     </button>
-                    <button type="buttom" className="btn-mx" onClick={() =>double(index)}>
+                    <button
+                      type="buttom"
+                      className="btn-mx"
+                      onClick={() => double(index)}
+                    >
                       <i class="far fa-copy"></i> Nhân bản
                     </button>
-                    <button onClick={() =>deleteQuiz(index)}>
+                    <button onClick={() => deleteQuiz(index)}>
                       <i class="far fa-trash-alt"></i> Xóa
                     </button>
                   </div>
