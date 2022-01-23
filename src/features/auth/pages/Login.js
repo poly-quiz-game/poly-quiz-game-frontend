@@ -1,23 +1,24 @@
 import React from "react";
 import { Row, Col } from "antd";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
-import authApi from "api/authApi";
+import { useNavigate } from "react-router-dom";
 
-import { fetchLogin, authActions } from "../authSlice";
+import { fetchLogin } from "../authSlice";
 
 import "./styles.css";
 
 const Login = () => {
+  const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const responseGoogle = async ({ tokenId }) => {
-    const { token } = await authApi.login({ tokenId: tokenId });
-    localStorage.setItem("access_token", token);
-    // console.log(fetchLogin({ tokenId: response.tokenId }));
-    // return dispatch(authActions.logout());
-    location.href = "/";
-    // return dispatch(fetchLogin({ tokenId }));
+    try {
+      await dispatch(fetchLogin({ tokenId }));
+      navigate("/quiz");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

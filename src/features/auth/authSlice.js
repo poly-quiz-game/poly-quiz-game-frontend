@@ -1,16 +1,15 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authApi from "api/authApi";
-import { push } from "redux-first-history";
 
 const initialState = {
+  token: localStorage.getItem("access_token") || "",
   isLoggedIn: false,
   logging: false,
   currentUser: undefined,
 };
 
 export const fetchLogin = createAsyncThunk("auth/login", async (payload) => {
-  const response = await authApi.login(payload);
-  return response.data;
+  return await authApi.login(payload);
 });
 
 const authSlice = createSlice({
@@ -23,11 +22,15 @@ const authSlice = createSlice({
     },
   },
   extraReducers: ({ addCase }) => {
+    addCase(fetchLogin.pending, (state) => {
+      state.logging = true;
+    });
     addCase(fetchLogin.fulfilled, (state, action) => {
-      console.log(333, state);
       state.isLoggedIn = true;
       state.logging = false;
-      state.currentUser = action.payload;
+      state.token = action.payload.token;
+      state.currentUser = action.payload.user;
+      localStorage.setItem("access_token", action.payload.token);
     });
   },
 });
@@ -38,6 +41,7 @@ export const authActions = authSlice.actions;
 // Selectors
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectIsLogging = (state) => state.auth.logging;
+export const selectToken = (state) => state.auth.token;
 
 // Reducer
 const authReducer = authSlice.reducer;

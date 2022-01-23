@@ -1,8 +1,10 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { selectToken } from "./features/auth/authSlice";
 
 const PrivateRoute = () => {
-  const token = localStorage.getItem("access_token");
+  const token = useSelector(selectToken);
   return token ? <Outlet /> : <Navigate to="/auth/login" />;
 };
 

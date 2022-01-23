@@ -19,19 +19,19 @@ const Choices = ({ playerAnswer, question }) => (
         </div>
       </Col>
       <Col span={6}>
-        <div className="answer" onClick={() => playerAnswer(0)}>
+        <div className="answer" onClick={() => playerAnswer(1)}>
           <div className="answer-index">2</div>
           <h2>{question.a2}</h2>
         </div>
       </Col>
       <Col span={6}>
-        <div className="answer" onClick={() => playerAnswer(0)}>
+        <div className="answer" onClick={() => playerAnswer(2)}>
           <div className="answer-index">3</div>
           <h2>{question.a3}</h2>
         </div>
       </Col>
       <Col span={6}>
-        <div className="answer" onClick={() => playerAnswer(0)}>
+        <div className="answer" onClick={() => playerAnswer(3)}>
           <div className="answer-index">4</div>
           <h2>{question.a4}</h2>
         </div>
