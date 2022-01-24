@@ -6,6 +6,7 @@ import Quiz from "./features/quiz";
 import Room from "./features/room";
 import Auth from "./features/auth";
 import Sample from "./features/sample";
+import Settingame from "./features/settingame"
 
 import PrivateRoute from "./privateRoute";
 import AuthLayout from "layouts/auth.layout";
@@ -31,6 +32,7 @@ function App() {
       {socket && (
         <Routes>
           <Route path="/" element={<Sample />} />
+          <Route path="/settingame" element={<Settingame />} />
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
           <Route path="/room" element={<Room socket={socket} />} />
