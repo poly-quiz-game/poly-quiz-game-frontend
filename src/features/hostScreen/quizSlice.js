@@ -27,11 +27,11 @@ const quizSlice = createSlice({
   reducers: {},
   extraReducers: ({ addCase }) => {
     //   Loading
-    addCase(fetchQuizzes.pending, (state, action) => {
+    addCase(fetchQuizzes.pending, (state) => {
       state.loading = true;
     });
     //   Loading
-    addCase(fetchQuiz.pending, (state, action) => {
+    addCase(fetchQuiz.pending, (state) => {
       state.loading = true;
     });
     //   Success
@@ -44,10 +44,10 @@ const quizSlice = createSlice({
       state.quiz = action.payload;
     });
     //   Fail
-    addCase(fetchQuizzes.rejected, (state, action) => {
+    addCase(fetchQuizzes.rejected, (state) => {
       state.loading = false;
     });
-    addCase(fetchQuiz.rejected, (state, action) => {
+    addCase(fetchQuiz.rejected, (state) => {
       state.loading = false;
     });
   },

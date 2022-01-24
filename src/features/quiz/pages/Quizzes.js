@@ -8,7 +8,7 @@ import MainLayout from "layouts/main.layout";
 
 import "./styles.scss";
 
-const Quizzes = ({ socket }) => {
+const Quizzes = () => {
   const dispatch = useDispatch();
 
   const quizzes = useSelector(selectQuizList);

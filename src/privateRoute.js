@@ -1,10 +1,9 @@
 import React from "react";
 import { Navigate, Outlet } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { selectToken } from "./features/auth/authSlice";
+import { getToken } from "./api/axiosClient";
 
 const PrivateRoute = () => {
-  const token = useSelector(selectToken);
+  const token = getToken();
   return token ? <Outlet /> : <Navigate to="/auth/login" />;
 };
 

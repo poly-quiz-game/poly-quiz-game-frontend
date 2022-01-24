@@ -1,36 +1,46 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import authApi from "api/authApi";
 
+let user;
+try {
+  user = JSON.parse(localStorage.getItem("user")) || {};
+} catch {
+  user = {};
+}
+
 const initialState = {
   token: localStorage.getItem("access_token") || "",
+  user,
   isLoggedIn: false,
   logging: false,
-  currentUser: undefined,
 };
 
-export const fetchLogin = createAsyncThunk("auth/login", async (payload) => {
+export const login = createAsyncThunk("auth/login", async (payload) => {
   return await authApi.login(payload);
+});
+
+export const logout = createAsyncThunk("auth/logout", async () => {
+  return await authApi.logout();
 });
 
 const authSlice = createSlice({
   name: "auth",
   initialState,
-  reducers: {
-    logout(state) {
-      state.isLoggedIn = false;
-      state.currentUser = undefined;
-    },
-  },
+  reducers: {},
   extraReducers: ({ addCase }) => {
-    addCase(fetchLogin.pending, (state) => {
+    addCase(login.pending, (state) => {
       state.logging = true;
     });
-    addCase(fetchLogin.fulfilled, (state, action) => {
+    addCase(login.fulfilled, (state, action) => {
       state.isLoggedIn = true;
       state.logging = false;
       state.token = action.payload.token;
-      state.currentUser = action.payload.user;
-      localStorage.setItem("access_token", action.payload.token);
+      state.user = action.payload.user;
+    });
+    addCase(logout.fulfilled, (state) => {
+      state.isLoggedIn = false;
+      state.user = {};
+      state.token = "";
     });
   },
 });
@@ -42,6 +52,7 @@ export const authActions = authSlice.actions;
 export const selectIsLoggedIn = (state) => state.auth.isLoggedIn;
 export const selectIsLogging = (state) => state.auth.logging;
 export const selectToken = (state) => state.auth.token;
+export const selectUser = (state) => state.auth.user;
 
 // Reducer
 const authReducer = authSlice.reducer;

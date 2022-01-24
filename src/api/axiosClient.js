@@ -20,8 +20,13 @@ axiosClient.interceptors.request.use(
   }
 );
 
-const token = localStorage.getItem("access_token");
-axiosClient.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+export const getToken = () => {
+  return localStorage.getItem("access_token");
+};
+
+export const authHeader = () => ({
+  Authorization: `Bearer ${getToken()}`,
+});
 
 axiosClient.interceptors.response.use(
   function (response) {
@@ -30,7 +35,7 @@ axiosClient.interceptors.response.use(
   function (error) {
     const { status } = error.toJSON();
     if (status === 401) {
-      // return alert("401");
+      // return console.log("401");
       return (location.href = "/auth/login");
     }
 

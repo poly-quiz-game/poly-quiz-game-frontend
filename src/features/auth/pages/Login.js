@@ -4,7 +4,7 @@ import { useDispatch } from "react-redux";
 import GoogleLogin from "react-google-login";
 import { useNavigate } from "react-router-dom";
 
-import { fetchLogin } from "../authSlice";
+import { login } from "../authSlice";
 
 import "./styles.css";
 
@@ -14,7 +14,7 @@ const Login = () => {
 
   const responseGoogle = async ({ tokenId }) => {
     try {
-      await dispatch(fetchLogin({ tokenId }));
+      await dispatch(login({ tokenId }));
       navigate("/quiz");
     } catch (error) {
       console.log(error);

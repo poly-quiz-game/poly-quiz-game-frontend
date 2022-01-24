@@ -4,14 +4,14 @@ import { Layout } from "antd";
 import "./styles.scss";
 import { Link } from "react-router-dom";
 
-const { Header, Footer, Content } = Layout;
+const { Header, Content } = Layout;
 
 const AuthLayout = ({ children }) => {
   return (
     <Layout>
       <Header className="header">
         <Link to="/quiz">
-          <div className="logo">Poly Quiz Game</div>{" "}
+          <div className="logo">Poly Quiz Game</div>
         </Link>
       </Header>
       <Content>
