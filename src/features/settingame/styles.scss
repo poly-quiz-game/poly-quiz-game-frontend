@@ -1,8 +1,27 @@
-.test{
+.box-setting{
     display: flex;
     padding-bottom: 50px;
+    margin-left: 20px;
 }
-#sl-box{
-    margin-left: 25px;
+.right{
+    margin-left: 100px;
     float: right;
+}
+#ip-left{
+    width: 400px;
+}
+.box{
+    margin-bottom: 30px;
+}
+#btn{
+    margin-left: -230px;
+}
+#btn-cancle{
+    float: right;
+    
+    margin-top: 100px;
+}
+#btn-done{
+    margin-top: 5px;
+    margin-left: -50px;
 }
