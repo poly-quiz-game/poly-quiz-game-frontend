@@ -13,6 +13,7 @@ import AuthLayout from "layouts/auth.layout";
 
 import "antd/dist/antd.min.css";
 import Report from "./features/report";
+import Settingame2 from "./features/settingame2";
 
 const Private = () => {
   return "Private";
@@ -33,6 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Sample />} />
           <Route path="/settingame" element={<Settingame />} />
+          <Route path="/settingame2" element={<Settingame2 />} />
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
           <Route path="/room" element={<Room socket={socket} />} />

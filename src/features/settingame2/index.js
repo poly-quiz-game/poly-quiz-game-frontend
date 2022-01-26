@@ -1,25 +1,35 @@
-import React from "react";
-import { Col, Row, Button, Input, Image, Select,Radio} from "antd";
+import React, {useState} from "react";
 
 import MainLayout from "layouts/main.layout";
 
 import "./styles.scss";
+import { Button,Modal,Col, Row , Input, Image, Select,Radio} from "antd";
 
-const Settingame = () => {
+const Settingame2 = () => {
+    const [visible, setVisible] = useState(false);
+
+  
   const { TextArea } = Input;
   const { Option } = Select;
-
   return (
     <MainLayout>
       <br></br>
-      <div className="setting">
+      <Button type="primary" onClick={() => setVisible(true)}>
+        CÀI ĐẶT
+      </Button>
+      <Modal
+        title="CÀI ĐẶT"
+        centered
+        visible={visible}
+        onOk={() => setVisible(false)}
+        onCancel={() => setVisible(false)}
+        width={1000}
+      >
+       
+    <div className="setting">
         <Row>
-          <Col span={16} offset={6}>
-            <div className="setting">
-              <h2>CÀI ĐẶT</h2>
-              <br></br>
-              <div className="box-setting">
-                <div className="left">
+          <Col span={16} offset={0.5}>
+          <div className="left">
                   <div className="box">
                     <h3>Tiêu đề</h3>
                     <Input
@@ -40,7 +50,7 @@ const Settingame = () => {
                     <h3>Lưu</h3>
                     <Select
                       defaultValue="My PolyQuizz"
-                      style={{ width: 400 }}
+                      style={{ width: 420 }}
                       
                     >
                       <Option value="jack">Jack</Option>
@@ -57,7 +67,7 @@ const Settingame = () => {
                   <div className="box">
                     <h3>Background</h3>
                     <Image
-                      width={400}
+                      width={420}
                       height={200}
                       src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
                     />
@@ -67,7 +77,7 @@ const Settingame = () => {
                     <h3>Nhạc nền</h3>
                     <Select
                       defaultValue="My PolyQuizz"
-                      style={{ width: 400 }}
+                      style={{ width: 420 }}
                       
                     >
                       <Option value="jack">Jack</Option>
@@ -82,16 +92,15 @@ const Settingame = () => {
                   <div className="box">
                       <h3>HIện thị</h3>
                       <Radio>Cộng cộng</Radio>
-                      <Radio>Rieeng Tư</Radio>
+                      <Radio>Riêng tư</Radio>
                   </div>
                 </div>
-              </div>
-            </div>
           </Col>
         </Row>
-      </div>
+    </div>
+      </Modal>
     </MainLayout>
   );
 };
 
-export default Settingame;
+export default Settingame2;
