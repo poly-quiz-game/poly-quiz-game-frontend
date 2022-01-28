@@ -34,7 +34,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Sample />} />
           <Route path="/settingame" element={<Settingame />} />
-          <Route path="/settingame2" element={<Settingame2 />} />
+          <Route path="/settingame2" element={<Settingame2  />} />
           <Route path="/quiz/*" element={<Quiz socket={socket} />} />
           <Route path="/report/*" element={<Report socket={socket} />} />
           <Route path="/room" element={<Room socket={socket} />} />
