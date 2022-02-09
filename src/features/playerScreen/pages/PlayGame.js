@@ -15,6 +15,7 @@ const PlayGame = ({ socket }) => {
   const [gameOver, setGameOver] = useState(false);
   const [playerData, setPlayerData] = useState({});
   const [player, setPlayer] = useState({});
+  const [game, setGame] = useState({});
 
   const params = useParams();
   const navigate = useNavigate();
@@ -24,20 +25,24 @@ const PlayGame = ({ socket }) => {
       socket.emit("player-join-game", { id: params.socketId });
     }
 
-    socket.on("noGameFound", () => {
+    socket.on("noGameFound-player", () => {
       navigate(`/play/enter-pin`);
     });
 
-    socket.on("hostDisconnect", () => {
+    socket.on("hostDisconnect-player", () => {
       navigate(`/play/enter-pin`);
     });
 
-    socket.on("answerResult-player", (res) => {
-      setIsCorrect(res);
+    socket.on("answerResult-player", (result) => {
+      setIsCorrect(result);
     });
 
-    socket.on("playerInfo-player", (res) => {
-      setPlayer(res);
+    socket.on("playerInfo-player", (player) => {
+      setPlayer(player);
+    });
+
+    socket.on("gameInfo-player", (game) => {
+      setGame(game);
     });
 
     socket.on("GameOverPlayer", (playerData) => {
@@ -109,7 +114,7 @@ const PlayGame = ({ socket }) => {
       {showResult && <h1>{isCorrect ? "correct" : "incorrect"}</h1>}
       <div className="question-footer">
         <div></div>
-        <div>PIN: 343537</div>
+        <div>PIN: {game.pin}</div>
       </div>
     </div>
   );

@@ -86,6 +86,11 @@
         flex-direction: column;
         justify-content: center;
         margin: 20px;
+        position: relative;
+        .check-icon {
+          position: absolute;
+          top: -50px;
+        }
         .answer-tree {
           width: 80px;
           // min-height: 120px;
@@ -126,6 +131,7 @@
 
     .question-image {
       max-height: 45vh;
+      min-height: 40vh;
       display: flex;
       align-items: center;
       justify-content: space-between;
@@ -177,7 +183,9 @@
     align-content: stretch;
     .answer {
       &.correct {
-        font-size: 50px;
+      }
+      &.in-correct {
+        opacity: 0.3;
       }
       width: calc(50% - 0.25rem);
       border-radius: 8px;

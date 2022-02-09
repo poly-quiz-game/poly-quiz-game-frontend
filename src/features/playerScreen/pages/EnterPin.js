@@ -14,7 +14,9 @@ const EnterPin = ({ socket }) => {
     socket.on("gameData-player", (game) => {
       setGame(game);
     });
+
     socket.on("noGameFound-player", () => {
+      setGame(null);
       setError("Phòng không tồn tại!");
     });
 

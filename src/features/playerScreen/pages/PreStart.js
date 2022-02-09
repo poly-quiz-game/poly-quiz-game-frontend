@@ -12,15 +12,15 @@ const EnterPin = ({ socket }) => {
 
     socket.emit("player-join", { name: params.name, pin: params.pin });
 
-    socket.on("noGameFound", function () {
+    socket.on("noGameFound-player", function () {
       navigate("/play/enter-pin");
     });
 
-    socket.on("kickedByHost", function () {
+    socket.on("kickedByHost-player", function () {
       navigate("/play/enter-pin");
     });
 
-    socket.on("hostDisconnect", function () {
+    socket.on("hostDisconnect-player", function () {
       navigate("/play/enter-pin");
     });
 

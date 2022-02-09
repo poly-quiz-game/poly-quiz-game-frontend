@@ -31,3 +31,105 @@
     }
   }
 }
+
+.create-quiz {
+  padding-top: 3.5rem;
+  .header {
+    position: fixed;
+    left: 0px;
+    top: 0;
+    right: 0px;
+    z-index: 110;
+    width: 100%;
+    background-color: #aaa;
+    .header-content {
+      background: rgb(255, 255, 255);
+      height: 3.5rem;
+      z-index: 10;
+      box-shadow: rgb(0 0 0 / 10%) 0px 2px 4px 0px;
+      // color: rgb(255, 255, 255);
+      padding: 0px 1rem;
+      -webkit-box-align: center;
+      align-items: center;
+      display: flex;
+      position: relative;
+      justify-content: space-between;
+
+      .left {
+        display: flex;
+
+        .quiz-settings {
+          display: flex;
+          align-items: center;
+
+          border: 1px solid #ddd;
+          border-radius: 4px;
+          padding: 5px;
+
+          .quiz-name {
+            margin-right: 10px;
+          }
+        }
+      }
+
+      .right-buttons {
+        button {
+          margin: 0 5px;
+        }
+      }
+    }
+  }
+  .body {
+    .left-sidebar {
+      position: fixed;
+      left: 0px;
+      z-index: 101;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      -webkit-box-align: center;
+      align-items: center;
+      bottom: unset;
+      width: 12rem;
+      height: 100%;
+      background: rgb(255, 255, 255);
+      box-shadow: rgb(0 0 0 / 15%) 0px 2px 4px 0px;
+      padding-top: 0px;
+      box-sizing: border-box;
+    }
+    .list-questions {
+      display: block;
+      position: relative;
+      z-index: 4;
+      max-height: 100%;
+      height: auto;
+      width: 100%;
+      overflow-y: auto;
+
+      .question-preview {
+        display: flex;
+        .btns {
+          display: flex;
+          flex-direction: column;
+          -webkit-box-pack: end;
+          justify-content: flex-end;
+          align-self: flex-end;
+          padding-right: 0.125rem;
+          height: 93px;
+          margin-left: 0.5rem;
+        }
+      }
+    }
+    .add-question-button {
+      display: flex;
+      flex: 1 0 auto;
+      flex-direction: column;
+      -webkit-box-align: center;
+      align-items: center;
+      -webkit-box-pack: start;
+      justify-content: flex-start;
+      min-width: 100%;
+      padding: 0px 1.5rem;
+    }
+  }
+}

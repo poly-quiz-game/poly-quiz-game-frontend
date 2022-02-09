@@ -13,14 +13,13 @@ const gameStates = {
 };
 
 const HostGame = ({ socket }) => {
-  const [question, setQuestion] = useState({});
+  const [question, setQuestion] = useState(null);
   const [quiz, setQuiz] = useState({});
   const [game, setGame] = useState({});
 
   const [players, setPlayers] = React.useState([]);
   const [gameState, setGameState] = React.useState(gameStates.LIVE_QUESTION);
   const [questionResult, setQuestionResult] = React.useState({});
-  const [correctAnswer, setCorrectAnswer] = React.useState(null);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -28,18 +27,13 @@ const HostGame = ({ socket }) => {
   useEffect(() => {
     socket.emit("host-join-game", { id: params.id });
 
-    socket.on("noRoomFound-host", function () {
-      navigate(`/quiz`);
-    });
     socket.on("noGameFound-host", function () {
-      alert("noGameFound-host");
       navigate(`/quiz`);
     });
 
     socket.on("gameQuestion-host", (res) => {
       setGameState(gameStates.LIVE_QUESTION);
       setQuestion(res);
-      setCorrectAnswer(null);
       setQuestionResult([]);
     });
 
@@ -62,10 +56,9 @@ const HostGame = ({ socket }) => {
     socket.on("questionOver-all", (res, answer) => {
       setGameState(gameStates.QUESTION_RESULT);
       setQuestionResult(res);
-      setCorrectAnswer(answer);
     });
 
-    socket.on("GameOver-host", (res, player) => {
+    socket.on("GameOver-host", () => {
       setGameState(gameStates.GAME_OVER);
     });
 
@@ -102,6 +95,9 @@ const HostGame = ({ socket }) => {
     </div>
   );
 
+  if (!question) {
+    return "";
+  }
 
   switch (gameState) {
     case gameStates.GAME_OVER:
@@ -128,7 +124,7 @@ const HostGame = ({ socket }) => {
           // }}
         >
           <div className="question-info">
-            <h1 className="question">{question.question || "123"}</h1>
+            <h1 className="question">{question.question}</h1>
           </div>
           <div className="question-body-container">
             {gameState !== gameStates.LIVE_QUESTION && (
@@ -138,6 +134,7 @@ const HostGame = ({ socket }) => {
             )}
             {gameState === gameStates.QUESTION_RESULT ? (
               <TotalAnswerResult
+                question={question}
                 questionResult={questionResult}
                 questionIndex={game.questionIndex}
               />
@@ -148,7 +145,8 @@ const HostGame = ({ socket }) => {
           <div className="answers">
             <div
               className={`answer answer-1 ${
-                correctAnswer === 0 ? "correct" : ""
+                gameState === gameStates.QUESTION_RESULT &&
+                (question.correctAnswer === 0 ? "correct" : "in-correct")
               }`}
             >
               <div className="answer-label">A</div>
@@ -158,7 +156,8 @@ const HostGame = ({ socket }) => {
             </div>
             <div
               className={`answer answer-2 ${
-                correctAnswer === 1 ? "correct" : ""
+                gameState === gameStates.QUESTION_RESULT &&
+                (question.correctAnswer === 1 ? "correct" : "in-correct")
               }`}
             >
               <div className="answer-label">B</div>
@@ -168,7 +167,8 @@ const HostGame = ({ socket }) => {
             </div>
             <div
               className={`answer answer-3 ${
-                correctAnswer === 2 ? "correct" : ""
+                gameState === gameStates.QUESTION_RESULT &&
+                (question.correctAnswer === 2 ? "correct" : "in-correct")
               }`}
             >
               <div className="answer-label">C</div>
@@ -178,7 +178,8 @@ const HostGame = ({ socket }) => {
             </div>
             <div
               className={`answer answer-4 ${
-                correctAnswer === 3 ? "correct" : ""
+                gameState === gameStates.QUESTION_RESULT &&
+                (question.correctAnswer === 3 ? "correct" : "in-correct")
               }`}
             >
               <div className="answer-label">D</div>

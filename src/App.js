@@ -17,11 +17,16 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Sample />} />
-        <Route exact path="/quiz/*" element={<PrivateRoute />}>
-          <Route path="/quiz/*" element={<Quiz />} />
-        </Route>
-        <Route exact path="/report/*" element={<PrivateRoute />}>
+        <Route index element={<Sample />} />
+        <Route
+          path="quiz/*"
+          element={
+            <PrivateRoute>
+              <Quiz />
+            </PrivateRoute>
+          }
+        />
+        <Route path="/report/*" element={<PrivateRoute />}>
           <Route path="/report/*" element={<Report />} />
         </Route>
         <Route path="/host/*" element={<HostScreen />} />

@@ -5,7 +5,7 @@ import { Row, Col, Statistic, Button, Popover } from "antd";
 import "../styles.scss";
 
 const Lobby = ({ socket }) => {
-  const [game, setGame] = useState({});
+  const [game, setGame] = useState(null);
   const [players, setPlayers] = useState([]);
 
   const navigate = useNavigate();
@@ -46,6 +46,10 @@ const Lobby = ({ socket }) => {
       playerSocketId,
     });
   };
+
+  if (!game) {
+    return "";
+  }
 
   return (
     <div className="lobby__screen">
