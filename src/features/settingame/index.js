@@ -1,84 +1,70 @@
 import React from "react";
-import { Col, Row, Button, Input, Image, Select, Radio } from "antd";
+import { Form, Input, Button,Select } from 'antd';
 
 import MainLayout from "layouts/main.layout";
 
 import "./styles.scss";
 
 const Settingame = () => {
-  const { TextArea } = Input;
-  const { Option } = Select;
+  
+  const onFinish = (values) => {
+    console.log('Success:', values);
+  };
+  
+  const onFinishFailed = (errorInfo) => {
+    console.log('Failed:', errorInfo);
+  };
 
   return (
     <MainLayout>
-      <br></br>
-      <div className="setting">
-        <Row>
-          <Col span={12} offset={8}>
-            <div className="title">
-              <h2>Mời các con vk nhập</h2>
-            </div>
-            <div className="background">
-              <div>
-                <div className="box">
-                  <h3>Tiêu đề</h3>
-                  <Input
-                    id="ip-left"
-                    size="large"
-                    placeholder="Nhập tiêu đề . . . "
-                  />
-                </div>
-                <div className="box">
-                  <h3>Mô tả</h3>
-                  <TextArea
-                    id="ip-left"
-                    rows={4}
-                    placeholder="Nhập mô tả . . . "
-                  />
-                </div>
-                <div className="box">
-                  <h3>Lưu</h3>
-                  <Select defaultValue="My PolyQuizz" style={{ width: 420 }}>
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
-                    <Option value="disabled" disabled>
-                      Disabled
-                    </Option>
-                    <Option value="Yiminghe">yiminghe</Option>
-                  </Select>
-                </div>
-              </div>
-              <div>
-                <div className="box">
-                  <h3>Background</h3>
-                  <Image
-                    width={420}
-                    height={200}
-                    src="https://zos.alipayobjects.com/rmsportal/jkjgkEfvpUPVyRjUImniVslZfWPnJuuZ.png"
-                  />
-                  <Button id="btn">Chọn</Button>
-                </div>
-                <div className="box">
-                  <h3>Nhạc nền</h3>
-                  <Select defaultValue="My PolyQuizz" style={{ width: 420 }}>
-                    <Option value="jack">Jack</Option>
-                    <Option value="lucy">Lucy</Option>
-                    <Option value="disabled" disabled>
-                      Disabled
-                    </Option>
-                    <Option value="Yiminghe">yiminghe</Option>
-                  </Select>
-                </div>
-                <div className="box">
-                  <h3>HIện thị</h3>
-                  <Radio>Cộng cộng</Radio>
-                  <Radio>Riêng tư</Radio>
-                </div>
-              </div>
-            </div>
-          </Col>
-        </Row>
-      </div>
+      <br></br><br></br><br></br>
+    <Form
+      name="basic"
+      labelCol={{
+        span: 6,
+      }}
+      wrapperCol={{
+        span: 12,
+      }}
+      initialValues={{
+        remember: true,
+      }}
+      onFinish={onFinish}
+      onFinishFailed={onFinishFailed}
+      autoComplete="off"
+    >
+      <Form.Item
+        label="Tên Quizz"
+        name="title"
+        rules={[
+          {
+            required: true,
+            message: 'Mời nhập tên quizz!',
+          },
+        ]}
+      >
+        <Input />
+      </Form.Item>
+      <Form.Item name="type" label="Chế độ" rules={[{ required: true }]}>
+        <Select
+          placeholder="Chọn chế độ"
+          allowClear
+        >
+          <Option value="public">Công khai</Option>
+          <Option value="private">Riêng tư</Option>
+        </Select>
+      </Form.Item>
+      <Form.Item
+        wrapperCol={{
+          offset: 8,
+          span: 16,
+        }}
+      >
+        <Button type="primary" htmlType="submit">
+          Submit
+        </Button>
+      </Form.Item>
+    </Form>
     </MainLayout>
   );
 };
