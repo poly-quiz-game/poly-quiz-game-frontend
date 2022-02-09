@@ -24,7 +24,7 @@ const EnterPin = ({ socket }) => {
       navigate("/play/enter-pin");
     });
 
-    socket.on("gameStartedPlayer", function () {
+    socket.on("gameStarted-player", function () {
       navigate(`/play/play-game/${socket.id}`);
     });
 

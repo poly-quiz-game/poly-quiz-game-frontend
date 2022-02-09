@@ -20,7 +20,7 @@ const HostScreen = (props) => {
 
   return (
     <Routes>
-      <Route path="/lobby" element={<Lobby {...props} socket={socket} />} />
+      <Route path="/lobby/:hostSocketId" element={<Lobby {...props} socket={socket} />} />
       <Route
         path="/start/:id"
         element={<StartGame {...props} socket={socket} />}

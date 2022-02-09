@@ -1,36 +1,30 @@
 import React, { useState, useEffect } from "react";
 import { Input, Button } from "antd";
-import { useParams, Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const EnterPin = ({ socket }) => {
+  const navigate = useNavigate();
+
   const [pin, setPin] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState("");
-  const [game, setRoomData] = useState(null);
-
-  let params = useParams();
+  const [game, setGame] = useState(null);
 
   useEffect(() => {
-    if (params.pin) {
-      setPin(params.pin);
-      checkRoom(params.pin);
-    }
-    const roomListener = (game) => {
-      if (!game) {
-        return setError("Phòng không tồn tại!");
-      }
-      setRoomData(game);
-    };
-
-    socket.on("roomDataFromPin", roomListener);
+    socket.on("gameData-player", (game) => {
+      setGame(game);
+    });
+    socket.on("noGameFound-player", () => {
+      setError("Phòng không tồn tại!");
+    });
 
     return () => {
       socket.emit("disconnect", socket.id);
     };
   }, []);
 
-  const checkRoom = (pin) => {
-    socket.emit("getRoomByPin", pin);
+  const checkGame = (pin) => {
+    socket.emit("player-check-game", pin);
   };
 
   return (
@@ -46,8 +40,11 @@ const EnterPin = ({ socket }) => {
                 setError("");
                 setPin(e.target.value);
               }}
+              onKeyDown={(e) => {
+                if (e.key === "Enter") checkGame(pin);
+              }}
             />
-            <Button type="primary" onClick={() => checkRoom(pin)}>
+            <Button type="primary" onClick={() => checkGame(pin)}>
               Tham gia
             </Button>
           </>
@@ -58,6 +55,10 @@ const EnterPin = ({ socket }) => {
               placeholder="Nhập tên của bạn"
               value={name}
               onChange={(e) => setName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === "Enter")
+                  navigate(`/play/pre-start/${game.pin}&${name}`);
+              }}
             />
             <Link to={`/play/pre-start/${game.pin}&${name}`}>
               <Button type="primary">Bắt đầu</Button>

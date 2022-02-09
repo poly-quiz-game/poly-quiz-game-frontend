@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, Navigate } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { Skeleton, Row, Col, Switch, Button } from "antd";
 
 import MainLayout from "layouts/main.layout";
@@ -19,10 +19,7 @@ const defaultConfig = {
 const StartGame = ({ socket }) => {
   let params = useParams();
   const dispatch = useDispatch();
-
-  // eslint-disable-next-line no-unused-vars
-  const [gameConfig, setGameConfig] = useState(defaultConfig);
-  const [gamePin, setGamePin] = useState(null);
+  const navigate = useNavigate();
 
   const quiz = useSelector(selectQuiz);
   const loading = useSelector(selectLoading);
@@ -30,21 +27,14 @@ const StartGame = ({ socket }) => {
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
 
-    const pinListener = (game) => {
-      console.log("pinListener: ", game);
-      setGamePin(game.pin);
-    };
-
-    socket.on("showGamePin", pinListener);
+    socket.on("showGamePin", ({ pin }) => {
+      navigate(`/host/lobby/${pin}`);
+    });
   }, [dispatch, params]);
 
   const startGame = () => {
     socket.emit("host-join", { id: quiz._id });
   };
-
-  if (gamePin) {
-    return <Navigate to={`/host/lobby?gamePin=${gamePin}`} />;
-  }
 
   return (
     <MainLayout>
@@ -73,22 +63,24 @@ const StartGame = ({ socket }) => {
                   <div className="setting-option">
                     <h3>Hiển thị câu hỏi, câu trả lời trên máy người chơi</h3>
                     <Switch
-                      checked={gameConfig.displayQuestionOnPlayerDevice}
-                      defaultChecked={gameConfig.displayQuestionOnPlayerDevice}
+                      checked={defaultConfig.displayQuestionOnPlayerDevice}
+                      defaultChecked={
+                        defaultConfig.displayQuestionOnPlayerDevice
+                      }
                     />
                   </div>
                   <div className="setting-option">
                     <h3>Xáo trộn câu hỏi</h3>
                     <Switch
-                      checked={gameConfig.randomQuestion}
-                      defaultChecked={gameConfig.randomQuestion}
+                      checked={defaultConfig.randomQuestion}
+                      defaultChecked={defaultConfig.randomQuestion}
                     />
                   </div>
                   <div className="setting-option">
                     <h3>Xáo trộn các câu trả lời</h3>
                     <Switch
-                      checked={gameConfig.randomAnswer}
-                      defaultChecked={gameConfig.randomAnswer}
+                      checked={defaultConfig.randomAnswer}
+                      defaultChecked={defaultConfig.randomAnswer}
                     />
                   </div>
                 </div>
@@ -96,14 +88,13 @@ const StartGame = ({ socket }) => {
                   <div className="setting-option">
                     <h3>Tự động chuyển câu hỏi</h3>
                     <Switch
-                      checked={gameConfig.autoPlay}
-                      defaultChecked={gameConfig.autoPlay}
+                      checked={defaultConfig.autoPlay}
+                      defaultChecked={defaultConfig.autoPlay}
                     />
                   </div>
                 </div>
               </div>
             )}
-            <br />
           </div>
         </Col>
       </Row>

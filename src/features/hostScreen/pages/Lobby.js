@@ -5,28 +5,28 @@ import { Row, Col, Statistic, Button, Popover } from "antd";
 import "../styles.scss";
 
 const Lobby = ({ socket }) => {
-  const [game, setGameData] = useState({});
+  const [game, setGame] = useState({});
   const [players, setPlayers] = useState([]);
 
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.emit("getRoom");
+    socket.emit("host-getGame");
 
-    socket.on("roomData", (game) => {
-      if (!game) {
-        return navigate(-1);
-      }
-      setGameData(game);
+    socket.on("noGameFound-host", () => {
+      navigate(-1);
     });
 
-    socket.on("updatePlayerLobby", (data) => {
+    socket.on("gameData-host", (res) => {
+      setGame(res);
+    });
+
+    socket.on("updatePlayerLobby-host", (data) => {
       console.log("updatePlayerLobby: ", data);
       setPlayers(data);
     });
 
     socket.on("gameStarted", function (id) {
-      console.log("id", id);
       navigate(`/host/game/${id}`);
     });
 
@@ -40,8 +40,11 @@ const Lobby = ({ socket }) => {
     socket.emit("startGame");
   };
 
-  const kickPlayer = (playerId) => {
-    socket.emit("host-kick-player", { hostId: socket.id, playerId });
+  const kickPlayer = (playerSocketId) => {
+    socket.emit("host-kick-player", {
+      hostSocketId: socket.id,
+      playerSocketId,
+    });
   };
 
   return (
@@ -52,7 +55,7 @@ const Lobby = ({ socket }) => {
             <Statistic
               title="Mã trò chơi"
               formatter={(val) => val}
-              value={game.pin}
+              value={game?.pin}
             />
           </div>
           <br />
@@ -62,7 +65,7 @@ const Lobby = ({ socket }) => {
               <Popover content="Kick" key={p.name}>
                 <Button
                   className="player-name"
-                  onClick={() => kickPlayer(p.playerId)}
+                  onClick={() => kickPlayer(p.playerSocketId)}
                 >
                   {p.name}
                 </Button>
@@ -71,7 +74,7 @@ const Lobby = ({ socket }) => {
           </div>
           <br />
           <br />
-          <Button type="primary" onClick={startGame}>
+          <Button type="primary" onClick={startGame} disabled={!players.length}>
             Bắt đầu game
           </Button>
         </Col>

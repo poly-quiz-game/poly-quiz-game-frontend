@@ -35,7 +35,7 @@ const GameFeature = (props) => {
         element={<PreStart {...props} socket={socket} />}
       />
       <Route
-        path="/play-game/:socketid"
+        path="/play-game/:socketId"
         element={<PlayGame {...props} socket={socket} />}
       />
     </Routes>
