@@ -65,9 +65,10 @@ const MainLayout = ({ children }) => {
             </Menu>
           }
         >
-          <div className="current-user">
-            <img width={45} height={45} src="https://picsum.photos/200" />
-            <div>{user.name}</div>
+          <div className="current-user avatar">
+          <div>{user.name}</div>
+            <img src="https://picsum.photos/200"/>
+            
           </div>
         </Dropdown>
       </Header>
