@@ -2,10 +2,7 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Quiz from "./features/quiz";
-import HostScreen from "./features/hostScreen";
-import PlayerScreen from "./features/playerScreen";
 import Auth from "./features/auth";
-import Sample from "./features/sample";
 
 import PrivateRoute from "./privateRoute";
 import AuthLayout from "layouts/auth.layout";
@@ -17,7 +14,6 @@ function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route index element={<Sample />} />
         <Route
           path="quiz/*"
           element={
@@ -34,8 +30,6 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/host/*" element={<HostScreen />} />
-        <Route path="/play/*" element={<PlayerScreen />} />
         <Route
           path="/auth/*"
           element={

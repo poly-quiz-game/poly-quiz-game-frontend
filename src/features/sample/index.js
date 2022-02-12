@@ -2,6 +2,7 @@ import React from "react";
 import { Button } from "antd";
 
 import "./styles.scss";
+import EditQuiz from "./EditQuiz";
 
 const initialQuestions = [
   {

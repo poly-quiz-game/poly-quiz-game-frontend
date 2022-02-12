@@ -86,8 +86,9 @@ const HostGame = ({ socket }) => {
     <div className="question-image">
       <div className="time">18</div>
       <div className="image">
-        <img src="https://i.picsum.photos/id/407/632/336.jpg?hmac=UxaQKtYZZzwSwt9KYntbc0EA6DZhUBISmne3bnaUwUw" />
-      </div>
+        {/* <img src="https://i.picsum.photos/id/407/632/336.jpg?hmac=UxaQKtYZZzwSwt9KYntbc0EA6DZhUBISmne3bnaUwUw" /> */}
+      </div>{" "}
+      ``
       <div className="player-answered">
         {players.playersAnswered}/{players.playersInGame}
         <br /> người đã trả lời
