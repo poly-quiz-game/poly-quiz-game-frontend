@@ -113,16 +113,7 @@ const HostGame = ({ socket }) => {
       );
     default:
       return (
-        <div
-          className="game__screen"
-          // style={{
-          //   background:
-          //     // "url(https://i.picsum.photos/id/819/1440/1024.jpg?hmac=KQQFhYlcPEz5zJkj8PqhWkieZ4FgO56TdT8sCou59JI)",
-          //     quiz.backgroundImage
-          //       ? `url("${quiz.backgroundImage}") center center / cover no-repeat rgb(204, 204, 204)`
-          //       : "",
-          // }}
-        >
+        <div className="game__screen">
           <div className="question-info">
             <h1 className="question">{question.question}</h1>
           </div>

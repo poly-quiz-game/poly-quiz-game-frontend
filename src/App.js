@@ -26,9 +26,14 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/report/*" element={<PrivateRoute />}>
-          <Route path="/report/*" element={<Report />} />
-        </Route>
+        <Route
+          path="/report/*"
+          element={
+            <PrivateRoute>
+              <Report />
+            </PrivateRoute>
+          }
+        />
         <Route path="/host/*" element={<HostScreen />} />
         <Route path="/play/*" element={<PlayerScreen />} />
         <Route

@@ -9,6 +9,17 @@ const quizApi = {
       headers: authHeader(),
     });
   },
+  create(quiz) {
+    const url = path;
+
+    return axiosClient.post(
+      url,
+      { quiz },
+      {
+        headers: authHeader(),
+      }
+    );
+  },
   getOne(id) {
     const url = `${path}/${id}`;
     return axiosClient.get(url, {
