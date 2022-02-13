@@ -1,11 +1,14 @@
 import React from "react";
-import { Button } from "antd";
+import _ from "lodash";
+import { Button, Popover } from "antd";
+import { ExclamationCircleOutlined } from "@ant-design/icons";
 
 const ListQuestions = ({
   questions,
   addQuestion,
   deleteQuestion,
   activeQuestion,
+  errors,
   setActiveQuestion,
 }) => {
   return (
@@ -21,6 +24,26 @@ const ListQuestions = ({
           >
             <div className="question-index">
               <h3>{i + 1}. Quiz</h3>
+              {!_.isEmpty(errors[i]) && (
+                <div className="question-error-sticky">
+                  <Popover
+                    content={
+                      <div className="question-error-list">
+                        {Object.keys(errors[i]).map((key) => (
+                          <div
+                            className="question-error"
+                            key={`error-item-${key}`}
+                          >
+                            <ExclamationCircleOutlined /> {errors[i][key]}
+                          </div>
+                        ))}
+                      </div>
+                    }
+                  >
+                    <ExclamationCircleOutlined />
+                  </Popover>
+                </div>
+              )}
             </div>
             <div className="question-preview-content">
               <div className="btns">

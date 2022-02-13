@@ -17,7 +17,9 @@ const QuestionBody = ({ question, onChangeQuestion }) => {
         </div>
         <div className="question-body-image">
           <div className="time">
-            <div className="time-value">Thời gian: {question.time / 1000} giây</div>
+            <div className="time-value">
+              Thời gian: {question.time / 1000} giây
+            </div>
           </div>
           <div className="image">
             <img src="https://i.picsum.photos/id/859/632/336.jpg?hmac=NHCRpqHlkp1TFiYXsrC0BLfgKsnQcJ0yo2ZwunPOreg" />

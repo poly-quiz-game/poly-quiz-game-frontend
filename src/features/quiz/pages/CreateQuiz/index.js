@@ -1,40 +1,15 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 
 import QuestionOption from "./QuestionOption";
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
-import { Button, Modal, Form, Input } from "antd";
+import QuizSettingModal from "./QuizSettingModal";
+import { Button } from "antd";
 import { fetchCreateQuiz } from "../../../hostScreen/quizSlice";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
-
-const arr = [
-  {
-    type: "quiz",
-    image: "",
-    answers: ["Câu trả lời đúng", "Câu trả lời sai", "Sai", "Vẫn sai"],
-    time: 20000,
-    question: "Câu hỏi số 1?",
-    correctAnswer: 0,
-  },
-  {
-    type: "quiz",
-    image: "",
-    answers: ["Câu trả lời sai", "Câu trả lời sai", "Đúng", "Vẫn sai"],
-    time: 20000,
-    question: "Câu hỏi số 2?",
-    correctAnswer: 2,
-  },
-  {
-    type: "quiz",
-    image: "",
-    answers: ["Câu trả lời sai", "Câu trả lời sai", "Sai", "Đúng"],
-    time: 60000,
-    question: "Câu hỏi số 3?",
-    correctAnswer: 3,
-  },
-];
+import ValidateQuizModal from "./ValidateQuizModal";
 
 const defaultQuestion = {
   type: "quiz",
@@ -52,8 +27,27 @@ const CreateQuiz = () => {
   const [isShowSetting, setIsShowSetting] = useState(false);
   const [quiz, setQuiz] = useState({ name: "" });
   const [input, setInput] = useState();
+  const [isShowValidateModal, setIsShowValidateModal] = useState(false);
+  const [errors, setErrors] = useState([]);
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const errs = questions.map((question) => {
+      const err = {};
+      if (!question.question) {
+        err.question = "Thiếu câu hỏi";
+      }
+      if (!question.answers.every((answer) => answer)) {
+        err.answers = "Thiếu đáp án";
+      }
+      if (typeof question.correctAnswer !== "number") {
+        err.correctAnswer = "Chưa chọn đáp án đúng";
+      }
+      return err;
+    });
+    setErrors(errs);
+  }, [questions]);
 
   const addQuestion = (question) => {
     const newQuestions = [...questions];
@@ -92,6 +86,10 @@ const CreateQuiz = () => {
   };
 
   const submitQuestions = async ({ name }) => {
+    if (errors.length) {
+      setIsShowValidateModal(true);
+      return;
+    }
     if (!quiz.name && !name) {
       setIsShowSetting("save");
       return;
@@ -137,6 +135,7 @@ const CreateQuiz = () => {
           deleteQuestion={deleteQuestion}
           activeQuestion={activeQuestion}
           setActiveQuestion={setActiveQuestion}
+          errors={errors}
         />
         <QuestionBody
           question={questions[activeQuestion]}
@@ -149,41 +148,21 @@ const CreateQuiz = () => {
           deleteQuestion={deleteQuestion}
         />
       </div>
-      <Modal
-        title="Cài đặt Quiz"
-        visible={isShowSetting}
-        onCancel={() => setIsShowSetting(false)}
-        footer={null}
-      >
-        <Form
-          name="quiz-setting"
-          initialValues={{ remember: true }}
-          layout="vertical"
-          autoComplete="off"
-        >
-          <Form.Item
-            label="Tên quiz"
-            name="name"
-            rules={[{ required: true, message: "Vui lòng nhập tên!" }]}
-          >
-            <Input value={input} onChange={(e) => setInput(e.target.value)} />
-          </Form.Item>
-          <Button
-            type="primary"
-            htmlType="submit"
-            onClick={() => {
-              if (isShowSetting === "save") {
-                submitQuestions({ name: input });
-                return;
-              }
-              setQuiz((q) => ({ ...q, name: input }));
-              setIsShowSetting(false);
-            }}
-          >
-            Lưu
-          </Button>
-        </Form>
-      </Modal>
+      <QuizSettingModal
+        isShowSetting={isShowSetting}
+        setIsShowSetting={setIsShowSetting}
+        submitQuestions={submitQuestions}
+        input={input}
+        setInput={setInput}
+        setQuiz={setQuiz}
+      />
+      <ValidateQuizModal
+        isShowValidateModal={isShowValidateModal}
+        setIsShowValidateModal={setIsShowValidateModal}
+        errors={errors}
+        questions={questions}
+        setActiveQuestion={setActiveQuestion}
+      />
     </div>
   );
 };
