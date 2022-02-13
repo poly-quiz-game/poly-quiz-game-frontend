@@ -9,6 +9,8 @@ import AuthLayout from "layouts/auth.layout";
 
 import "antd/dist/antd.min.css";
 import Report from "./features/report";
+import HostScreen from "./features/hostScreen";
+import Play from "./features/playerScreen";
 
 function App() {
   return (
@@ -23,10 +25,26 @@ function App() {
           }
         />
         <Route
+          path="/host/*"
+          element={
+            <PrivateRoute>
+              <HostScreen />
+            </PrivateRoute>
+          }
+        />
+        <Route
           path="/report/*"
           element={
             <PrivateRoute>
               <Report />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/play/*"
+          element={
+            <PrivateRoute>
+              <Play />
             </PrivateRoute>
           }
         />

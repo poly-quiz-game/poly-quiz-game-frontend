@@ -162,6 +162,10 @@
         width: 60%;
         text-align: center;
 
+        &.no-image {
+          opacity: 0.4;
+        }
+
         img {
           max-height: 40vh;
           max-width: 100%;
@@ -175,7 +179,7 @@
     position: absolute;
     width: 100%;
     bottom: 7vh;
-    min-height: 28vh;
+    min-height: 35vh;
     display: flex;
     flex: 4 1 0%;
     flex-wrap: wrap;

@@ -1,71 +1,29 @@
 import React from "react";
 import { Menu, Row, Table } from "antd";
 import { Link } from "react-router-dom";
+
 const columns = [
   {
-    title: "nickName",
+    title: "Tên",
     dataIndex: "name",
-    // render: (text) => <a>{text}</a>,
   },
+  // {
+  //   title: "Rank",
+  //   dataIndex: "rank",
+  // },
+  // {
+  //   title: "Correct answers",
+  //   dataIndex: "correct",
+  // },
+  // {
+  //   title: "Unanswered",
+  //   dataIndex: "unanswered",
+  // },
   {
-    title: "Rank",
-    dataIndex: "rank",
-  },
-  {
-    title: "Correct answers",
-    dataIndex: "correct",
-  },
-  {
-    title: "Unanswered",
-    dataIndex: "unanswered",
-  },
-  {
-    title: "Final score",
+    title: "Điểm",
     dataIndex: "score",
   },
 ];
-const data = [
-  {
-    key: "1",
-    name: "Đoàn",
-    rank: 1,
-    correct: "25%",
-    unanswered: 0,
-    score: 8,
-  },
-  {
-    key: "2",
-    name: "Huy",
-    rank: 2,
-    correct: "25%",
-    unanswered: 0,
-    score: 8,
-  },
-  {
-    key: "3",
-    name: "Tiến",
-    rank: 3,
-    correct: "25%",
-    unanswered: 0,
-    score: 7.5,
-  },
-  {
-    key: "4",
-    name: "Khiêm",
-    rank: 4,
-    correct: "25%",
-    unanswered: 0,
-    score: 7,
-  },
-  {
-    key: "5",
-    name: "Hiếu",
-    rank: 5,
-    correct: "25%",
-    unanswered: 0,
-    score: 6,
-  },
-]; // rowSelection object indicates the need for row selection
 
 const rowSelection = {
   onChange: (selectedRowKeys, selectedRows) => {
@@ -82,29 +40,26 @@ const rowSelection = {
   }),
 };
 
-const Player = () => {
+const Player = ({ report }) => {
   return (
     <div>
-      <Row>
+      {/* <Row>
         <Menu>
           <Menu.Item>
-            <Link to="">All (5)</Link>
+            <Link to="">Tất cả ({report?.players?.length})</Link>
           </Menu.Item>
           <Menu.Item>
-            <Link to="/">Need help (5)</Link>
-          </Menu.Item>
-          <Menu.Item>
-            <Link to="/">Didn’t finish (2)</Link>
+            <Link to="/">Chưa hoàn thành</Link>
           </Menu.Item>
         </Menu>
-      </Row>
+      </Row> */}
       <Table
         rowSelection={{
           type: "checkbox",
           ...rowSelection,
         }}
         columns={columns}
-        dataSource={data}
+        dataSource={report?.players}
       />
     </div>
   );

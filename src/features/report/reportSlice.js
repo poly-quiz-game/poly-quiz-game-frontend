@@ -1,65 +1,64 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-import quizApi from "../../api/quizApi";
+import reportApi from "../../api/reportApi";
 
 const initialState = {
   loading: false,
   list: [],
-  quiz: {},
+  report: {},
 };
 
-export const fetchQuizzes = createAsyncThunk("quiz/getAll", async () => {
-  const response = await quizApi.getAll();
+export const fetchReports = createAsyncThunk("report/getAll", async () => {
+  const response = await reportApi.getAll();
+  console.log(response)
   return response.data;
 });
 
-export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
-  console.log(111);
-  const response = await quizApi.getOne(id);
-  console.log(response);
+export const fetchReport = createAsyncThunk("report/getOne", async (id) => {
+  const response = await reportApi.getOne(id);
   return response.data;
 });
 
-const quizSlice = createSlice({
-  name: "quiz",
+const reportSlice = createSlice({
+  name: "report",
   initialState,
   reducers: {},
   extraReducers: ({ addCase }) => {
     //   Loading
-    addCase(fetchQuizzes.pending, (state, action) => {
+    addCase(fetchReports.pending, (state, action) => {
       state.loading = true;
     });
     //   Loading
-    addCase(fetchQuiz.pending, (state, action) => {
+    addCase(fetchReport.pending, (state, action) => {
       state.loading = true;
     });
     //   Success
-    addCase(fetchQuizzes.fulfilled, (state, action) => {
+    addCase(fetchReports.fulfilled, (state, action) => {
       state.loading = false;
       state.list = action.payload;
     });
-    addCase(fetchQuiz.fulfilled, (state, action) => {
+    addCase(fetchReport.fulfilled, (state, action) => {
       state.loading = false;
-      state.quiz = action.payload;
+      state.report = action.payload;
     });
     //   Fail
-    addCase(fetchQuizzes.rejected, (state, action) => {
+    addCase(fetchReports.rejected, (state, action) => {
       state.loading = false;
     });
-    addCase(fetchQuiz.rejected, (state, action) => {
+    addCase(fetchReport.rejected, (state, action) => {
       state.loading = false;
     });
   },
 });
 
 // Actions
-export const quizActions = quizSlice.actions;
+export const reportActions = reportSlice.actions;
 
 // Selectors
-export const selectQuizList = (state) => state.quiz.list;
-export const selectQuiz = (state) => state.quiz.quiz;
-export const selectLoading = (state) => state.quiz.loading;
+export const selectReportList = (state) => state.report.list;
+export const selectReport = (state) => state.report.report;
+export const selectLoading = (state) => state.report.loading;
 
 // Reducer
-const quizReducer = quizSlice.reducer;
-export default quizReducer;
+const reportReducer = reportSlice.reducer;
+export default reportReducer;

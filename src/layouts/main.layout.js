@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Menu, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -35,6 +35,10 @@ const MainLayout = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  const [tab, setTab] = React.useState(
+    location.pathname.includes("/quiz") ? "quiz" : "report"
+  );
+
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/auth/login");
@@ -47,12 +51,16 @@ const MainLayout = ({ children }) => {
           <Link to="/quiz">
             <div className="logo">Poly Quiz game</div>
           </Link>
-          <Menu theme="light" mode="horizontal" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="1" icon={PuzzleIcon}>
-              <Link to="/quiz">Quiz</Link>
+          <Menu theme="light" mode="horizontal" defaultSelectedKeys={[tab]}>
+            <Menu.Item key="quiz" icon={PuzzleIcon}>
+              <Link to="/quiz" onClick={() => setTab("quiz")}>
+                Quiz
+              </Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<ProfileOutlined />}>
-              <Link to="/report">Báo cáo</Link>
+            <Menu.Item key="report" icon={<ProfileOutlined />}>
+              <Link to="/report" onClick={() => setTab("report")}>
+                Báo cáo
+              </Link>
             </Menu.Item>
           </Menu>
         </div>

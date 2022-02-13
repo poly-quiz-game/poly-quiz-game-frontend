@@ -1,3 +1,15 @@
+.quizzes {
+  .quizzes-header {
+    display: flex;
+    justify-content: flex-end;
+    padding: 20px;
+  }
+
+  .list-quiz {
+    padding: 0px 20px;
+  }
+}
+
 .start-quiz__screen {
   .quiz-info {
     text-align: center;
@@ -41,13 +53,13 @@
     right: 0px;
     z-index: 110;
     width: 100%;
+    margin: 0;
     background-color: #aaa;
     .header-content {
       background: rgb(255, 255, 255);
       height: 3.5rem;
       z-index: 10;
       box-shadow: rgb(0 0 0 / 10%) 0px 2px 4px 0px;
-      // color: rgb(255, 255, 255);
       padding: 0px 1rem;
       -webkit-box-align: center;
       align-items: center;

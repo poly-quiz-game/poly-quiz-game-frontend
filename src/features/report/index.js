@@ -10,10 +10,7 @@ const ReportFeature = (props) => {
   return (
     <Routes>
       <Route path="/" element={<Report {...props} />} />
-      <Route path="detail/:id" element={<ReportDetail {...props} />}>
-        <Route index element={<Player />} />
-        <Route path="question" element={<Question />} />
-      </Route>
+      <Route path="detail/:id" element={<ReportDetail {...props} />} />
     </Routes>
   );
 };

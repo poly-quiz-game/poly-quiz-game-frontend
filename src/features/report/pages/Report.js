@@ -1,12 +1,23 @@
-import React from "react";
-import { Col, Input, Row, Skeleton } from "antd";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { Button, Col, Input, Row, Select } from "antd";
 
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 
-import "./styles.css";
+import "./styles.scss";
+import { selectReportList, selectLoading, fetchReports } from "../reportSlice";
 
-const Report = ({ socket }) => {
+const Report = () => {
+  const dispatch = useDispatch();
+
+  const reports = useSelector(selectReportList);
+  const loading = useSelector(selectLoading);
+
+  useEffect(() => {
+    dispatch(fetchReports());
+  }, [dispatch]);
+
   return (
     <MainLayout>
       <div className="report">
@@ -18,71 +29,55 @@ const Report = ({ socket }) => {
             <div className="header">
               <Row justify="space-between">
                 <Col span={4}>
-                  <span><i className="fas fa-list"></i> 3 bản ghi</span>
+                  <span>
+                    <i className="fas fa-list"></i> {reports.length} bản ghi
+                  </span>
                 </Col>
-                <Col span={4}>
-                  <button type="" className="btn btn-new">
-                  <i className="fas fa-chevron-down"></i> Mới nhất
-                  </button>
-                </Col>
-              </Row>
-            </div>
-            <div className="quiz">
-              <Row>
-                <Col>
-                  <h2>
-                    Poly quiz! for formative assessment formative assessment
-                  </h2>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <span><i className="far fa-user"></i> 10 người chơi</span>
-                </Col>
-                <Col>
-                  <span className="question"><i className="fas fa-list"></i> 3 câu hỏi</span>
-                </Col>
-              </Row>
-              <Row className="quiz-button">
-                <Col>
-                  <button type="button" className="excel">
-                    <i className="far fa-file-excel"></i>    Xuất file excel
-                  </button>
-                </Col>
-                <Col>
-                  <Link to="detail/3"><i className="fas fa-info-circle"></i> Chi tiết</Link>
+                <Col span={3}>
+                  <Select style={{ width: "100%" }} value="latest">
+                    <Select.Option value="latest">Mới nhất</Select.Option>
+                    <Select.Option value="true_false">Cũ nhất</Select.Option>
+                  </Select>
                 </Col>
               </Row>
             </div>
-            <div className="quiz">
-              <Row>
-                <Col>
-                  <h2>
-                    Poly quiz! for formative assessment formative assessment
-                  </h2>
-                </Col>
-              </Row>
-              <Row>
-                <Col>
-                  <span><i className="far fa-user"></i> 10 người chơi</span>
-                </Col>
-                <Col>
-                  <span className="question"><i className="fas fa-list"></i> 3 câu hỏi</span>
-                </Col>
-              </Row>
-              <Row className="quiz-button">
-                <Col>
-                  <button type="button" className="excel">
-                    <i className="far fa-file-excel"></i>    Xuất file excel
-                  </button>
-                </Col>
-                <Col green-8>
-                  <button type="button" className="detail">
-                  <i className="fas fa-info-circle"></i> Chi tiết
-                  </button>
-                </Col>
-              </Row>
-            </div>
+            {reports.map((r) => (
+              <div className="report-item" key={r._id}>
+                <Row>
+                  <Col>
+                    <h2>{r.quiz.name}</h2>
+                  </Col>
+                </Row>
+                <Row>
+                  <Col>
+                    <span>
+                      <i className="far fa-user"></i> {r.players.length} người
+                      chơi
+                    </span>
+                  </Col>
+                  <Col>
+                    <span className="question">
+                      <i className="fas fa-list"></i> {r.quiz.questions.length}{" "}
+                      câu hỏi
+                    </span>
+                  </Col>
+                </Row>
+                <Row className="quiz-button">
+                  <Col>
+                    <Button type="Button" className="excel">
+                      <i className="far fa-file-excel"></i> Xuất file excel
+                    </Button>
+                  </Col>
+                  <Col>
+                    <Link to={`/report/detail/${r._id}`}>
+                      <Button className="detail-btn">
+                        <i className="fas fa-info-circle"></i> Chi tiết
+                      </Button>
+                    </Link>
+                  </Col>
+                </Row>
+              </div>
+            ))}
           </Col>
         </Row>
       </div>

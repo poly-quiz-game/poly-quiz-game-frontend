@@ -10,11 +10,20 @@
   float: right;
 }
 
-.quiz {
+.report {
   margin-top: 15px;
   padding: 10px 35px;
-  background-color: #ccc;
+  background-color: #e6e6e6;
   border-radius: 2px;
+  min-height: 100vh;
+
+  .report-item {
+    background-color: #fff;
+    margin: 20px 0;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  }
 }
 
 .question {
@@ -23,17 +32,23 @@
 
 .quiz-button {
   margin-top: 10px;
+
+  i {
+    margin-right: 6px;
+  }
 }
 
 .excel {
   background-color: #2a9235;
   color: #fff;
+  margin-right: 6px;
+  border-radius: 4px;
 }
 
-.detail {
+.detail-btn {
   background-color: rgb(182, 182, 182);
   color: black;
-  margin-left: 20px;
+  border-radius: 4px;
 }
 
 /* ReportDetail */
@@ -42,7 +57,7 @@
 }
 
 .synthetic {
-    margin-left: 20px;
+  margin-left: 20px;
 }
 
 .synthetic-div {
@@ -59,9 +74,9 @@
 }
 
 .synthetic-div p {
-    padding-left: 5px;
+  padding-left: 5px;
 }
 .ant-menu-light {
-    display: flex;
-    margin-bottom: -15px;
+  display: flex;
+  margin-bottom: -15px;
 }

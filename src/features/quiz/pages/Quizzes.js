@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchQuizzes, selectQuizList, selectLoading } from "../quizSlice";
-import { Skeleton, Card } from "antd";
+import { Skeleton, Card, Button } from "antd";
 
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
@@ -21,6 +21,11 @@ const Quizzes = () => {
   return (
     <MainLayout>
       <div className="quizzes">
+        <div className="quizzes-header">
+          <Link to="create">
+            <Button type="primary">Tạo quiz</Button>
+          </Link>
+        </div>
         {loading ? (
           <Skeleton />
         ) : (

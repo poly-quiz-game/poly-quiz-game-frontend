@@ -7,6 +7,7 @@ import QuestionBody from "./QuestionBody";
 import { Button, Modal, Form, Input } from "antd";
 import { fetchCreateQuiz } from "../../../hostScreen/quizSlice";
 import { useNavigate } from "react-router";
+import { Link } from "react-router-dom";
 
 const arr = [
   {
@@ -47,7 +48,7 @@ const defaultQuestion = {
 const CreateQuiz = () => {
   const dispatch = useDispatch();
   const [activeQuestion, setActiveQuestion] = useState(0);
-  const [questions, setQuestions] = useState(arr);
+  const [questions, setQuestions] = useState([defaultQuestion]);
   const [isShowSetting, setIsShowSetting] = useState(false);
   const [quiz, setQuiz] = useState({ name: "" });
   const [input, setInput] = useState();
@@ -119,7 +120,9 @@ const CreateQuiz = () => {
             </div>
           </div>
           <div className="right-buttons">
-            <Button>Thoát</Button>
+            <Link to="/quiz">
+              <Button>Thoát</Button>
+            </Link>
             <Button type="primary" onClick={submitQuestions}>
               Lưu
             </Button>
@@ -143,6 +146,7 @@ const CreateQuiz = () => {
           onChangeQuestionType={onChangeQuestionType}
           onChangeQuestionTime={onChangeQuestionTime}
           question={questions[activeQuestion]}
+          deleteQuestion={deleteQuestion}
         />
       </div>
       <Modal
