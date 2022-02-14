@@ -7,3 +7,83 @@ td {
   border: 1px solid black;
   padding: 10px;
 }
+.title{
+  padding-top: 20px;
+  padding-left: 20px;
+}
+.title h3{
+  font-family: 'Roboto Slab';
+  font-size: 24px;
+  font-weight: 600;
+}
+.number-play{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-top: 20px;
+  padding-left: 20px;
+}
+.number-play .content h4{
+  font-family: 'Roboto Slab';
+  font-size: 14px;
+  font-weight: 300;
+  margin-top: 5px;
+}
+.button-icon{
+  display:flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-right: 20px;
+  gap: 5px;
+}
+.button{
+  padding-top: 20px;
+  padding-left: 20px;
+  display:flex;
+  justify-content: left;
+  align-items: center;
+}
+.button-start h3{
+  color: #fff;
+  font-family: 'Roboto Slab';
+  font-size: 14px;
+}
+.button-atribute h3{
+  color: #111111;
+  font-family: 'Roboto Slab';
+  font-size: 14px;
+}
+.button2 {
+  padding-left: 20px;
+}
+.description{
+  padding-top: 20px;
+  padding-left: 20px;
+}
+.description h5{
+  font-family: 'Roboto Slab';
+  font-size: 14px;
+  font-weight: 300;
+}
+.user{
+  padding-top: 20px;
+  padding-left: 20px;
+  display:flex;
+  justify-content: left;
+  align-items: center;
+}
+.user-content{
+  font-weight: normal;
+  font-size: 14px;
+  font-family: 'Roboto Slab';
+  padding-left: 15px;
+  padding-top: 3px;
+}
+.question{
+  padding-top: 20px;
+}
+.question h3{
+  font-size: 24px;
+  font-family: 'Roboto Slab';
+  font-weight: 500;
+}
