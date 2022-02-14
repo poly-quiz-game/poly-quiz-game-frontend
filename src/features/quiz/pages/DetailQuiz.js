@@ -148,14 +148,6 @@ const DetailQuiz = ({ socket }) => {
                     <h3>Bắt đầu</h3>
                   </Button>
                 </div>
-                <div className="button2">
-                  <Button
-                    className="button-atribute"
-                    style={{ backgroundColor: "#fff" }}
-                  >
-                    <h3>Thuộc tính</h3>
-                  </Button>
-                </div>
               </div>
               <div className="description">
                 <h5>
