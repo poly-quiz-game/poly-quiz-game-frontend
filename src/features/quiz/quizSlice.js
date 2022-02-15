@@ -5,13 +5,16 @@ import quizApi from "api/quizApi";
 const initialState = {
   loading: false,
   list: [],
+  total: 0,
   quiz: {},
 };
 
-export const fetchQuizzes = createAsyncThunk("quiz/getAll", async () => {
-  const response = await quizApi.getAll();
-  return response.data;
-});
+export const fetchQuizzes = createAsyncThunk(
+  "quiz/getAll",
+  async ({ offset, limit, search }) => {
+    return await quizApi.getAll({ offset, limit, search });
+  }
+);
 
 export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
   const response = await quizApi.getOne(id);
@@ -31,7 +34,8 @@ const quizSlice = createSlice({
     });
     addCase(fetchQuizzes.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
+      state.list = action.payload.data;
+      state.total = action.payload.total;
     });
     addCase(fetchQuiz.fulfilled, (state, action) => {
       state.loading = false;
@@ -51,6 +55,7 @@ export const quizActions = quizSlice.actions;
 
 // Selectors
 export const selectQuizList = (state) => state.quiz.list;
+export const selectQuizTotal = (state) => state.quiz.total;
 export const selectQuiz = (state) => state.quiz.quiz;
 export const selectLoading = (state) => state.quiz.loading;
 
