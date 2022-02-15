@@ -11,7 +11,7 @@ const QuizFeature = () => {
     <Routes>
       <Route index element={<Quizzes />} />
       <Route path="create" element={<CreateQuiz />} />
-      <Route path="detail/:id" element={<CreateQuiz />} />
+      <Route path="detail/:id" element={<DetailQuiz />} />
       <Route path="update/:id" element={<CreateQuiz />} />
     </Routes>
   );
