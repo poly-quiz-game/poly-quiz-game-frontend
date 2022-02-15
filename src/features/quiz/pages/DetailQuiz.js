@@ -165,7 +165,7 @@ const DetailQuiz = ({ socket }) => {
           <Layout style={{ padding: "0 24px 24px", paddingLeft: "150px" }}>
             <div className="question">
               <h3>
-                Câu hỏi <span>({quiz.questions.length})</span>
+                Câu hỏi <span>(3)</span>
               </h3>
             </div>
             <Content
