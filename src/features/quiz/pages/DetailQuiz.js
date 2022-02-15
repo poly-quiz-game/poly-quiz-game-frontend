@@ -46,11 +46,11 @@ const IncorretIcocn = (
     <CloseCircleFilled />
   </span>
 );
-
+const QUESTION_LABELS = ['A','B','C','D']
 const DetailQuiz = ({ socket }) => {
   let params = useParams();
   const dispatch = useDispatch();
-
+  
   const quiz = useSelector(selectQuiz);
   const loading = useSelector(selectLoading);
 
@@ -60,18 +60,7 @@ const DetailQuiz = ({ socket }) => {
 
   return (
     <MainLayout>
-      {/* <div className="start-quiz">
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <>
-            <h2>{quiz.name}</h2>
-            <div>
-              <Button type="primary">Bắt đầu game</Button>
-              <br />
-              <br />
-            </div>
-
+      {/*
             {(quiz.questions || []).map((qt) => (
               <Card
                 key={qt._id}
@@ -123,7 +112,7 @@ const DetailQuiz = ({ socket }) => {
               </div>
               <div className="number-play">
                 <div className="content">
-                  <h4>1 lượt - 1 người chơi</h4>
+                  <h4>{quiz.reports?.length} lượt</h4>
                 </div>
                 <div className="button-icon">
                   <div>
@@ -162,7 +151,7 @@ const DetailQuiz = ({ socket }) => {
           <Layout style={{ padding: "0 24px 24px", paddingLeft: "150px" }}>
             <div className="question">
               <h3>
-                Câu hỏi <span>(3)</span>
+                Câu hỏi <span>({quiz.questions?.length})</span>
               </h3>
             </div>
             <Content
@@ -173,10 +162,10 @@ const DetailQuiz = ({ socket }) => {
                 minHeight: 1000,
               }}
             >
-              {(quiz.questions || []).map((qt) => (<div className="quizquestion">
+              {(quiz.questions || []).map((qt,i) => (<div className="quizquestion">
                 <div className="quizzquestion-top">
                   <div className="quizquestion-left">
-                    <h4>1-Câu hỏi</h4>
+                    <h4>{i+1}-Câu hỏi</h4>
                     <h5>{qt.question}</h5>
                   </div>
                   <div className="quizquestion-right">
@@ -189,7 +178,7 @@ const DetailQuiz = ({ socket }) => {
                         marginRight: "20px",
                         display: "block",
                       }}
-                      src="https://dean2020.edu.vn/wp-content/uploads/2020/03/anh-cho-con.jpg"
+                      src={qt.image}
                     ></Image>
                     <Button
                     style={{
@@ -209,53 +198,23 @@ const DetailQuiz = ({ socket }) => {
                 </div>
                
                 <div className="quizzquestion-bottom">
-                {(qt.answers || []).map((as) => (
+                {(qt.answers || []).map((as,index) => (
                   <div className="answer">
                   <div className="answer-question">
                     <div className="answer-question-left">
-                      <h3>A</h3>
+                      <h3>{QUESTION_LABELS[index]}</h3>
                     </div>
                     <div className="answer-question-right">
                       <h4>{as}</h4>
                     </div>
                   </div>
-                  <div className="answer-icon"><CheckCircleFilled/></div>
+                  <div className="answer-icon">{
+                          qt.correctAnswer === index
+                            ? CorrectIcon
+                            : IncorretIcocn
+                        }</div>
                 </div>
                 ))}
-                  
-                  {/* <div className="answer">
-                    <div className="answer-question">
-                      <div className="answer-question-left">
-                        <h3>B</h3>
-                      </div>
-                      <div className="answer-question-right">
-                        <h4>Con Mèo</h4>
-                      </div>
-                    </div>
-                    <div className="answer-icon"><CloseCircleFilled/></div>
-                  </div>
-                  <div className="answer">
-                    <div className="answer-question">
-                      <div className="answer-question-left">
-                        <h3>C</h3>
-                      </div>
-                      <div className="answer-question-right">
-                        <h4>Con Lợn</h4>
-                      </div>
-                    </div>
-                    <div className="answer-icon"><CloseCircleFilled/></div>
-                  </div>
-                  <div className="answer">
-                    <div className="answer-question">
-                      <div className="answer-question-left">
-                        <h3>D</h3>
-                      </div>
-                      <div className="answer-question-right">
-                        <h4>Con Gà</h4>
-                      </div>
-                    </div>
-                    <div className="answer-icon"><CloseCircleFilled/></div>
-                  </div> */}
                 </div>
               </div>))}
               
