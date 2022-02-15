@@ -130,9 +130,6 @@ const DetailQuiz = ({ socket }) => {
                     <FaPencilAlt />
                   </div>
                   <div>
-                    <FaStar />
-                  </div>
-                  <div>
                     <FaEllipsisV />
                   </div>
                 </div>
