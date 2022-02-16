@@ -5,7 +5,7 @@ import { useSelector } from "react-redux";
 import { selectUser, logout } from "features/auth/authSlice";
 import { useDispatch } from "react-redux";
 import { ProfileOutlined } from "@ant-design/icons";
-
+import Icon, { StarOutlined } from "@ant-design/icons";
 import "./styles.scss";
 
 const { Header, Content } = Layout;
@@ -50,7 +50,7 @@ const MainLayout = ({ children }) => {
         <div className="main-menu">
           <Link to="/quiz">
             <div className="logo">
-              <img style={{width:"180px"}} src="/img/logo.png" />
+              <img style={{ width: "180px" }} src="/img/logo.png" />
             </div>
           </Link>
           <Menu
@@ -67,6 +67,28 @@ const MainLayout = ({ children }) => {
             <Menu.Item key="report" icon={<ProfileOutlined />}>
               <Link to="/report" onClick={() => setTab("report")}>
                 Báo cáo
+              </Link>
+            </Menu.Item>
+            <Menu.Item
+              key="update"
+              className="update-start"
+              style={{ marginLeft: "625px" }}
+            >
+              <Link to="" onClick={() => setTab("")}>
+                <StarOutlined />
+                Upadate
+              </Link>
+            </Menu.Item>
+            <Menu.Item
+              key="start"
+              className="update-start-n"
+              style={{ marginLeft: "auto" }}
+            >
+              <Link to="" onClick={() => setTab("")}>
+                <button style={{lineHeight:"23px"}}>
+                  <StarOutlined />
+                  Create
+                </button>
               </Link>
             </Menu.Item>
           </Menu>
