@@ -43,13 +43,13 @@ const QuestionBody = ({ question, onChangeQuestion }) => {
         <div className="question-body-image">
           <div className="image-container">
             <div className="image">
-              {question.image ? (
+              {question.image && !loading ? (
                 <>
                   <img src={question.image} />
                   <div className="image-actions">
-                    <label htmlFor="upload-image">
-                      <Button>Thay ảnh</Button>
-                    </label>
+                    <Button>
+                      <label htmlFor="upload-image">Thay ảnh</label>
+                    </Button>
                     <Button onClick={() => setQuestionImage("")}>Xoá</Button>
                   </div>
                 </>

@@ -18,6 +18,7 @@ const QuestionSettingModal = ({
   quiz,
   setQuiz,
   isShowSetting,
+  setIsShowSetting,
   submitCreateQuiz,
 }) => {
   const [imageData, setImageData] = useState({
@@ -49,6 +50,7 @@ const QuestionSettingModal = ({
       submitCreateQuiz({ ...values, ...imageData });
       return;
     }
+    setIsShowSetting(false);
     setQuiz({ ...values, ...imageData });
   };
 
@@ -84,9 +86,9 @@ const QuestionSettingModal = ({
               <>
                 <img src={imageData.coverImage} />
                 <div className="image-actions">
-                  <label htmlFor="upload-cover-image">
-                    <Button>Thay ảnh</Button>
-                  </label>
+                  <Button>
+                    <label htmlFor="upload-cover-image">Thay ảnh</label>
+                  </Button>
                   <Button
                     onClick={() =>
                       setImageData({ ...imageData, coverImage: "" })
