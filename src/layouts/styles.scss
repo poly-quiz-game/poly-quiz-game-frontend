@@ -18,6 +18,15 @@
     padding: 0 10px;
     cursor: pointer;
     transition: all 0.1s;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+
+    div {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
 
     &:hover {
       background-color: #eee;
@@ -40,13 +49,13 @@
   width: 130px;
   height: 31px;
 }
-.nav-list-quiz{
+.nav-list-quiz {
   padding-top: 10px;
 }
-.title-top-list-quiz{
+.title-top-list-quiz {
   margin-top: 10px;
-  span{
-    padding: 8px ;
+  span {
+    padding: 8px;
     background-color: white;
     border-radius: 5px;
   }
