@@ -6,11 +6,7 @@ import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 
 import { Layout, Menu, Breadcrumb } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
+
 
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;

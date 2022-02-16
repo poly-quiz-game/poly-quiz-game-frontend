@@ -476,3 +476,36 @@
     }
   }
 }
+.quizzes{
+  margin-left: 20px;
+  width: 100%;
+  margin-left: auto;
+  .quizzes-top-sreach{
+    display: flex;
+    .title-top-list-quiz{
+      padding-top: 17px;
+      margin-left: 20px;
+      span{
+        border: 1px solid black;
+        line-height: 10px;
+      }
+    }
+    .title-top-list-quizz{
+      margin-top: 20px;
+      margin-left: auto;
+      padding-left: 357px;
+    }
+    .search{
+      margin-top: 19px;
+    }
+    .quizzes-header{
+      margin-left: auto;
+    }
+  }
+}
+.main-quiz-all{
+  display: flex;
+}
+.next-page{
+  text-align: center;
+}
