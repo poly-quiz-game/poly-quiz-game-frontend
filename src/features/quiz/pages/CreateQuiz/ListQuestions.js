@@ -70,7 +70,7 @@ const ListQuestions = ({
                 <div
                   className="action-button delete-button"
                   onClick={(e) => {
-                    e.preventDefault();
+                    e.stopPropagation();
                     deleteQuestion(i);
                   }}
                 >

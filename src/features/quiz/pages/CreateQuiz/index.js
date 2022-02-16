@@ -9,7 +9,7 @@ import QuestionOption from "./QuestionOption";
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
 import QuizSettingModal from "./QuizSettingModal";
-import { fetchCreateQuiz, quizActions } from "../../../hostScreen/quizSlice";
+import { fetchCreateQuiz } from "../../../hostScreen/quizSlice";
 import ValidateQuizModal from "./ValidateQuizModal";
 
 const defaultQuestion = {
@@ -26,7 +26,12 @@ const quizzes = [
     type: "quiz",
     image:
       "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
-    answers: ["Lửa chùa", "Quiz Online", "Game online", "Một game thẻ bài"],
+    answers: [
+      "Tương tự lửa chùa",
+      "Quiz Online",
+      "Game online",
+      "Một game thẻ bài",
+    ],
     time: 20000,
     question: "Poly Quiz là gì?",
     correctAnswer: 1,
@@ -54,7 +59,8 @@ const quizzes = [
 const CreateQuiz = () => {
   const dispatch = useDispatch();
   const [activeQuestion, setActiveQuestion] = useState(0);
-  const [questions, setQuestions] = useState([defaultQuestion]);
+  // const [questions, setQuestions] = useState([defaultQuestion]);
+  const [questions, setQuestions] = useState(quizzes);
   const [isShowSetting, setIsShowSetting] = useState(false);
   const [quiz, setQuiz] = useState({
     name: "",
@@ -70,6 +76,7 @@ const CreateQuiz = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
+    console.log(questions, activeQuestion);
     const errs = questions.map((question) => {
       const err = {};
       if (!question.question) {
@@ -96,7 +103,8 @@ const CreateQuiz = () => {
 
   const deleteQuestion = (index) => {
     if (questions.length === 1) return;
-    if (activeQuestion === index) setActiveQuestion(activeQuestion - 1);
+    if (activeQuestion === index && activeQuestion > 0)
+      setActiveQuestion(activeQuestion - 1);
     setQuestions(questions.filter((q, i) => i !== index));
   };
 
