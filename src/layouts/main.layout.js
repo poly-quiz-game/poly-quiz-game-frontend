@@ -49,9 +49,16 @@ const MainLayout = ({ children }) => {
       <Header className="main-header">
         <div className="main-menu">
           <Link to="/quiz">
-            <div className="logo">Poly Quiz game</div>
+            <div className="logo">
+              <img style={{width:"180px"}} src="/img/logo.png" />
+            </div>
           </Link>
-          <Menu theme="light" mode="horizontal" defaultSelectedKeys={[tab]}>
+          <Menu
+            theme="light"
+            style={{ paddingLeft: "76px", marginLeft: "38px" }}
+            mode="horizontal"
+            defaultSelectedKeys={[tab]}
+          >
             <Menu.Item key="quiz" icon={PuzzleIcon}>
               <Link to="/quiz" onClick={() => setTab("quiz")}>
                 Quiz
