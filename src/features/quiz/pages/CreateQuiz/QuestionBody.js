@@ -1,9 +1,34 @@
-import React from "react";
-import { Button, Input, Switch } from "antd";
+import React, { useState } from "react";
+import { Button, Input } from "antd";
+import { FileImageOutlined } from "@ant-design/icons";
+import { handleUploadImage } from "../../../../utils";
 
 const QUESTION_LABELS = ["A", "B", "C", "D"];
 
 const QuestionBody = ({ question, onChangeQuestion }) => {
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmitFile = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    try {
+      setLoading(true);
+      const imageUrl = await handleUploadImage(file);
+      setQuestionImage(imageUrl);
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const setQuestionImage = (imageUrl) => {
+    onChangeQuestion({
+      ...question,
+      image: imageUrl,
+    });
+  };
+
   return (
     <div className="question-body-container">
       <div className="question-body">
@@ -16,16 +41,33 @@ const QuestionBody = ({ question, onChangeQuestion }) => {
           />
         </div>
         <div className="question-body-image">
-          <div className="time">
-            <div className="time-value">
-              Thời gian: {question.time / 1000} giây
-            </div>
-          </div>
-          <div className="image">
-            <img src="https://i.picsum.photos/id/859/632/336.jpg?hmac=NHCRpqHlkp1TFiYXsrC0BLfgKsnQcJ0yo2ZwunPOreg" />
-            <div className="image-actions">
-              <Button>Thay ảnh</Button>
-              <Button>Xoá</Button>
+          <div className="image-container">
+            <div className="image">
+              {question.image ? (
+                <>
+                  <img src={question.image} />
+                  <div className="image-actions">
+                    <label htmlFor="upload-image">
+                      <Button>Thay ảnh</Button>
+                    </label>
+                    <Button onClick={() => setQuestionImage("")}>Xoá</Button>
+                  </div>
+                </>
+              ) : (
+                <label htmlFor="upload-image">
+                  <div className="image-upload-button">
+                    <FileImageOutlined />
+                    <p>{!loading ? "Thêm ảnh" : "Đang tải ảnh lên..."}</p>
+                  </div>
+                </label>
+              )}
+              <input
+                id="upload-image"
+                type="file"
+                name="image"
+                onChange={handleSubmitFile}
+                className="form-input"
+              />
             </div>
           </div>
         </div>
@@ -52,16 +94,31 @@ const QuestionBody = ({ question, onChangeQuestion }) => {
                 />
               </div>
               <div className="correct-checkbox">
-                Câu trả lời đúng:{" "}
-                <Switch
-                  checked={question.correctAnswer === index}
-                  onChange={(value) =>
+                <button
+                  data-functional-selector="question-answer__toggle-button"
+                  className={`correct-answer-check-button ${
+                    question.correctAnswer === index ? "checked" : ""
+                  }`}
+                  onClick={() =>
                     onChangeQuestion({
                       ...question,
-                      correctAnswer: value ? index : null,
+                      correctAnswer:
+                        question.correctAnswer !== index ? index : null,
                     })
                   }
-                />
+                >
+                  {question.correctAnswer === index && (
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 448 512"
+                    >
+                      <path
+                        fill="#fff"
+                        d="M438.6 105.4C451.1 117.9 451.1 138.1 438.6 150.6L182.6 406.6C170.1 419.1 149.9 419.1 137.4 406.6L9.372 278.6C-3.124 266.1-3.124 245.9 9.372 233.4C21.87 220.9 42.13 220.9 54.63 233.4L159.1 338.7L393.4 105.4C405.9 92.88 426.1 92.88 438.6 105.4H438.6z"
+                      />
+                    </svg>
+                  )}
+                </button>
               </div>
             </div>
           ))}

@@ -94,9 +94,11 @@ const ListQuestions = ({
                 </div>
                 <div className="question-image-content">
                   <div className="question-time">{question.time / 1000}</div>
-                  <div className="question-image">
-                    <div className="image">
-                      <img src="https://i.picsum.photos/id/89/632/336.jpg?hmac=XRJoBRQHxPyli5h3rHPaHXVt0EeD5mX-egUrJfef_XE" />
+                  <div className="question-preview-image-container">
+                    <div className="question-preview-image">
+                      <div className="image">
+                        <img src={question.image} />
+                      </div>
                     </div>
                   </div>
                 </div>

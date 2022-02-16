@@ -1,14 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import _ from "lodash";
+import { Button, Modal } from "antd";
+import { Link } from "react-router-dom";
+import { useNavigate } from "react-router";
 
 import QuestionOption from "./QuestionOption";
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
 import QuizSettingModal from "./QuizSettingModal";
-import { Button } from "antd";
-import { fetchCreateQuiz } from "../../../hostScreen/quizSlice";
-import { useNavigate } from "react-router";
-import { Link } from "react-router-dom";
+import { fetchCreateQuiz, quizActions } from "../../../hostScreen/quizSlice";
 import ValidateQuizModal from "./ValidateQuizModal";
 
 const defaultQuestion = {
@@ -20,13 +21,49 @@ const defaultQuestion = {
   correctAnswer: null,
 };
 
+const quizzes = [
+  {
+    type: "quiz",
+    image:
+      "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
+    answers: ["Lửa chùa", "Quiz Online", "Game online", "Một game thẻ bài"],
+    time: 20000,
+    question: "Poly Quiz là gì?",
+    correctAnswer: 1,
+  },
+  {
+    type: "quiz",
+    image:
+      "https://res.cloudinary.com/poly-quiz/image/upload/v1644943362/um2zps8vmja8z9a6wdyo.jpg",
+    answers: ["Đáp án sai", "Sai", "Cái này đúng", "Sai nhé!"],
+    time: 20000,
+    question: "Câu hỏi thứ hai",
+    correctAnswer: 2,
+  },
+  {
+    type: "quiz",
+    image:
+      "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
+    answers: ["Đáp án đúng", "Sai bét", "Cái này ko đúng", "Sai nhé!"],
+    time: 20000,
+    question: "Câu hỏi thứ ba",
+    correctAnswer: 0,
+  },
+];
+
 const CreateQuiz = () => {
   const dispatch = useDispatch();
   const [activeQuestion, setActiveQuestion] = useState(0);
   const [questions, setQuestions] = useState([defaultQuestion]);
   const [isShowSetting, setIsShowSetting] = useState(false);
-  const [quiz, setQuiz] = useState({ name: "" });
-  const [input, setInput] = useState();
+  const [quiz, setQuiz] = useState({
+    name: "",
+    coverImage: "",
+    backgroundImage: "",
+    needLogin: false,
+    music: "",
+    numberOfPlayer: 10,
+  });
   const [isShowValidateModal, setIsShowValidateModal] = useState(false);
   const [errors, setErrors] = useState([]);
 
@@ -85,18 +122,22 @@ const CreateQuiz = () => {
     );
   };
 
-  const submitQuestions = async ({ name }) => {
-    if (errors.length) {
+  const submitCreateQuiz = async (customData = {}) => {
+    if (errors.filter((e) => !_.isEmpty(e)).length) {
       setIsShowValidateModal(true);
       return;
     }
-    if (!quiz.name && !name) {
+    if (!quiz.name && !customData.name) {
       setIsShowSetting("save");
       return;
     }
-    const newQuiz = { name: name || quiz.name, questions };
-    await dispatch(fetchCreateQuiz(newQuiz));
-    navigate("/quiz");
+    const newQuiz = { ...quiz, questions, ...customData };
+    try {
+      await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+      navigate("/quiz");
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -121,7 +162,7 @@ const CreateQuiz = () => {
             <Link to="/quiz">
               <Button>Thoát</Button>
             </Link>
-            <Button type="primary" onClick={submitQuestions}>
+            <Button type="primary" onClick={() => submitCreateQuiz()}>
               Lưu
             </Button>
           </div>
@@ -148,14 +189,27 @@ const CreateQuiz = () => {
           deleteQuestion={deleteQuestion}
         />
       </div>
-      <QuizSettingModal
-        isShowSetting={isShowSetting}
-        setIsShowSetting={setIsShowSetting}
-        submitQuestions={submitQuestions}
-        input={input}
-        setInput={setInput}
-        setQuiz={setQuiz}
-      />
+      <Modal
+        title="Cài đặt Quiz"
+        visible={isShowSetting}
+        onCancel={() => setIsShowSetting(false)}
+        okButtonProps={{
+          form: "quizSettingForm",
+          key: "submit",
+          htmlType: "submit",
+        }}
+        className="quiz-setting-modal"
+        okText="Lưu"
+        cancelText="Đóng"
+      >
+        <QuizSettingModal
+          isShowSetting={isShowSetting}
+          setIsShowSetting={setIsShowSetting}
+          submitCreateQuiz={submitCreateQuiz}
+          quiz={quiz}
+          setQuiz={setQuiz}
+        />
+      </Modal>
       <ValidateQuizModal
         isShowValidateModal={isShowValidateModal}
         setIsShowValidateModal={setIsShowValidateModal}

@@ -2,7 +2,7 @@ import axios from "axios";
 
 // const baseURL = process.env.ENDPOINT;
 // const baseURL = "http://165.22.53.167:3005/api";
-const baseURL = "http://localhost:3005/api";
+export const baseURL = process.env.ENDPOINT || "http://localhost:3005/api";
 
 const axiosClient = axios.create({
   baseURL,
@@ -33,6 +33,7 @@ axiosClient.interceptors.response.use(
     return response.data;
   },
   function (error) {
+    console.log(error);
     const { status } = error.toJSON();
     if (status === 401) {
       // return console.log("401");
