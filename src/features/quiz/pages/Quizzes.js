@@ -15,7 +15,7 @@ import {
 
 import "./styles.scss";
 
-const LIMIT = 10;
+const LIMIT = 2;
 
 const Quizzes = () => {
   const [offset, setOffset] = useState(0);
