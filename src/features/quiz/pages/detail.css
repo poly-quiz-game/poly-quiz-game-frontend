@@ -43,11 +43,6 @@ table {
     justify-content: left;
     align-items: center;
   }
-  .button-start h3{
-    color: #fff;
-   
-    font-size: 14px;
-  }
   .button-atribute h3{
     color: #111111;
    
@@ -88,6 +83,9 @@ table {
     font-weight: 500;
    
   }
+  .quiz-img{
+    padding-top: 20px;
+  }
   .quizquestion{
     background-color: #fff;
     border-radius: 20px;
@@ -115,11 +113,11 @@ table {
     display:flex;
     justify-content: space-between;
     align-items: center;
-    border-bottom: 1px solid black;
+    border-bottom: 1px solid #EAE2E2;
   }
   .quizzquestion-bottom{
     width: 100%;
-    border-top: 1px solid black;
+    border-top: 1px solid #EAE2E2;
   }
   .answer-question{
     padding-left: 20px;
