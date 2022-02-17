@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import moment from "moment";
 
-import { Skeleton, Card, Button, Pagination, Input } from "antd";
+import { Skeleton, Card, Button, Pagination, Input, Image } from "antd";
 
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
@@ -48,12 +49,13 @@ const Quizzes = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        {loading ? (
-          <Skeleton />
-        ) : (
-          <div className="list-quiz">
-            {quizzes.map((quiz) => (
+        <div className="list-quiz">
+          {loading ? (
+            <Skeleton />
+          ) : (
+            quizzes.map((quiz) => (
               <Card
+                className="quiz-item"
                 key={quiz._id}
                 title={quiz.name}
                 hoverable
@@ -68,21 +70,28 @@ const Quizzes = () => {
                 ]}
                 style={{ marginBottom: "15px" }}
               >
-                <p>8 câu hỏi</p>
-                <p>Ngày tạo: 20/01/2022 08:35</p>
-                <span>3 lượt chơi</span>
+                <p>{quiz.questions.length} câu hỏi</p>
+                <p>
+                  Ngày tạo: {moment(quiz.updatedAt).format("DD/MM/YYYY HH:mm")}
+                </p>
+                <span>{quiz?.reports?.length || 0} lượt chơi</span>
+                <Image
+                  className="cover-image"
+                  src={quiz.coverImage}
+                  width="200px"
+                />
               </Card>
-            ))}
-            <Pagination
-              defaultCurrent={1}
-              pageSize={LIMIT}
-              current={current}
-              total={total}
-              onChange={(val) => setOffset((val - 1) * LIMIT)}
-            />
-          </div>
-        )}
-        <br />
+            ))
+          )}
+          <Pagination
+            hideOnSinglePage
+            defaultCurrent={1}
+            pageSize={LIMIT}
+            current={current}
+            total={total}
+            onChange={(val) => setOffset((val - 1) * LIMIT)}
+          />
+        </div>
       </div>
     </MainLayout>
   );
