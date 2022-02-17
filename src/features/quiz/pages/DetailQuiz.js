@@ -141,7 +141,7 @@ const DetailQuiz = ({ socket }) => {
               }}
             >
               {(quiz.questions || []).map((qt, i) => (
-                <div className="quizquestion">
+                <div className="quizquestion" key={qt._id}>
                   <div className="quizzquestion-top">
                     <div className="quizquestion-left">
                       <h4>{i + 1}-Câu hỏi</h4>
@@ -181,7 +181,7 @@ const DetailQuiz = ({ socket }) => {
                   </div>
                   <div className="quizzquestion-bottom">
                     {(qt.answers || []).map((as, index) => (
-                      <div className="answer">
+                      <div className="answer" key={index}>
                         <div className="answer-question">
                           <div className="answer-question-left">
                             <h3>{QUESTION_LABELS[index]}</h3>

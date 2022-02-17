@@ -11,8 +11,8 @@ const initialState = {
 
 export const fetchQuizzes = createAsyncThunk(
   "quiz/getAll",
-  async ({ offset, limit, search }) => {
-    return await quizApi.getAll({ offset, limit, search });
+  async ({ offset, limit, search, sortBy }) => {
+    return await quizApi.getAll({ offset, limit, search, sortBy });
   }
 );
 

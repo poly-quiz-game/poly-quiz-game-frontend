@@ -14,7 +14,7 @@ import {
   fetchReports,
 } from "../reportSlice";
 
-const LIMIT = 2;
+const LIMIT = 5;
 
 const Report = () => {
   const dispatch = useDispatch();
@@ -62,9 +62,9 @@ const Report = () => {
           <div className="report-item" key={r._id}>
             <Row>
               <img
-                width={150}
-                height={130}
-                src={r.quiz.coverImage || "quiz.jpg"}
+                width={120}
+                height={100}
+                src={r.quiz.coverImage || "report.jpg"}
               />
               <Row style={{ marginLeft: "20px" }}>
                 <Col>
