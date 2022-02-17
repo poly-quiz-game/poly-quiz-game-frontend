@@ -84,6 +84,7 @@ const Quizzes = () => {
             ))
           )}
           <Pagination
+            hideOnSinglePage
             defaultCurrent={1}
             pageSize={LIMIT}
             current={current}

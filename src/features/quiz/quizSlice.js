@@ -34,7 +34,7 @@ const quizSlice = createSlice({
     });
     addCase(fetchQuizzes.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload.data;
+      state.list = action.payload.quizzes;
       state.total = action.payload.total;
     });
     addCase(fetchQuiz.fulfilled, (state, action) => {
