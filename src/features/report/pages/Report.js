@@ -111,12 +111,15 @@ const Report = () => {
             scrollableTarget="reportsDiv"
           >
             <List
+              bordered
               dataSource={
                 reports.length ? reports : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
               }
               renderItem={(report) =>
                 loading ? (
-                  <Skeleton avatar paragraph={{ rows: 1 }} />
+                  <List.Item>
+                    <Skeleton avatar paragraph={{ rows: 1 }} />
+                  </List.Item>
                 ) : (
                   <List.Item
                     key={report.id}
