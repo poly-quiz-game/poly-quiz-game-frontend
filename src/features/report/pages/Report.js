@@ -1,8 +1,15 @@
-import React, { useEffect, useState } from "react";
-import moment from "moment";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Col, Input, Row, Select } from "antd";
-import { Pagination } from "antd";
+import moment from "moment";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+import { Skeleton, List, Space, Divider, Input, Select, Avatar } from "antd";
+import {
+  CalendarOutlined,
+  QuestionCircleOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 
@@ -12,30 +19,48 @@ import {
   selectReportTotal,
   selectLoading,
   fetchReports,
+  reportActions,
 } from "../reportSlice";
 
-const LIMIT = 5;
+const LIMIT = 20;
+
+const IconText = ({ icon, text }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
 
 const Report = () => {
+  const ref = useRef();
+  const [metadata, setMetadata] = useState({
+    offset: 0,
+    limit: LIMIT,
+    search: "",
+    sortBy: "-createdAt",
+  });
+
   const dispatch = useDispatch();
 
-  const [sortBy, setSortBy] = useState("-createdAt");
-  const [offset, setOffset] = useState(0);
-  const [search, setSearch] = useState("");
-
   const reports = useSelector(selectReportList);
-  const total = useSelector(selectReportTotal);
   const loading = useSelector(selectLoading);
+  const total = useSelector(selectReportTotal);
 
   useEffect(() => {
-    dispatch(fetchReports({ sortBy, search, offset, limit: LIMIT }));
-  }, [dispatch, sortBy, search]);
-
-  const current = offset / LIMIT + 1;
+    if (
+      ref?.current?.sortBy !== metadata.sortBy ||
+      ref?.current?.search !== metadata.search
+    ) {
+      dispatch(reportActions.resetReports()); // reset quizzes
+    }
+    console.log("metadata", metadata);
+    dispatch(fetchReports(metadata));
+    ref.current = metadata;
+  }, [dispatch, metadata]);
 
   return (
     <MainLayout>
-      <div className="list-report">
+      <div className="reports" id="reportsDiv">
         <div className="header">
           <div className="title-top-list-quiz">
             <i className="fas fa-list"></i> {total} bản ghi
@@ -43,82 +68,109 @@ const Report = () => {
           <div className="right-header">
             <div className="search">
               <Input
-                size="large"
                 placeholder="Tìm kiếm"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
+                value={metadata.search}
+                onChange={(e) =>
+                  setMetadata({
+                    ...metadata,
+                    search: e.target.value,
+                  })
+                }
               />
             </div>
 
             <div className="report-sort">
-              <Select value={sortBy} onChange={setSortBy} size="large">
+              <Select
+                value={metadata.sortBy}
+                onChange={(value) =>
+                  setMetadata({
+                    ...metadata,
+                    offset: 0,
+                    sortBy: value,
+                  })
+                }
+              >
                 <Select.Option value="-createdAt">Mới nhất</Select.Option>
                 <Select.Option value="+createdAt">Cũ nhất</Select.Option>
               </Select>
             </div>
           </div>
         </div>
-        {reports.map((r) => (
-          <div className="report-item" key={r._id}>
-            <Row>
-              <img
-                width={120}
-                height={100}
-                src={r.quiz.coverImage || "report.jpg"}
-              />
-              <Row style={{ marginLeft: "20px" }}>
-                <Col>
-                  <h2>{r.quiz.name}</h2>
-                </Col>
-              </Row>
-              <div className="nav-list-quiz-one">
-                <Row className="quiz">
-                  <div>
-                    <span>
-                      <i className="fas fa-user"></i> {r?.players?.length} nguời
-                      tham gia
-                    </span>
-                  </div>
-                  <div>
-                    <span className="question">
-                      <i className="fas fa-question"></i> {r?.questions?.length}{" "}
-                      câu hỏi
-                    </span>
-                  </div>
-                  <div>
-                    <span className="question">
-                      <i className="fas fa-calendar-check"></i>{" "}
-                      {moment(r.createdAt).format("DD/MM/YYYY - HH:mm")}
-                    </span>
-                  </div>
-                </Row>
-                <Row className="quiz-detail">
-                  <div>
-                    <Button type="Button" className="excel">
-                      <i className="far fa-file-excel"></i> Xuất file excel
-                    </Button>
-                  </div>
-                  <div>
-                    <Link to={`/report/detail/${r._id}`}>
-                      <Button className="detail-btn">
-                        <i className="fas fa-info-circle"></i> Chi tiết
-                      </Button>
-                    </Link>
-                  </div>
-                </Row>
-              </div>
-            </Row>
-          </div>
-        ))}
-        <div className="nextPage">
-          <Pagination
-            hideOnSinglePage
-            defaultCurrent={1}
-            pageSize={LIMIT}
-            current={current}
-            total={total}
-            onChange={(val) => setOffset((val - 1) * LIMIT)}
-          />
+        <div className="list-report">
+          <InfiniteScroll
+            dataLength={reports.length}
+            next={() =>
+              setMetadata({
+                ...metadata,
+                offset: reports.length,
+              })
+            }
+            hasMore={reports.length < total}
+            loader={<Skeleton paragraph={{ rows: 1 }} active />}
+            endMessage={!loading && <Divider plain>Hết</Divider>}
+            scrollableTarget="reportsDiv"
+          >
+            <List
+              dataSource={
+                reports.length ? reports : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              }
+              renderItem={(report) =>
+                loading ? (
+                  <Skeleton avatar paragraph={{ rows: 1 }} />
+                ) : (
+                  <List.Item
+                    key={report.id}
+                    actions={[
+                      <div
+                        className="report-players"
+                        key="list-vertical-user-o"
+                      >
+                        <IconText
+                          icon={UserOutlined}
+                          text={report?.players?.length}
+                        />
+                      </div>,
+                      <div
+                        className="report-questions"
+                        key="list-vertical-like-o"
+                      >
+                        <IconText
+                          icon={QuestionCircleOutlined}
+                          text={report?.questions?.length}
+                        />
+                      </div>,
+                      <div
+                        className="report-createdAt"
+                        key="list-vertical-message"
+                      >
+                        <IconText
+                          icon={CalendarOutlined}
+                          text={moment(report.createdAt).format("DD-MM")}
+                        />
+                      </div>,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          src={report?.quiz?.coverImage || "report.jpg"}
+                        />
+                      }
+                      title={
+                        <Link
+                          to={`/report/detail/${report._id}`}
+                          key={report._id}
+                          className="quiz-item-link"
+                        >
+                          {report.name}{" "}
+                        </Link>
+                      }
+                    />
+                  </List.Item>
+                )
+              }
+            />
+          </InfiniteScroll>
         </div>
       </div>
     </MainLayout>

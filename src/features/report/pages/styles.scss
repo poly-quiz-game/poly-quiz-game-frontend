@@ -1,14 +1,20 @@
-.list-report {
-  max-width: 1000px;
-  width: 80%;
-  margin: auto;
-  min-height: 100vh;
+.reports {
+  overflow: auto;
+  height: calc(100vh - 64px);
 
+  .list-report {
+    max-width: 1000px;
+    width: 80%;
+    margin: auto;
+  }
   .header {
     display: flex;
     padding: 20px 0;
     align-items: center;
     justify-content: space-between;
+    max-width: 1000px;
+    width: 80%;
+    margin: auto;
     .right-header {
       display: flex;
       align-items: center;
@@ -16,6 +22,24 @@
     .search {
       margin-right: 8px;
     }
+  }
+
+  .report-players {
+    // font-weight: bold;
+    color: #555;
+    // color: #e21b3c;
+    span {
+    }
+  }
+  .report-questions {
+    // font-weight: bold;
+    color: #555;
+    // color: #d89e00;
+  }
+  .report-createdAt {
+    // font-weight: bold;
+    color: #555;
+    // color: #1368ce;
   }
 
   .report-item {

@@ -25,7 +25,12 @@ export const fetchReport = createAsyncThunk("report/getOne", async (id) => {
 const reportSlice = createSlice({
   name: "report",
   initialState,
-  reducers: {},
+  reducers: {
+    resetReports: (state) => {
+      state.list = [];
+      state.total = 0;
+    },
+  },
   extraReducers: ({ addCase }) => {
     //   Loading
     addCase(fetchReports.pending, (state) => {
@@ -38,7 +43,7 @@ const reportSlice = createSlice({
     //   Success
     addCase(fetchReports.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload.reports;
+      state.list = [...state.list, ...action.payload.reports];
       state.total = action.payload.total;
     });
     addCase(fetchReport.fulfilled, (state, action) => {

@@ -1,8 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import moment from "moment";
-
-import { Skeleton, Card, Button, Pagination, Input, Image, Select } from "antd";
+import InfiniteScroll from "react-infinite-scroll-component";
+import {
+  PlayCircleOutlined,
+  QuestionCircleOutlined,
+  CalendarOutlined,
+} from "@ant-design/icons";
+import { Skeleton, List, Button, Divider, Input, Select } from "antd";
 
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
@@ -12,16 +17,22 @@ import {
   selectQuizList,
   selectLoading,
   selectQuizTotal,
+  quizActions,
 } from "../quizSlice";
 
 import "./styles.scss";
 
-const LIMIT = 5;
+const LIMIT = 20;
 
 const Quizzes = () => {
-  const [offset, setOffset] = useState(0);
-  const [search, setSearch] = useState("");
-  const [sortBy, setSortBy] = useState("-createdAt");
+  const ref = useRef();
+
+  const [metadata, setMetadata] = useState({
+    offset: 0,
+    limit: LIMIT,
+    search: "",
+    sortBy: "-createdAt",
+  });
 
   const dispatch = useDispatch();
 
@@ -30,83 +41,112 @@ const Quizzes = () => {
   const total = useSelector(selectQuizTotal);
 
   useEffect(() => {
-    dispatch(fetchQuizzes({ search, sortBy, offset, limit: LIMIT }));
-  }, [dispatch, offset, search, sortBy]);
-
-  const current = offset / LIMIT + 1;
+    if (
+      ref?.current?.sortBy !== metadata.sortBy ||
+      ref?.current?.search !== metadata.search
+    ) {
+      dispatch(quizActions.resetQuizzes()); // reset quizzes
+    }
+    dispatch(fetchQuizzes(metadata));
+    ref.current = metadata;
+  }, [dispatch, metadata]);
 
   return (
     <MainLayout>
-      <div className="quizzes">
+      <div className="quizzes" id="quizzesDiv">
         <div className="quizzes-header">
+          <div className="quizzes-search">
+            <Link to="create">
+              <Button type="primary">Tạo mới</Button>
+            </Link>
+          </div>
           <div className="quizzes-search">
             <Input
               placeholder="Tìm kiếm"
-              value={search}
-              size="large"
-              onChange={(e) => setSearch(e.target.value)}
+              value={metadata.search}
+              onChange={(e) =>
+                setMetadata({
+                  ...metadata,
+                  search: e.target.value,
+                })
+              }
             />
-            <Link to="create">
-              <Button type="primary" size="large">
-                Tạo quiz
-              </Button>
-            </Link>
-          </div>
-          <div className="quizzes-sort">
-            <Select value={sortBy} onChange={setSortBy} size="large">
+            <Select
+              value={metadata.sortBy}
+              onChange={(value) =>
+                setMetadata({
+                  ...metadata,
+                  offset: 0,
+                  sortBy: value,
+                })
+              }
+            >
               <Select.Option value="-createdAt">Mới nhất</Select.Option>
               <Select.Option value="+createdAt">Cũ nhất</Select.Option>
             </Select>
           </div>
         </div>
         <div className="list-quiz">
-          {loading ? (
-            <Skeleton />
-          ) : (
-            quizzes.map((quiz) => (
-              <Link
-                to={`/detail/${quiz._id}`}
-                key={quiz._id}
-                className="quiz-item-link"
-              >
-                <div className="quiz-item" key={quiz._id}>
-                  <div className="quiz-item-image">
-                    <img src={quiz.coverImage || "quiz.png"} />
-                  </div>
-                  <div className="quiz-item-content">
-                    <h2 className="quiz-item-name">{quiz.name}</h2>
-                    <div className="quiz-item-info">
-                      <div>
-                        <i className="fas fa-play"></i> {quiz?.reports?.length}{" "}
-                        lượt chơi
+          <InfiniteScroll
+            dataLength={quizzes.length}
+            next={() =>
+              setMetadata({
+                ...metadata,
+                offset: quizzes.length,
+              })
+            }
+            hasMore={quizzes.length < total}
+            loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
+            endMessage={!loading && <Divider plain>Hết</Divider>}
+            scrollableTarget="quizzesDiv"
+          >
+            <List
+              dataSource={
+                quizzes.length ? quizzes : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              }
+              renderItem={(quiz) =>
+                loading ? (
+                  <Skeleton avatar paragraph={{ rows: 1 }} />
+                ) : (
+                  <Link
+                    to={`/quiz/detail/${quiz._id}`}
+                    key={quiz._id}
+                    className="quiz-item-link"
+                  >
+                    <div className="quiz-item" key={quiz._id}>
+                      <div className="quiz-item-image">
+                        <img src={quiz.coverImage || "quiz.png"} />
                       </div>
-                      <div>
-                        <i className="fas fa-question"></i>
-                        {quiz?.questions?.length} câu hỏi
+                      <div className="quiz-item-content">
+                        <h3 className="quiz-item-name">{quiz.name}</h3>
+                        <div className="quiz-item-info">
+                          <div>
+                            <PlayCircleOutlined /> {quiz?.reports?.length} lượt
+                            chơi
+                          </div>
+                          <div>
+                            <QuestionCircleOutlined /> {quiz?.questions?.length}{" "}
+                            câu hỏi
+                          </div>
+                          <div>
+                            <CalendarOutlined />{" "}
+                            {moment(quiz.createdAt).format(
+                              "DD/MM/YYYY - HH:mm"
+                            )}
+                          </div>
+                        </div>
                       </div>
-                      <div>
-                        <i className="fas fa-calendar-check"></i>{" "}
-                        {moment(quiz.createdAt).format("DD/MM/YYYY - HH:mm")}
+                      <div className="quiz-item-actions">
+                        <Button>
+                          <Link to={`/host/start/${quiz._id}`}>Bắt đầu</Link>
+                        </Button>
                       </div>
                     </div>
-                  </div>
-                  <div className="quiz-item-actions">
-                    <Button>
-                      <Link to={`/host/start/${quiz._id}`}>Bắt đầu</Link>
-                    </Button>
-                  </div>
-                </div>
-              </Link>
-            ))
-          )}
-          <Pagination
-            hideOnSinglePage
-            defaultCurrent={1}
-            pageSize={LIMIT}
-            current={current}
-            total={total}
-            onChange={(val) => setOffset((val - 1) * LIMIT)}
-          />
+                  </Link>
+                )
+              }
+            />
+          </InfiniteScroll>
         </div>
       </div>
     </MainLayout>

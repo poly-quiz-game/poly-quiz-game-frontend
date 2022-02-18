@@ -1,12 +1,13 @@
 .quizzes {
-  max-width: 1000px;
-  width: 80%;
-  margin: auto;
+  overflow: auto;
+  height: calc(100vh - 64px);
   .quizzes-header {
     display: flex;
     justify-content: space-between;
     padding-top: 20px;
-    margin-bottom: 10px;
+    max-width: 1000px;
+    width: 80%;
+    margin: 0 auto 10px;
   }
   .quizzes-search {
     display: flex;
@@ -17,26 +18,28 @@
 
   .list-quiz {
     margin: auto;
-    padding-bottom: 200px;
+    max-width: 1000px;
+    width: 80%;
+    margin: auto;
     .quiz-item-link {
       color: unset;
     }
     .quiz-item {
       position: relative;
-      padding: 20px;
-      background-color: #f5f5f5;
-      margin-bottom: 10px;
+      padding: 10px;
+      // background-color: #f5f5f5;
+      margin-bottom: 8px;
       border-radius: 4px;
-      border: 1px solid #ddd;
+      border: 1px solid #f0f0f0;
       display: flex;
       &:hover {
-        background-color: #f0f0f0;
-        box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+        // background-color: #f0f0f0;
+        // box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
       }
       .quiz-item-image {
         margin-right: 10px;
         img {
-          width: 200px;
+          width: 100px;
         }
       }
       .quiz-item-content {
