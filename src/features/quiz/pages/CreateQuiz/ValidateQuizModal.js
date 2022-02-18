@@ -30,7 +30,8 @@ const ValidateQuizModal = ({
               <div className="question-error-content">
                 <div className="question-error-index">Câu hỏi {index + 1}</div>
                 <div className="question-error-title">
-                  {questions[index].question || "Chưa nhập câu hỏi"}
+                  {(questions[index] && questions[index].question) ||
+                    "Chưa nhập câu hỏi"}
                 </div>
               </div>
               <Button
