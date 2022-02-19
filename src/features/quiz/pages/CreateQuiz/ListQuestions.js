@@ -124,7 +124,7 @@ const ListQuestions = ({
                             </div>
                             <div className="question-image-content">
                               <div className="question-time">
-                                {question.time / 1000}
+                                {question.timeLimit / 1000}
                               </div>
                               <div className="question-preview-image-container">
                                 <div className="question-preview-image">

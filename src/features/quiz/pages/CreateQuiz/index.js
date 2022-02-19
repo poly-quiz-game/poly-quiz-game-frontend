@@ -16,7 +16,7 @@ const defaultQuestion = {
   type: "quiz",
   image: "",
   answers: ["", "", "", ""],
-  time: 20000,
+  timeLimit: 20000,
   question: "",
   correctAnswer: null,
 };
@@ -32,7 +32,7 @@ const quizzes = [
       "Game online",
       "Một game thẻ bài",
     ],
-    time: 20000,
+    timeLimit: 20000,
     question: "Poly Quiz là gì?",
     correctAnswer: 1,
   },
@@ -41,7 +41,7 @@ const quizzes = [
     image:
       "https://res.cloudinary.com/poly-quiz/image/upload/v1644943362/um2zps8vmja8z9a6wdyo.jpg",
     answers: ["Đáp án sai", "Sai", "Cái này đúng", "Sai nhé!"],
-    time: 20000,
+    timeLimit: 20000,
     question: "Câu hỏi thứ hai",
     correctAnswer: 2,
   },
@@ -50,7 +50,7 @@ const quizzes = [
     image:
       "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
     answers: ["Đáp án đúng", "Sai bét", "Cái này ko đúng", "Sai nhé!"],
-    time: 20000,
+    timeLimit: 20000,
     question: "Câu hỏi thứ ba",
     correctAnswer: 0,
   },
@@ -119,7 +119,7 @@ const CreateQuiz = () => {
   const onChangeQuestionTime = (value) => {
     setQuestions(
       questions.map((q, index) =>
-        index === activeQuestion ? { ...questions[index], time: value } : q
+        index === activeQuestion ? { ...questions[index], timeLimit: value } : q
       )
     );
   };

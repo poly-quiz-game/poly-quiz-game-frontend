@@ -15,7 +15,6 @@ import MainLayout from "layouts/main.layout";
 import {
   fetchQuizzes,
   selectQuizList,
-  selectLoading,
   selectQuizTotal,
   quizActions,
 } from "../quizSlice";
@@ -31,14 +30,28 @@ const Quizzes = () => {
     offset: 0,
     limit: LIMIT,
     search: "",
-    sortBy: "-createdAt",
+    sortDirection: "desc",
+    sortField: "createdAt",
+  });
+
+  const [loadingState, setLoadingState] = useState({
+    initLoading: true,
+    loading: false,
   });
 
   const dispatch = useDispatch();
 
   const quizzes = useSelector(selectQuizList);
-  const loading = useSelector(selectLoading);
   const total = useSelector(selectQuizTotal);
+
+  const fetchData = () => {
+    if (!loadingState.initLoading) {
+      setLoadingState({ ...loadingState, loading: true });
+    }
+    dispatch(fetchQuizzes(metadata)).then(() => {
+      setLoadingState({ initLoading: false, loading: false });
+    });
+  };
 
   useEffect(() => {
     if (
@@ -47,9 +60,11 @@ const Quizzes = () => {
     ) {
       dispatch(quizActions.resetQuizzes()); // reset quizzes
     }
-    dispatch(fetchQuizzes(metadata));
+    fetchData();
     ref.current = metadata;
   }, [dispatch, metadata]);
+
+  const { initLoading, loading } = loadingState;
 
   return (
     <MainLayout>
@@ -72,17 +87,17 @@ const Quizzes = () => {
               }
             />
             <Select
-              value={metadata.sortBy}
+              value={metadata.sortDirection}
               onChange={(value) =>
                 setMetadata({
                   ...metadata,
                   offset: 0,
-                  sortBy: value,
+                  sortDirection: value,
                 })
               }
             >
-              <Select.Option value="-createdAt">Mới nhất</Select.Option>
-              <Select.Option value="+createdAt">Cũ nhất</Select.Option>
+              <Select.Option value="desc">Mới nhất</Select.Option>
+              <Select.Option value="asc">Cũ nhất</Select.Option>
             </Select>
           </div>
         </div>
@@ -96,24 +111,21 @@ const Quizzes = () => {
               })
             }
             hasMore={quizzes.length < total}
-            loader={<Skeleton avatar paragraph={{ rows: 1 }} active />}
-            endMessage={!loading && <Divider plain>Hết</Divider>}
+            endMessage={
+              !loading && !initLoading && <Divider plain>Hết</Divider>
+            }
             scrollableTarget="quizzesDiv"
           >
             <List
-              dataSource={
-                quizzes.length ? quizzes : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-              }
-              renderItem={(quiz) =>
-                loading ? (
-                  <Skeleton avatar paragraph={{ rows: 1 }} />
-                ) : (
-                  <Link
-                    to={`/quiz/detail/${quiz._id}`}
-                    key={quiz._id}
-                    className="quiz-item-link"
-                  >
-                    <div className="quiz-item" key={quiz._id}>
+              dataSource={quizzes}
+              renderItem={(quiz) => (
+                <Link
+                  to={`/quiz/detail/${quiz.id}`}
+                  key={quiz.id}
+                  className="quiz-item-link"
+                >
+                  <div className="quiz-item" key={quiz.id}>
+                    <Skeleton title={false} loading={quiz.loading} active>
                       <div className="quiz-item-image">
                         <img src={quiz.coverImage || "quiz.png"} />
                       </div>
@@ -138,13 +150,13 @@ const Quizzes = () => {
                       </div>
                       <div className="quiz-item-actions">
                         <Button>
-                          <Link to={`/host/start/${quiz._id}`}>Bắt đầu</Link>
+                          <Link to={`/host/start/${quiz.id}`}>Bắt đầu</Link>
                         </Button>
                       </div>
-                    </div>
-                  </Link>
-                )
-              }
+                    </Skeleton>
+                  </div>
+                </Link>
+              )}
             />
           </InfiniteScroll>
         </div>

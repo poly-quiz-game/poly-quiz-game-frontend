@@ -33,7 +33,7 @@ const StartGame = ({ socket }) => {
   }, [dispatch, params]);
 
   const startGame = () => {
-    socket.emit("host-join", { id: quiz._id });
+    socket.emit("host-join", { id: quiz.id });
   };
 
   return (
@@ -56,10 +56,10 @@ const StartGame = ({ socket }) => {
                     className="create-room"
                     onClick={startGame}
                   >
-                    Tạo phòng
+                    Tiếp tục
                   </Button>
                 </div>
-                <div className="room-settings">
+                {/* <div className="room-settings">
                   <div className="setting-option">
                     <h3>Hiển thị câu hỏi, câu trả lời trên máy người chơi</h3>
                     <Switch
@@ -92,7 +92,7 @@ const StartGame = ({ socket }) => {
                       defaultChecked={defaultConfig.autoPlay}
                     />
                   </div>
-                </div>
+                </div> */}
               </div>
             )}
           </div>

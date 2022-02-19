@@ -56,7 +56,7 @@ const QuestionOption = ({
             defaultValue="20000"
             style={{ width: "100%" }}
             onChange={onChangeQuestionTime}
-            value={question.time.toString()}
+            value={question.timeLimit.toString()}
           >
             <Select.Option value="20000">20 giây</Select.Option>
             <Select.Option value="60000">1 phút</Select.Option>
