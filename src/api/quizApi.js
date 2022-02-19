@@ -3,8 +3,8 @@ import axiosClient, { authHeader } from "./axiosClient";
 const path = "/quiz";
 
 const quizApi = {
-  getAll({ offset, limit, search }) {
-    const url = `${path}?offset=${offset}&limit=${limit}&search=${search}`;
+  getAll({ offset = 0, limit = 10, search = "", sortBy = "-createdAt" }) {
+    const url = `${path}?offset=${offset}&limit=${limit}&search=${search}&sortBy=${sortBy}`;
     return axiosClient.get(url, {
       headers: authHeader(),
     });

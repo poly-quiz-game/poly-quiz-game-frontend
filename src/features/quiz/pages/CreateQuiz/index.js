@@ -185,6 +185,7 @@ const CreateQuiz = () => {
           activeQuestion={activeQuestion}
           setActiveQuestion={setActiveQuestion}
           errors={errors}
+          setQuestions={setQuestions}
         />
         <QuestionBody
           question={questions[activeQuestion]}

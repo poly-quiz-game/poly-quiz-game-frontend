@@ -64,12 +64,12 @@ const QuestionOption = ({
           </Select>
         </div>
       </div>
-      <div className="question-option-actions">
+      {/* <div className="question-option-actions">
         <Button className="delete-btn" danger>
           Xóa
         </Button>
         <Button>Nhân đôi</Button>
-      </div>
+      </div> */}
     </div>
   );
 };

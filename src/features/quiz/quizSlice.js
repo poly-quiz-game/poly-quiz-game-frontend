@@ -11,8 +11,8 @@ const initialState = {
 
 export const fetchQuizzes = createAsyncThunk(
   "quiz/getAll",
-  async ({ offset, limit, search }) => {
-    return await quizApi.getAll({ offset, limit, search });
+  async ({ offset, limit, search, sortBy }) => {
+    return await quizApi.getAll({ offset, limit, search, sortBy });
   }
 );
 
@@ -24,7 +24,12 @@ export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
 const quizSlice = createSlice({
   name: "quiz",
   initialState,
-  reducers: {},
+  reducers: {
+    resetQuizzes: (state) => {
+      state.list = [];
+      state.total = 0;
+    },
+  },
   extraReducers: ({ addCase }) => {
     addCase(fetchQuizzes.pending, (state) => {
       state.loading = true;
@@ -34,7 +39,7 @@ const quizSlice = createSlice({
     });
     addCase(fetchQuizzes.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload.data;
+      state.list = [...state.list, ...action.payload.quizzes];
       state.total = action.payload.total;
     });
     addCase(fetchQuiz.fulfilled, (state, action) => {

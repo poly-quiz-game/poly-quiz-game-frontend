@@ -61,7 +61,7 @@ const MainLayout = ({ children }) => {
           >
             <Menu.Item key="quiz" icon={PuzzleIcon}>
               <Link to="/quiz" onClick={() => setTab("quiz")}>
-                Quiz
+                Thư viện của tôi
               </Link>
             </Menu.Item>
             <Menu.Item key="report" icon={<ProfileOutlined />}>

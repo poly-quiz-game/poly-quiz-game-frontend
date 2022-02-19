@@ -1,23 +1,62 @@
-.header {
-  margin-top: 20px;
-}
+.reports {
+  overflow: auto;
+  height: calc(100vh - 64px);
 
-.btn-new {
-  float: right;
-}
+  .list-report {
+    max-width: 1000px;
+    width: 80%;
+    margin: auto;
+  }
+  .ant-list-item-meta-title {
+    margin-bottom: 0;
+    line-height: 32px;
+  }
+  .header {
+    display: flex;
+    padding: 20px 0;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 1000px;
+    width: 80%;
+    margin: auto;
+    .right-header {
+      display: flex;
+      align-items: center;
+    }
+    .search {
+      margin-right: 8px;
+    }
+  }
 
-.report {
-  margin-left: 35px;
-  background-color: #e6e6e6;
-  border-radius: 2px;
-  min-height: 100vh;
+  .report-players {
+    // font-weight: bold;
+    color: #555;
+    // color: #e21b3c;
+    span {
+    }
+  }
+  .report-questions {
+    // font-weight: bold;
+    color: #555;
+    // color: #d89e00;
+  }
+  .report-createdAt {
+    // font-weight: bold;
+    color: #555;
+    // color: #1368ce;
+  }
 
   .report-item {
     background-color: #fff;
-    margin: 20px 0;
+    margin-bottom: 10px;
     padding: 20px;
     border-radius: 8px;
-    box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+    border: 1px solid #ddd;
+    background-color: #f0f0f0;
+    transition: all 0.2s;
+    &:hover {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.1);
+    }
   }
 
   .question {
@@ -37,12 +76,19 @@
     color: #fff;
     margin-right: 6px;
     border-radius: 4px;
+    i {
+      margin-right: 6px;
+    }
   }
 
   .detail-btn {
     background-color: rgb(182, 182, 182);
     color: black;
     border-radius: 4px;
+
+    i {
+      margin-right: 6px;
+    }
   }
 
   /* ReportDetail */
@@ -76,26 +122,24 @@
   .nextPage {
     text-align: center;
   }
-  .search {
-    input {
-      margin-left: 90px;
-      border-radius: 5px;
-      line-height: 9px;
-      margin-top: 3px;
+  .title-top-list-quiz {
+    font-size: 16px;
+    i {
+      margin-right: 10px;
     }
   }
-  .title-top-list-quizz {
-    margin: 5px;
-    margin-left: 100px;
+  .search {
+    input {
+      border-radius: 4px;
+    }
+  }
+  .report-sort {
     Select {
       border-radius: 5px;
       Select.Option {
         border-radius: 5px;
       }
     }
-  }
-  .title-top-list-quiz {
-    margin-right: 10px;
   }
   .border {
     padding-top: 20px;
@@ -114,7 +158,25 @@
   .nav-list-quiz-one {
     margin-left: auto;
     .quiz {
-      margin-bottom: 80px;
+      margin-bottom: 50px;
+    }
+    .quiz-detail {
+      display: flex;
+      justify-content: flex-end;
+    }
+  }
+  .main {
+    display: flex;
+    .list-icon {
+      border-right: 2px solid rgb(211, 201, 201);
+
+      padding-top: 200px;
+      padding-left: 5px;
+      padding-right: 5px;
+      img {
+        margin-top: 20px;
+        border-radius: 5px;
+      }
     }
   }
 }

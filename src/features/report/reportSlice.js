@@ -5,14 +5,17 @@ import reportApi from "../../api/reportApi";
 const initialState = {
   loading: false,
   list: [],
+  total: 0,
   report: {},
 };
 
-export const fetchReports = createAsyncThunk("report/getAll", async () => {
-  const response = await reportApi.getAll();
-  console.log(response)
-  return response.data;
-});
+export const fetchReports = createAsyncThunk(
+  "report/getAll",
+  async ({ sortBy, offset, limit, search }) => {
+    const response = await reportApi.getAll({ sortBy, offset, limit, search });
+    return response;
+  }
+);
 
 export const fetchReport = createAsyncThunk("report/getOne", async (id) => {
   const response = await reportApi.getOne(id);
@@ -22,20 +25,26 @@ export const fetchReport = createAsyncThunk("report/getOne", async (id) => {
 const reportSlice = createSlice({
   name: "report",
   initialState,
-  reducers: {},
+  reducers: {
+    resetReports: (state) => {
+      state.list = [];
+      state.total = 0;
+    },
+  },
   extraReducers: ({ addCase }) => {
     //   Loading
-    addCase(fetchReports.pending, (state, action) => {
+    addCase(fetchReports.pending, (state) => {
       state.loading = true;
     });
     //   Loading
-    addCase(fetchReport.pending, (state, action) => {
+    addCase(fetchReport.pending, (state) => {
       state.loading = true;
     });
     //   Success
     addCase(fetchReports.fulfilled, (state, action) => {
       state.loading = false;
-      state.list = action.payload;
+      state.list = [...state.list, ...action.payload.reports];
+      state.total = action.payload.total;
     });
     addCase(fetchReport.fulfilled, (state, action) => {
       state.loading = false;
@@ -56,6 +65,7 @@ export const reportActions = reportSlice.actions;
 
 // Selectors
 export const selectReportList = (state) => state.report.list;
+export const selectReportTotal = (state) => state.report.total;
 export const selectReport = (state) => state.report.report;
 export const selectLoading = (state) => state.report.loading;
 

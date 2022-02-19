@@ -1,146 +1,180 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { Button, Col, Input, Row, Select } from "antd";
-import { Pagination } from "antd";
+import moment from "moment";
+import InfiniteScroll from "react-infinite-scroll-component";
+
+import { Skeleton, List, Space, Divider, Input, Select, Avatar } from "antd";
+import {
+  CalendarOutlined,
+  QuestionCircleOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 
-import { Layout, Menu, Breadcrumb } from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
-
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
-
 import "./styles.scss";
-import { selectReportList, selectLoading, fetchReports } from "../reportSlice";
+import {
+  selectReportList,
+  selectReportTotal,
+  selectLoading,
+  fetchReports,
+  reportActions,
+} from "../reportSlice";
+
+const LIMIT = 20;
+
+const IconText = ({ icon, text }) => (
+  <Space>
+    {React.createElement(icon)}
+    {text}
+  </Space>
+);
 
 const Report = () => {
+  const ref = useRef();
+  const [metadata, setMetadata] = useState({
+    offset: 0,
+    limit: LIMIT,
+    search: "",
+    sortBy: "-createdAt",
+  });
+
   const dispatch = useDispatch();
 
   const reports = useSelector(selectReportList);
   const loading = useSelector(selectLoading);
+  const total = useSelector(selectReportTotal);
 
   useEffect(() => {
-    dispatch(fetchReports());
-  }, [dispatch]);
+    if (
+      ref?.current?.sortBy !== metadata.sortBy ||
+      ref?.current?.search !== metadata.search
+    ) {
+      dispatch(reportActions.resetReports()); // reset quizzes
+    }
+    console.log("metadata", metadata);
+    dispatch(fetchReports(metadata));
+    ref.current = metadata;
+  }, [dispatch, metadata]);
 
   return (
     <MainLayout>
-      <div className="report">
-        <Row>
-          <Menu
-            className="nav-list-quiz"
-            mode="inline"
-            defaultSelectedKeys={["1"]}
-            defaultOpenKeys={["sub1"]}
-            style={{ width: "200px", paddingTop: "10px", color: "black" }}
-          >
-            <Menu.Item key="1">
-              <i className="fas fa-list"></i> option1
-            </Menu.Item>
-            <Menu.Item key="2">option2</Menu.Item>
-            <Menu.Item key="3">option3</Menu.Item>
-            <Menu.Item key="4">option4</Menu.Item>
-            <div className="border" style={{ display: "flex" }}>
-              <img
-                width={15}
-                style={{ marginLeft: "10px" }}
-                src="user-icon-2098873_960_720.png"
+      <div className="reports" id="reportsDiv">
+        <div className="header">
+          <div className="title-top-list-quiz">
+            <i className="fas fa-list"></i> {total} bản ghi
+          </div>
+          <div className="right-header">
+            <div className="search">
+              <Input
+                placeholder="Tìm kiếm"
+                value={metadata.search}
+                onChange={(e) =>
+                  setMetadata({
+                    ...metadata,
+                    search: e.target.value,
+                  })
+                }
               />
-              <h5 style={{ marginTop: "7px", marginLeft: "10px" }}>
-                khiemmdph11477@fpt.edu.vn
-              </h5>
             </div>
-            <div className="button-nav-sumbit">Fpoly + AccessPass</div>
-          </Menu>
-          <div>
-            <div style={{ width: "1000px", marginLeft: "130px" }}>
-              <div className="header">
-                <div justify="space-between" style={{ display: "flex" }}>
-                  <div className="title-top-list-quiz">
-                    <span>
-                      <i className="fas fa-list"></i> {reports.length} bản ghi
-                    </span>
-                  </div>
-                  <div className="title-top-list-quiz">
-                    <span>
-                      <i className="fas fa-list"></i> {reports.length} bản ghi
-                    </span>
-                  </div>
-                  <div className="title-top-list-quiz">
-                    <span>
-                      <i className="fas fa-list"></i> {reports.length} bản ghi
-                    </span>
-                  </div>
-                  <div className="search">
-                    <Input
-                      size="large"
-                      placeholder="Search"
-                      style={{ width: "400px" }}
-                    />
-                  </div>
 
-                  <div className="title-top-list-quizz">
-                    <Select value="latest">
-                      <Select.Option value="latest">Mới nhất</Select.Option>
-                      <Select.Option value="true_false">Cũ nhất</Select.Option>
-                    </Select>
-                  </div>
-                </div>
-              </div>
-              {reports.map((r) => (
-                <div className="report-item" key={r._id}>
-                  <Row>
-                    <img width={150} height={130} src="quiz.jpg" />
-                    <Row style={{ marginLeft: "20px" }}>
-                      <Col>
-                        <h2>{r.quiz.name}</h2>
-                      </Col>
-                    </Row>
-                    <div className="nav-list-quiz-one">
-                      <Row className="quiz">
-                        <div>
-                          <span>
-                            <i className="far fa-user"></i> {r.players.length}{" "}
-                            người chơi
-                          </span>
-                        </div>
-                        <div>
-                          <span className="question">
-                            <i className="fas fa-list"></i>{" "}
-                            {r.quiz.questions.length} câu hỏi
-                          </span>
-                        </div>
-                      </Row>
-                      <Row className="quiz-deltai">
-                        <div>
-                          <Button type="Button" className="excel">
-                            <i className="far fa-file-excel"></i> Xuất file
-                            excel
-                          </Button>
-                        </div>
-                        <div>
-                          <Link to={`/report/detail/${r._id}`}>
-                            <Button className="detail-btn">
-                              <i className="fas fa-info-circle"></i> Chi tiết
-                            </Button>
-                          </Link>
-                        </div>
-                      </Row>
-                    </div>
-                  </Row>
-                </div>
-              ))}
-              <div className="nextPage">
-                <Pagination defaultCurrent={1} total={50} />
-              </div>
+            <div className="report-sort">
+              <Select
+                value={metadata.sortBy}
+                onChange={(value) =>
+                  setMetadata({
+                    ...metadata,
+                    offset: 0,
+                    sortBy: value,
+                  })
+                }
+              >
+                <Select.Option value="-createdAt">Mới nhất</Select.Option>
+                <Select.Option value="+createdAt">Cũ nhất</Select.Option>
+              </Select>
             </div>
           </div>
-        </Row>
+        </div>
+        <div className="list-report">
+          <InfiniteScroll
+            dataLength={reports.length}
+            next={() =>
+              setMetadata({
+                ...metadata,
+                offset: reports.length,
+              })
+            }
+            hasMore={reports.length < total}
+            loader={<Skeleton paragraph={{ rows: 1 }} active />}
+            endMessage={!loading && <Divider plain>Hết</Divider>}
+            scrollableTarget="reportsDiv"
+          >
+            <List
+              bordered
+              dataSource={
+                reports.length ? reports : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+              }
+              renderItem={(report) =>
+                loading ? (
+                  <List.Item>
+                    <Skeleton avatar paragraph={{ rows: 1 }} />
+                  </List.Item>
+                ) : (
+                  <List.Item
+                    key={report.id}
+                    actions={[
+                      <div
+                        className="report-players"
+                        key="list-vertical-user-o"
+                      >
+                        <IconText
+                          icon={UserOutlined}
+                          text={report?.players?.length}
+                        />
+                      </div>,
+                      <div
+                        className="report-questions"
+                        key="list-vertical-like-o"
+                      >
+                        <IconText
+                          icon={QuestionCircleOutlined}
+                          text={report?.questions?.length}
+                        />
+                      </div>,
+                      <div
+                        className="report-createdAt"
+                        key="list-vertical-message"
+                      >
+                        <IconText
+                          icon={CalendarOutlined}
+                          text={moment(report.createdAt).format("DD-MM")}
+                        />
+                      </div>,
+                    ]}
+                  >
+                    <List.Item.Meta
+                      avatar={
+                        <Avatar
+                          src={report?.quiz?.coverImage || "report.jpg"}
+                        />
+                      }
+                      title={
+                        <Link
+                          to={`/report/detail/${report._id}`}
+                          key={report._id}
+                          className="quiz-item-link"
+                        >
+                          {report.name}{" "}
+                        </Link>
+                      }
+                    />
+                  </List.Item>
+                )
+              }
+            />
+          </InfiniteScroll>
+        </div>
       </div>
     </MainLayout>
   );
