@@ -22,7 +22,6 @@ export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
 export const fetchCreateQuiz = createAsyncThunk("quiz/create", async (quiz) => {
   return await quizApi.create(quiz);
 });
-
 const quizSlice = createSlice({
   name: "quiz",
   initialState,
@@ -60,6 +59,9 @@ const quizSlice = createSlice({
       state.loading = false;
     });
     addCase(fetchCreateQuiz.rejected, (state) => {
+      state.loading = false;
+    });
+    addCase(remove.rejected, (state) => {
       state.loading = false;
     });
   },

@@ -1,28 +1,28 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useParams} from "react-router-dom";
+import {useNavigate} from "react-router"
 import {
-  Skeleton,
+  Space,
   Button,
-  Card,
-  List,
-  Avatar,
+ 
   Layout,
   Menu,
-  Breadcrumb,
+
   Image,
 } from "antd";
 import {
   UserOutlined,
   LaptopOutlined,
   NotificationOutlined,
+  DeleteOutlined
 } from "@ant-design/icons";
 import {
   FaUserAlt,
   FaCaretRight,
   FaEllipsisV,
   FaPencilAlt,
-  FaStar,
+  FaTrashAlt,
   FaChartBar,
 } from "react-icons/fa";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
@@ -30,9 +30,10 @@ import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 import MainLayout from "layouts/main.layout";
 import { Link } from "react-router-dom";
 
-import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
+import { fetchQuiz, selectQuiz, selectLoading,remove } from "../quizSlice";
 
 import "./detail.css";
+import { showDeleteConfirm } from "../../../confirm/DeleteConfirm";
 const { SubMenu } = Menu;
 const { Header, Content, Sider } = Layout;
 
@@ -53,7 +54,7 @@ const DetailQuiz = ({ socket }) => {
   const user = JSON.parse(localStorage.getItem("user"));
   const quiz = useSelector(selectQuiz);
   const loading = useSelector(selectLoading);
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
   }, [dispatch, params]);
@@ -90,7 +91,26 @@ const DetailQuiz = ({ socket }) => {
                   </div>
                   <div className="button-icon">
                     <div>
-                      <FaPencilAlt />
+                      <Link
+                        to={`/quiz/update/${quiz._id}`}
+                        style={{ color: "black", fontSize: "14px" }}
+                      >
+                        <FaPencilAlt />
+                      </Link>
+                    </div>
+                    <div>
+                      <Space size="middle">
+                        <DeleteOutlined
+                          style={{ cursor: "pointer", color: "black" }}
+                          onClick={() => {
+                            showDeleteConfirm(quiz.name, async () => {
+                              await dispatch(remove(quiz._id));
+                              await dispatch(fetchQuiz());
+                              await navigate('/quiz')
+                            });
+                          }}
+                        />
+                      </Space>
                     </div>
                     <div>
                       <FaEllipsisV />
