@@ -11,8 +11,14 @@ const initialState = {
 
 export const fetchReports = createAsyncThunk(
   "report/getAll",
-  async ({ sortBy, offset, limit, search }) => {
-    return await reportApi.getAll({ sortBy, offset, limit, search });
+  async ({ offset, limit, search, sortField, sortDirection }) => {
+    return await reportApi.getAll({
+      offset,
+      limit,
+      search,
+      sortField,
+      sortDirection,
+    });
   }
 );
 

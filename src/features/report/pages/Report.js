@@ -36,7 +36,8 @@ const Report = () => {
     offset: 0,
     limit: LIMIT,
     search: "",
-    sortBy: "-createdAt",
+    sortDirection: "desc",
+    sortField: "createdAt",
   });
   const [loadingState, setLoadingState] = useState({
     initLoading: true,
@@ -59,7 +60,7 @@ const Report = () => {
 
   useEffect(() => {
     if (
-      ref?.current?.sortBy !== metadata.sortBy ||
+      ref?.current?.sortDirection !== metadata.sortDirection ||
       ref?.current?.search !== metadata.search
     ) {
       dispatch(reportActions.resetReports()); // reset quizzes
@@ -93,17 +94,17 @@ const Report = () => {
 
             <div className="report-sort">
               <Select
-                value={metadata.sortBy}
+                value={metadata.sortDirection}
                 onChange={(value) =>
                   setMetadata({
                     ...metadata,
                     offset: 0,
-                    sortBy: value,
+                    sortDirection: value,
                   })
                 }
               >
-                <Select.Option value="-createdAt">Mới nhất</Select.Option>
-                <Select.Option value="+createdAt">Cũ nhất</Select.Option>
+                <Select.Option value="desc">Mới nhất</Select.Option>
+                <Select.Option value="asc">Cũ nhất</Select.Option>
               </Select>
             </div>
           </div>
@@ -147,7 +148,7 @@ const Report = () => {
                           >
                             <IconText
                               icon={QuestionCircleOutlined}
-                              text={report?.questions?.length}
+                              text={report?.reportQuestions?.length}
                             />
                           </div>,
                           <div

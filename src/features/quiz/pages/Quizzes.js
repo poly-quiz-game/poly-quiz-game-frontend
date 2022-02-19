@@ -35,7 +35,7 @@ const Quizzes = () => {
   });
 
   const [loadingState, setLoadingState] = useState({
-    initLoading: true,
+    initLoading: false,
     loading: false,
   });
 
@@ -48,6 +48,9 @@ const Quizzes = () => {
     if (!loadingState.initLoading) {
       setLoadingState({ ...loadingState, loading: true });
     }
+    if (loadingState.initLoading || loadingState.loading) {
+      return;
+    }
     dispatch(fetchQuizzes(metadata)).then(() => {
       setLoadingState({ initLoading: false, loading: false });
     });
@@ -55,7 +58,7 @@ const Quizzes = () => {
 
   useEffect(() => {
     if (
-      ref?.current?.sortBy !== metadata.sortBy ||
+      ref?.current?.sortDirection !== metadata.sortDirection ||
       ref?.current?.search !== metadata.search
     ) {
       dispatch(quizActions.resetQuizzes()); // reset quizzes
