@@ -79,13 +79,9 @@ const Lobby = ({ socket }) => {
             >
               <UserOutlined/> {players?.length}
             </Button></div>
-          <div><Image
-                  style={{
-                    width: "50%",
-                    margin: "0 auto",
-                  }}
+          <div className="logo-content"><img
                   src="/img/logo.png"
-                ></Image></div>
+                ></img></div>
           <div>
             <Button
             style={{

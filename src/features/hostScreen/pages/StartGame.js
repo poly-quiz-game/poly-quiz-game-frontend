@@ -45,24 +45,16 @@ const StartGame = ({ socket }) => {
           ) : (
             <div>
               <div className="quiz-info">
-                <Image
-                  style={{
-                    width: "80%",
-                    margin: "0 auto",
-                  }}
+                <img
+                  
                   src="/img/logo.png"
-                ></Image>
+                />
                 <h1>{quiz.name}</h1>
                 <div className="box-start">
                   <div className="icon-game">
-                  <Image
-                  style={{
-                    paddingTop: "30px",
-                    width: "80%",
-                    margin: "0 auto",
-                  }}
+                  <img
                   src="/img/icon.png"
-                ></Image>
+                />
                   </div>
                   <div className="question-number">
                     {(quiz.questions || []).length} câu hỏi
