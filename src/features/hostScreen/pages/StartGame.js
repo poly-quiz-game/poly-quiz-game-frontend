@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { Skeleton, Row, Col, Switch, Button } from "antd";
+import { Skeleton, Row, Col, Switch, Button, Image } from "antd";
 
 import MainLayout from "layouts/main.layout";
 
@@ -37,29 +37,47 @@ const StartGame = ({ socket }) => {
   };
 
   return (
-    <MainLayout>
+    <div className="start-quiz__screen">
       <Row>
         <Col span={12} offset={6}>
-          <div className="start-quiz__screen">
-            {loading ? (
-              <Skeleton />
-            ) : (
-              <div>
-                <div className="quiz-info">
-                  <h1>{quiz.name}</h1>
+          {loading ? (
+            <Skeleton />
+          ) : (
+            <div>
+              <div className="quiz-info">
+                <Image
+                  style={{
+                    width: "80%",
+                    margin: "0 auto",
+                  }}
+                  src="/img/logo.png"
+                ></Image>
+                <h1>{quiz.name}</h1>
+                <div className="box-start">
+                  <div className="icon-game">
+                  <Image
+                  style={{
+                    paddingTop: "30px",
+                    width: "80%",
+                    margin: "0 auto",
+                  }}
+                  src="/img/icon.png"
+                ></Image>
+                  </div>
                   <div className="question-number">
                     {(quiz.questions || []).length} câu hỏi
                   </div>
                   <Button
-                    type="primary"
                     size="large"
+                    style={{  backgroundColor: "#399D29",border: "none",color:"#fff",fontSize: "20px",paddingTop:"0",marginTop: "30px"}}
                     className="create-room"
                     onClick={startGame}
                   >
-                    Tạo phòng
+                    Tiếp tục
                   </Button>
                 </div>
-                <div className="room-settings">
+              </div>
+              {/* <div className="room-settings">
                   <div className="setting-option">
                     <h3>Hiển thị câu hỏi, câu trả lời trên máy người chơi</h3>
                     <Switch
@@ -92,13 +110,12 @@ const StartGame = ({ socket }) => {
                       defaultChecked={defaultConfig.autoPlay}
                     />
                   </div>
-                </div>
-              </div>
-            )}
-          </div>
+                </div> */}
+            </div>
+          )}
         </Col>
       </Row>
-    </MainLayout>
+    </div>
   );
 };
 
