@@ -6,11 +6,15 @@ import Lobby from "./pages/Lobby";
 import HostGame from "./pages/HostGame";
 import StartGame from "./pages/StartGame";
 
+const port = process.env.ENDPOINT
+  ? `ws://${process.env.ENDPOINT}`
+  : "ws://localhost:3005";
+
 const HostScreen = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(process.env.ENDPOINT);
+    const newSocket = io(port);
     setSocket(newSocket);
 
     return () => newSocket.close();

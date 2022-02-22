@@ -8,17 +8,21 @@ import PreStart from "./pages/PreStart";
 
 import "./styles.scss";
 
+const port = process.env.ENDPOINT
+  ? `ws://${process.env.ENDPOINT}`
+  : "ws://localhost:3005";
+
 const GameFeature = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(process.env.ENDPOINT);
+    const newSocket = io(port);
     setSocket(newSocket);
 
     return () => newSocket.close();
   }, [setSocket]);
 
-  if(!socket) return <div>Connecting</div>
+  if (!socket) return <div>Connecting</div>;
 
   return (
     <Routes>
