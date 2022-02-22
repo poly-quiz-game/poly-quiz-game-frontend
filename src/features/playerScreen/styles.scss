@@ -40,14 +40,8 @@
 .player-game__screen {
   height: 100vh;
   .player-info {
-    .player-score {
-      padding: 5px 20px;
-      background-color: #c4c4c4;
-      position: absolute;
-      font-size: 18px;
-      right: 10px;
-      font-weight: bold;
-      border-radius: 4px;
+    img{
+      width: 10%;
     }
     .player-name {
       font-weight: bold;
@@ -59,9 +53,7 @@
     padding: 10px;
     background-color: #fff;
     text-align: center;
-    display: flex;
     align-items: center;
-    justify-content: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
   .answers {
@@ -144,5 +136,50 @@
     padding: 0 20px;
     background-color: #fff;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
+  }
+  .question-footer {
+    .player-score {
+      padding: 5px 20px;
+      background-color: #c4c4c4;
+      position: absolute;
+      font-size: 18px;
+      right: 10px;
+      font-weight: bold;
+      border-radius: 4px;
+    }
+    .player-name {
+      font-weight: bold;
+      letter-spacing: 0.2px;
+      font-size: 20px;
+    }
+    padding: 5px 10px;
+    height: 8vh;
+    padding: 10px;
+    background-color: #fff;
+    text-align: center;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+    box-shadow: 4px 4px 25px rgba(0, 0, 0, 0.25);
+  }
+}
+.question-answer{
+  background-image: url("https://shimatest.shop/background-dep-cho-powerpoint/imager_2_25831_700.jpg");
+  background-repeat: no-repeat;
+  background-size: 1920px;
+  height: 780px;
+  .question-tf{
+    
+    padding-top: 40px;
+  }
+  display:flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  img{
+    padding-top: 100px;
+  }
+  h3{
+    padding-top: 20px;
   }
 }
