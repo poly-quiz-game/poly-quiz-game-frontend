@@ -12,7 +12,7 @@ const GameFeature = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(`ws://localhost:3005`);
+    const newSocket = io(process.env.ENDPOINT);
     setSocket(newSocket);
 
     return () => newSocket.close();
