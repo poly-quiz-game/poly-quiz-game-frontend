@@ -47,7 +47,7 @@ const reportSlice = createSlice({
     addCase(fetchReport.pending, (state) => {});
     //   Success
     addCase(fetchReports.fulfilled, (state, action) => {
-      state.data = [...state.data, ...action.payload.data];
+      state.data = [...state.data, ...(action.payload.data || [])];
       state.list = state.data;
       state.total = action.payload.total;
     });

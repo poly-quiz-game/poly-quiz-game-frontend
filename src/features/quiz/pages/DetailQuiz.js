@@ -71,7 +71,7 @@ const DetailQuiz = () => {
                   <div className="button-icon">
                     <div>
                       <Link
-                        to={`/quiz/update/${quiz._id}`}
+                        to={`/quiz/update/${quiz.id}`}
                         style={{ color: "black", fontSize: "14px" }}
                       >
                         <FaPencilAlt />
@@ -83,7 +83,7 @@ const DetailQuiz = () => {
                           style={{ cursor: "pointer", color: "black" }}
                           onClick={() => {
                             showDeleteConfirm(quiz.name, async () => {
-                              await dispatch(remove(quiz._id));
+                              await dispatch(remove(quiz.id));
                               await dispatch(fetchQuiz());
                               await navigate("/quiz");
                             });

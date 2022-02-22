@@ -30,7 +30,7 @@ const Question = ({ report }) => {
           </Menu.Item>
         </Menu>
       </Row> */}
-      <Table columns={columns} dataSource={report.quiz.questions} />
+      <Table columns={columns} dataSource={report.reportQuestions} />
     </div>
   );
 };

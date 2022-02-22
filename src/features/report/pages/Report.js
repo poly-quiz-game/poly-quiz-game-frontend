@@ -131,7 +131,7 @@ const Report = () => {
                 <List.Item
                   key={report.id}
                   actions={
-                    !loading && !initLoading
+                    !report.loading
                       ? [
                           <div
                             className="report-players"

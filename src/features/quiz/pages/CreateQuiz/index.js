@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
+import { useParams } from "react-router-dom";
 import _ from "lodash";
 import { Button, Modal } from "antd";
 import { Link } from "react-router-dom";
@@ -9,7 +10,7 @@ import QuestionOption from "./QuestionOption";
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
 import QuizSettingModal from "./QuizSettingModal";
-import { fetchCreateQuiz } from "../../../hostScreen/quizSlice";
+import { fetchCreateQuiz, fetchQuiz } from "../../../hostScreen/quizSlice";
 import ValidateQuizModal from "./ValidateQuizModal";
 
 const defaultQuestion = {
@@ -74,6 +75,7 @@ const CreateQuiz = () => {
   const [errors, setErrors] = useState([]);
 
   const navigate = useNavigate();
+  let params = useParams();
 
   useEffect(() => {
     console.log(questions, activeQuestion);
@@ -147,6 +149,10 @@ const CreateQuiz = () => {
       console.log(error);
     }
   };
+
+  useEffect(() => {
+    dispatch(fetchQuiz(params.id));
+  }, [dispatch, params]);
 
   return (
     <div className="create-quiz">
