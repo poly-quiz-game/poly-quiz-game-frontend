@@ -100,7 +100,6 @@ const PlayGame = ({ socket }) => {
   return (
     <div className="player-game__screen">
       <div className="player-info">
-        <div className="player-name">1/5</div>
         <img src="/img/logo.png" />
       </div>
       {!answered && (

@@ -42,7 +42,6 @@
   .player-info {
     img{
       width: 10%;
-      margin-right: 850px;
     }
     .player-name {
       font-weight: bold;
@@ -54,8 +53,6 @@
     padding: 10px;
     background-color: #fff;
     text-align: center;
-    display:flex;
-    justify-content: space-between;
     align-items: center;
     box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   }
@@ -167,6 +164,10 @@
   }
 }
 .question-answer{
+  background-image: url("https://shimatest.shop/background-dep-cho-powerpoint/imager_2_25831_700.jpg");
+  background-repeat: no-repeat;
+  background-size: 1920px;
+  height: 780px;
   .question-tf{
     
     padding-top: 40px;
