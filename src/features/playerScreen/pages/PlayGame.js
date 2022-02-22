@@ -3,7 +3,16 @@ import { useNavigate, useParams, Link } from "react-router-dom";
 import { Row, Col } from "antd";
 
 import "../styles.scss";
-
+// const CorrectIcon = (
+//   <span style={{ color: "#52c41a" }}>
+//     <CheckCircleFilled />
+//   </span>
+// );
+// const IncorretIcocn = (
+//   <span style={{ color: "#eb2f96" }}>
+//     <CloseCircleFilled />
+//   </span>
+// );
 // chưa trả lời
 // đã trả lời - đợi kết quả
 // đã trả lời - đã có kết quả
@@ -91,8 +100,7 @@ const PlayGame = ({ socket }) => {
   return (
     <div className="player-game__screen">
       <div className="player-info">
-        <div className="player-name">{player.name}</div>
-        <div className="player-score">{player.score}</div>
+        <img src="/img/logo.png" />
       </div>
       {!answered && (
         <div className="answers">
@@ -111,10 +119,18 @@ const PlayGame = ({ socket }) => {
         </div>
       )}
       {!showResult && answered && <h1>Submited. Waiting for others!</h1>}
-      {showResult && <h1>{isCorrect ? "correct" : "incorrect"}</h1>}
+      {showResult && (
+        <div className="question-answer">
+          <img src={isCorrect ? "/img/true.png" : "/img/false.png"}/>
+          <h1 className="question-tf">{isCorrect ? "Đúng" : "Sai"}</h1>
+          <p>{isCorrect ? "+ 100 " : "+ 0 "} point</p>
+          <h3>Bạn đang ở vị trí số 1</h3>
+        </div>
+      )}
       <div className="question-footer">
-        <div></div>
-        <div>PIN: {game.pin}</div>
+        <div className="player-name">{player.name}</div>
+        <div className="player-score">{player.score}</div>
+        {/* <div>PIN: {game.pin}</div> */}
       </div>
     </div>
   );
