@@ -8,9 +8,7 @@ import PreStart from "./pages/PreStart";
 
 import "./styles.scss";
 
-const port = process.env.ENDPOINT
-  ? `ws://${process.env.ENDPOINT}`
-  : "ws://localhost:3005";
+const port = process.env.ENDPOINT || "ws://localhost:3005";
 
 const GameFeature = (props) => {
   const [socket, setSocket] = useState(null);

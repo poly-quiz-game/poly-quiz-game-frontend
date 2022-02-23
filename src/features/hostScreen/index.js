@@ -6,9 +6,7 @@ import Lobby from "./pages/Lobby";
 import HostGame from "./pages/HostGame";
 import StartGame from "./pages/StartGame";
 
-const port = process.env.ENDPOINT
-  ? `ws://${process.env.ENDPOINT}`
-  : "ws://localhost:3005";
+const port = process.env.ENDPOINT || "ws://localhost:3005";
 
 const HostScreen = (props) => {
   const [socket, setSocket] = useState(null);
