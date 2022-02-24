@@ -56,15 +56,6 @@ const quizzes = [
     question: "Câu hỏi thứ ba",
     correctAnswer: "0",
   },
-  {
-    type: questionTypes.TYPE_ANSWER,
-    image:
-      "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
-    answers: ["Đáp án đúng", "Sai bét", "Cái này ko đúng", "Sai nhé!"],
-    timeLimit: 20000,
-    question: "Câu hỏi thứ ba",
-    correctAnswer: "0",
-  },
 ];
 
 const CreateQuiz = () => {

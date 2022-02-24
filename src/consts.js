@@ -1,20 +1,20 @@
 const SINGLE_CORRECT_ANSWER = "SINGLE_CORRECT_ANSWER";
 const MULTIPLE_CORRECT_ANSWER = "MULTIPLE_CORRECT_ANSWER";
 const TRUE_FALSE_ANSWER = "TRUE_FALSE_ANSWER";
-const TYPE_ANSWER = "TYPE_ANSWER";
+// const TYPE_ANSWER = "TYPE_ANSWER";
 
 export const questionTypes = {
   [SINGLE_CORRECT_ANSWER]: SINGLE_CORRECT_ANSWER,
   [MULTIPLE_CORRECT_ANSWER]: MULTIPLE_CORRECT_ANSWER,
   [TRUE_FALSE_ANSWER]: TRUE_FALSE_ANSWER,
-  [TYPE_ANSWER]: TYPE_ANSWER,
+  // [TYPE_ANSWER]: TYPE_ANSWER,
 };
 
 export const questionTypeLabels = {
   [SINGLE_CORRECT_ANSWER]: "Một đáp án",
   [MULTIPLE_CORRECT_ANSWER]: "Nhiều đáp án",
   [TRUE_FALSE_ANSWER]: "Đúng sai",
-  [TYPE_ANSWER]: "Nhập câu trả lời",
+  // [TYPE_ANSWER]: "Nhập câu trả lời",
 };
 
 export const questionTimeLimitOptions = [
