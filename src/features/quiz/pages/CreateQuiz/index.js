@@ -6,25 +6,26 @@ import { Button, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
 
-import QuestionOption from "./QuestionOption";
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
 import QuizSettingModal from "./QuizSettingModal";
 import { fetchCreateQuiz, fetchQuiz } from "../../../hostScreen/quizSlice";
 import ValidateQuizModal from "./ValidateQuizModal";
+import { questionTypes } from "consts";
+import { validateQuestion } from "./utils";
 
 const defaultQuestion = {
-  type: "quiz",
+  type: questionTypes.SINGLE_CORRECT_ANSWER,
   image: "",
   answers: ["", "", "", ""],
   timeLimit: 20000,
   question: "",
-  correctAnswer: null,
+  correctAnswer: "",
 };
 
 const quizzes = [
   {
-    type: "quiz",
+    type: questionTypes.MULTIPLE_CORRECT_ANSWER,
     image:
       "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
     answers: [
@@ -35,32 +36,31 @@ const quizzes = [
     ],
     timeLimit: 20000,
     question: "Poly Quiz là gì?",
-    correctAnswer: 1,
+    correctAnswer: "1|2",
   },
   {
-    type: "quiz",
+    type: questionTypes.SINGLE_CORRECT_ANSWER,
     image:
       "https://res.cloudinary.com/poly-quiz/image/upload/v1644943362/um2zps8vmja8z9a6wdyo.jpg",
     answers: ["Đáp án sai", "Sai", "Cái này đúng", "Sai nhé!"],
     timeLimit: 20000,
     question: "Câu hỏi thứ hai",
-    correctAnswer: 2,
+    correctAnswer: "2",
   },
   {
-    type: "quiz",
+    type: questionTypes.TRUE_FALSE_ANSWER,
     image:
       "https://res.cloudinary.com/poly-quiz/image/upload/v1644943191/qbzcodre7o5oolkge8vg.jpg",
     answers: ["Đáp án đúng", "Sai bét", "Cái này ko đúng", "Sai nhé!"],
     timeLimit: 20000,
     question: "Câu hỏi thứ ba",
-    correctAnswer: 0,
+    correctAnswer: "0",
   },
 ];
 
 const CreateQuiz = () => {
   const dispatch = useDispatch();
   const [activeQuestion, setActiveQuestion] = useState(0);
-  // const [questions, setQuestions] = useState([defaultQuestion]);
   const [questions, setQuestions] = useState(quizzes);
   const [isShowSetting, setIsShowSetting] = useState(false);
   const [quiz, setQuiz] = useState({
@@ -78,20 +78,7 @@ const CreateQuiz = () => {
   let params = useParams();
 
   useEffect(() => {
-    console.log(questions, activeQuestion);
-    const errs = questions.map((question) => {
-      const err = {};
-      if (!question.question) {
-        err.question = "Thiếu câu hỏi";
-      }
-      if (!question.answers.every((answer) => answer)) {
-        err.answers = "Thiếu đáp án";
-      }
-      if (typeof question.correctAnswer !== "number") {
-        err.correctAnswer = "Chưa chọn đáp án đúng";
-      }
-      return err;
-    });
+    const errs = questions.map(validateQuestion);
     setErrors(errs);
   }, [questions]);
 
@@ -110,22 +97,6 @@ const CreateQuiz = () => {
     setQuestions(questions.filter((q, i) => i !== index));
   };
 
-  const onChangeQuestionType = (type) => {
-    setQuestions(
-      questions.map((q, index) =>
-        index === activeQuestion ? { ...questions[index], type } : q
-      )
-    );
-  };
-
-  const onChangeQuestionTime = (value) => {
-    setQuestions(
-      questions.map((q, index) =>
-        index === activeQuestion ? { ...questions[index], timeLimit: value } : q
-      )
-    );
-  };
-
   const onChangeQuestion = (question) => {
     setQuestions(
       questions.map((q, index) => (index === activeQuestion ? question : q))
@@ -142,6 +113,7 @@ const CreateQuiz = () => {
       return;
     }
     const newQuiz = { ...quiz, questions, ...customData };
+
     try {
       await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
       navigate("/quiz");
@@ -150,9 +122,9 @@ const CreateQuiz = () => {
     }
   };
 
-  useEffect(() => {
-    dispatch(fetchQuiz(params.id));
-  }, [dispatch, params]);
+  // useEffect(() => {
+  //   dispatch(fetchQuiz(params.id));
+  // }, [dispatch, params]);
 
   return (
     <div className="create-quiz">
@@ -196,11 +168,6 @@ const CreateQuiz = () => {
         <QuestionBody
           question={questions[activeQuestion]}
           onChangeQuestion={onChangeQuestion}
-        />
-        <QuestionOption
-          onChangeQuestionType={onChangeQuestionType}
-          onChangeQuestionTime={onChangeQuestionTime}
-          question={questions[activeQuestion]}
           deleteQuestion={deleteQuestion}
         />
       </div>

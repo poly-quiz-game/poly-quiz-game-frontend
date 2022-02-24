@@ -12,37 +12,34 @@ const Lobby = ({ socket }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.emit("host-getGame");
+    socket.emit("get-game-info");
 
-    socket.on("noGameFound-host", () => {
+    socket.on("no-game-found", () => {
       navigate(-1);
     });
 
-    socket.on("gameData-host", (res) => {
-      setGame(res);
+    socket.on("game-info", (game) => {
+      setGame(game);
     });
 
-    socket.on("updatePlayerLobby-host", (data) => {
-      console.log("updatePlayerLobby: ", data);
-      setPlayers(data);
-    });
-
-    socket.on("gameStarted", function (id) {
-      navigate(`/host/game/${id}`);
+    socket.on("lobby-players", (players) => {
+      setPlayers(players);
     });
 
     return () => {
-      console.log("disconeect lobby");
       socket.emit("disconnect", socket.id);
+      socket.off("no-game-found");
+      socket.off("game-info");
+      socket.off("lobby-players");
     };
   }, []);
 
   const startGame = () => {
-    socket.emit("startGame");
+    navigate(`/host/game/${socket.id}`);
   };
 
   const kickPlayer = (playerSocketId) => {
-    socket.emit("host-kick-player", {
+    socket.emit("host-kick-player-on-lobby", {
       hostSocketId: socket.id,
       playerSocketId,
     });

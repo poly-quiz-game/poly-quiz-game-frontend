@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-const EnterPin = ({ socket }) => {
+const OnLobby = ({ socket }) => {
   let params = useParams();
   const navigate = useNavigate();
 
@@ -10,21 +10,21 @@ const EnterPin = ({ socket }) => {
       navigate("/play/enter-pin");
     }
 
-    socket.emit("player-join", { name: params.name, pin: params.pin });
+    socket.emit("player-join-lobby", { name: params.name, pin: params.pin });
 
-    socket.on("noGameFound-player", function () {
+    socket.on("no-game-found", function () {
       navigate("/play/enter-pin");
     });
 
-    socket.on("kickedByHost-player", function () {
+    socket.on("get-kicked", function () {
       navigate("/play/enter-pin");
     });
 
-    socket.on("hostDisconnect-player", function () {
+    socket.on("host-disconnrected", function () {
       navigate("/play/enter-pin");
     });
 
-    socket.on("gameStarted-player", function () {
+    socket.on("game-started", function () {
       navigate(`/play/play-game/${socket.id}`);
     });
 
@@ -38,4 +38,4 @@ const EnterPin = ({ socket }) => {
   );
 };
 
-export default EnterPin;
+export default OnLobby;

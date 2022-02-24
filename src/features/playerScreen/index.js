@@ -4,7 +4,7 @@ import io from "socket.io-client";
 
 import EnterPin from "./pages/EnterPin";
 import PlayGame from "./pages/PlayGame";
-import PreStart from "./pages/PreStart";
+import OnLobby from "./pages/OnLobby";
 
 import "./styles.scss";
 
@@ -34,7 +34,7 @@ const GameFeature = (props) => {
       />
       <Route
         path="/pre-start/:pin&:name"
-        element={<PreStart {...props} socket={socket} />}
+        element={<OnLobby {...props} socket={socket} />}
       />
       <Route
         path="/play-game/:socketId"

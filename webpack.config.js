@@ -316,6 +316,7 @@ module.exports = function (webpackEnv) {
         layouts: path.resolve(__dirname, "src/layouts/"),
         features: path.resolve(__dirname, "src/features/"),
         api: path.resolve(__dirname, "src/api/"),
+        consts: path.resolve(__dirname, "src/consts"),
         app: path.resolve(__dirname, "src/apps/"),
         // Allows for better profiling with ReactDevTools
         ...(isEnvProductionProfile && {
