@@ -17,7 +17,6 @@ import "./styles.scss";
 import {
   selectReportList,
   selectReportTotal,
-  selectLoading,
   fetchReports,
   reportActions,
 } from "../reportSlice";
@@ -37,26 +36,40 @@ const Report = () => {
     offset: 0,
     limit: LIMIT,
     search: "",
-    sortBy: "-createdAt",
+    sortDirection: "desc",
+    sortField: "createdAt",
+  });
+  const [loadingState, setLoadingState] = useState({
+    initLoading: true,
+    loading: false,
   });
 
   const dispatch = useDispatch();
 
   const reports = useSelector(selectReportList);
-  const loading = useSelector(selectLoading);
   const total = useSelector(selectReportTotal);
+
+  const fetchData = () => {
+    if (!loadingState.initLoading) {
+      setLoadingState({ ...loadingState, loading: true });
+    }
+    dispatch(fetchReports(metadata)).then(() => {
+      setLoadingState({ initLoading: false, loading: false });
+    });
+  };
 
   useEffect(() => {
     if (
-      ref?.current?.sortBy !== metadata.sortBy ||
+      ref?.current?.sortDirection !== metadata.sortDirection ||
       ref?.current?.search !== metadata.search
     ) {
       dispatch(reportActions.resetReports()); // reset quizzes
     }
-    console.log("metadata", metadata);
-    dispatch(fetchReports(metadata));
+    fetchData();
     ref.current = metadata;
   }, [dispatch, metadata]);
+
+  const { initLoading, loading } = loadingState;
 
   return (
     <MainLayout>
@@ -81,17 +94,17 @@ const Report = () => {
 
             <div className="report-sort">
               <Select
-                value={metadata.sortBy}
+                value={metadata.sortDirection}
                 onChange={(value) =>
                   setMetadata({
                     ...metadata,
                     offset: 0,
-                    sortBy: value,
+                    sortDirection: value,
                   })
                 }
               >
-                <Select.Option value="-createdAt">Mới nhất</Select.Option>
-                <Select.Option value="+createdAt">Cũ nhất</Select.Option>
+                <Select.Option value="desc">Mới nhất</Select.Option>
+                <Select.Option value="asc">Cũ nhất</Select.Option>
               </Select>
             </div>
           </div>
@@ -106,52 +119,56 @@ const Report = () => {
               })
             }
             hasMore={reports.length < total}
-            loader={<Skeleton paragraph={{ rows: 1 }} active />}
-            endMessage={!loading && <Divider plain>Hết</Divider>}
+            endMessage={
+              !loading && !initLoading && <Divider plain>Hết</Divider>
+            }
             scrollableTarget="reportsDiv"
           >
             <List
               bordered
-              dataSource={
-                reports.length ? reports : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-              }
-              renderItem={(report) =>
-                loading ? (
-                  <List.Item>
-                    <Skeleton avatar paragraph={{ rows: 1 }} />
-                  </List.Item>
-                ) : (
-                  <List.Item
-                    key={report.id}
-                    actions={[
-                      <div
-                        className="report-players"
-                        key="list-vertical-user-o"
-                      >
-                        <IconText
-                          icon={UserOutlined}
-                          text={report?.players?.length}
-                        />
-                      </div>,
-                      <div
-                        className="report-questions"
-                        key="list-vertical-like-o"
-                      >
-                        <IconText
-                          icon={QuestionCircleOutlined}
-                          text={report?.questions?.length}
-                        />
-                      </div>,
-                      <div
-                        className="report-createdAt"
-                        key="list-vertical-message"
-                      >
-                        <IconText
-                          icon={CalendarOutlined}
-                          text={moment(report.createdAt).format("DD-MM")}
-                        />
-                      </div>,
-                    ]}
+              dataSource={reports}
+              renderItem={(report) => (
+                <List.Item
+                  key={report.id}
+                  actions={
+                    !report.loading
+                      ? [
+                          <div
+                            className="report-players"
+                            key="list-vertical-user-o"
+                          >
+                            <IconText
+                              icon={UserOutlined}
+                              text={report?.players?.length}
+                            />
+                          </div>,
+                          <div
+                            className="report-questions"
+                            key="list-vertical-like-o"
+                          >
+                            <IconText
+                              icon={QuestionCircleOutlined}
+                              text={report?.reportQuestions?.length}
+                            />
+                          </div>,
+                          <div
+                            className="report-createdAt"
+                            key="list-vertical-message"
+                          >
+                            <IconText
+                              icon={CalendarOutlined}
+                              text={moment(report.createdAt).format("DD-MM")}
+                            />
+                          </div>,
+                        ]
+                      : []
+                  }
+                >
+                  <Skeleton
+                    avatar
+                    title={false}
+                    loading={report.loading}
+                    active
                   >
                     <List.Item.Meta
                       avatar={
@@ -161,17 +178,17 @@ const Report = () => {
                       }
                       title={
                         <Link
-                          to={`/report/detail/${report._id}`}
-                          key={report._id}
+                          to={`/report/detail/${report.id}`}
+                          key={report.id}
                           className="quiz-item-link"
                         >
                           {report.name}{" "}
                         </Link>
                       }
                     />
-                  </List.Item>
-                )
-              }
+                  </Skeleton>
+                </List.Item>
+              )}
             />
           </InfiniteScroll>
         </div>

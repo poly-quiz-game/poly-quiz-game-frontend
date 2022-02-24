@@ -13,6 +13,7 @@ const QuizFeature = () => {
       <Route path="create" element={<CreateQuiz />} />
       <Route path="detail/:id" element={<DetailQuiz />} />
       <Route path="update/:id" element={<CreateQuiz />} />
+      <Route path="remove/:id" element={<CreateQuiz />} />
     </Routes>
   );
 };

@@ -3,7 +3,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import quizApi from "api/quizApi";
 
 const initialState = {
-  loading: false,
+  data: [],
   list: [],
   total: 0,
   quiz: {},
@@ -11,14 +11,25 @@ const initialState = {
 
 export const fetchQuizzes = createAsyncThunk(
   "quiz/getAll",
-  async ({ offset, limit, search, sortBy }) => {
-    return await quizApi.getAll({ offset, limit, search, sortBy });
+  async ({ offset, limit, search, sortField, sortDirection }) => {
+    return await quizApi.getAll({
+      offset,
+      limit,
+      search,
+      sortField,
+      sortDirection,
+    });
   }
 );
 
 export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
-  const response = await quizApi.getOne(id);
-  return response.data;
+  return await quizApi.getOne(id);
+});
+export const remove = createAsyncThunk(
+  "quiz/remove",
+  async (id) => {
+    const { data } = await quizApi.delete(id);
+    return data;
 });
 
 const quizSlice = createSlice({
@@ -27,31 +38,27 @@ const quizSlice = createSlice({
   reducers: {
     resetQuizzes: (state) => {
       state.list = [];
+      state.data = [];
       state.total = 0;
     },
   },
   extraReducers: ({ addCase }) => {
     addCase(fetchQuizzes.pending, (state) => {
-      state.loading = true;
+      state.list = state.data.concat(
+        [...new Array(3)].map(() => ({ loading: true }))
+      );
     });
-    addCase(fetchQuiz.pending, (state) => {
-      state.loading = true;
-    });
+    addCase(fetchQuiz.pending, (state) => {});
     addCase(fetchQuizzes.fulfilled, (state, action) => {
-      state.loading = false;
-      state.list = [...state.list, ...action.payload.quizzes];
+      state.data = [...state.data, ...(action.payload.data || [])];
+      state.list = state.data;
       state.total = action.payload.total;
     });
     addCase(fetchQuiz.fulfilled, (state, action) => {
-      state.loading = false;
       state.quiz = action.payload;
     });
-    addCase(fetchQuizzes.rejected, (state) => {
-      state.loading = false;
-    });
-    addCase(fetchQuiz.rejected, (state) => {
-      state.loading = false;
-    });
+    addCase(fetchQuizzes.rejected, (state) => {});
+    addCase(fetchQuiz.rejected, (state) => {});
   },
 });
 
@@ -62,7 +69,6 @@ export const quizActions = quizSlice.actions;
 export const selectQuizList = (state) => state.quiz.list;
 export const selectQuizTotal = (state) => state.quiz.total;
 export const selectQuiz = (state) => state.quiz.quiz;
-export const selectLoading = (state) => state.quiz.loading;
 
 // Reducer
 const quizReducer = quizSlice.reducer;

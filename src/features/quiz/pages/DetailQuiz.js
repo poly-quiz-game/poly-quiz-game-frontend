@@ -1,40 +1,20 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
-import {
-  Skeleton,
-  Button,
-  Card,
-  List,
-  Avatar,
-  Layout,
-  Menu,
-  Breadcrumb,
-  Image,
-} from "antd";
-import {
-  UserOutlined,
-  LaptopOutlined,
-  NotificationOutlined,
-} from "@ant-design/icons";
-import {
-  FaUserAlt,
-  FaCaretRight,
-  FaEllipsisV,
-  FaPencilAlt,
-  FaStar,
-  FaChartBar,
-} from "react-icons/fa";
+import { useNavigate } from "react-router";
+import { Space, Button, Layout, Menu, Image } from "antd";
+import { DeleteOutlined } from "@ant-design/icons";
+import { FaUserAlt, FaEllipsisV, FaPencilAlt } from "react-icons/fa";
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 
 import MainLayout from "layouts/main.layout";
 import { Link } from "react-router-dom";
 
-import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
+import { fetchQuiz, selectQuiz, remove } from "../quizSlice";
 
 import "./detail.css";
-const { SubMenu } = Menu;
-const { Header, Content, Sider } = Layout;
+import { showDeleteConfirm } from "../../../confirm/DeleteConfirm";
+const { Content, Sider } = Layout;
 
 const CorrectIcon = (
   <span style={{ color: "#52c41a" }}>
@@ -47,13 +27,13 @@ const IncorretIcocn = (
   </span>
 );
 const QUESTION_LABELS = ["A", "B", "C", "D"];
-const DetailQuiz = ({ socket }) => {
+
+const DetailQuiz = () => {
   let params = useParams();
   const dispatch = useDispatch();
   const user = JSON.parse(localStorage.getItem("user"));
   const quiz = useSelector(selectQuiz);
-  const loading = useSelector(selectLoading);
-
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
   }, [dispatch, params]);
@@ -90,7 +70,26 @@ const DetailQuiz = ({ socket }) => {
                   </div>
                   <div className="button-icon">
                     <div>
-                      <FaPencilAlt />
+                      <Link
+                        to={`/quiz/update/${quiz.id}`}
+                        style={{ color: "black", fontSize: "14px" }}
+                      >
+                        <FaPencilAlt />
+                      </Link>
+                    </div>
+                    <div>
+                      <Space size="middle">
+                        <DeleteOutlined
+                          style={{ cursor: "pointer", color: "black" }}
+                          onClick={() => {
+                            showDeleteConfirm(quiz.name, async () => {
+                              await dispatch(remove(quiz.id));
+                              await dispatch(fetchQuiz());
+                              await navigate("/quiz");
+                            });
+                          }}
+                        />
+                      </Space>
                     </div>
                     <div>
                       <FaEllipsisV />
@@ -104,7 +103,7 @@ const DetailQuiz = ({ socket }) => {
                       style={{ backgroundColor: "#416CDA" }}
                     >
                       <Link
-                        to={`/host/start/${quiz._id}`}
+                        to={`/host/start/${quiz.id}`}
                         style={{ color: "#fff", fontSize: "14px" }}
                       >
                         Bắt đầu game
@@ -141,7 +140,7 @@ const DetailQuiz = ({ socket }) => {
               }}
             >
               {(quiz.questions || []).map((qt, i) => (
-                <div className="quizquestion" key={qt._id}>
+                <div className="quizquestion" key={qt.id}>
                   <div className="quizzquestion-top">
                     <div className="quizquestion-left">
                       <h4>{i + 1}-Câu hỏi</h4>
@@ -187,11 +186,11 @@ const DetailQuiz = ({ socket }) => {
                             <h3>{QUESTION_LABELS[index]}</h3>
                           </div>
                           <div className="answer-question-right">
-                            <h4>{as}</h4>
+                            <h4>{as.answer}</h4>
                           </div>
                         </div>
                         <div className="answer-icon">
-                          {qt.correctAnswer === index
+                          {qt.correctAnswer === as.index
                             ? CorrectIcon
                             : IncorretIcocn}
                         </div>
@@ -204,7 +203,6 @@ const DetailQuiz = ({ socket }) => {
           </Layout>
         </Layout>
       </Layout>
-      ,
     </MainLayout>
   );
 };

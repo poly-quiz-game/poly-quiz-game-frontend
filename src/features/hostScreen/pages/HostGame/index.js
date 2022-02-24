@@ -142,7 +142,7 @@ const HostGame = ({ socket }) => {
             >
               <div className="answer-label">A</div>
               <div className="answer-content">
-                {(question.answers || [])[0]}
+                {(question.answers || [])[0].answer}
               </div>
             </div>
             <div
@@ -153,7 +153,7 @@ const HostGame = ({ socket }) => {
             >
               <div className="answer-label">B</div>
               <div className="answer-content">
-                {(question.answers || [])[1]}
+                {(question.answers || [])[1].answer}
               </div>
             </div>
             <div
@@ -164,7 +164,7 @@ const HostGame = ({ socket }) => {
             >
               <div className="answer-label">C</div>
               <div className="answer-content">
-                {(question.answers || [])[2]}
+                {(question.answers || [])[2].answer}
               </div>
             </div>
             <div
@@ -175,7 +175,7 @@ const HostGame = ({ socket }) => {
             >
               <div className="answer-label">D</div>
               <div className="answer-content">
-                {(question.answers || [])[3]}
+                {(question.answers || [])[3].answer}
               </div>
             </div>
           </div>

@@ -6,7 +6,7 @@ import { Layout, Menu } from "antd";
 
 import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
 
-import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
+import { fetchQuiz, selectQuiz } from "../quizSlice";
 
 const { Content, Sider } = Layout;
 
@@ -29,7 +29,7 @@ const UpdateQuiz = ({ socket }) => {
   const dispatch = useDispatch();
 
   const quiz = useSelector(selectQuiz);
-  const loading = useSelector(selectLoading);
+  // const loading = useSelector(selectLoading);
 
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
@@ -59,47 +59,43 @@ const UpdateQuiz = ({ socket }) => {
       </Sider>
       <Content style={{ padding: "24px" }}>
         <div className="start-quiz">
-          {loading ? (
-            <Skeleton />
-          ) : (
-            <>
-              <Button type="default" onClick={() => navigate(-1)}>
-                Trở về
-              </Button>
-              <h2>{quiz.name}</h2>
-              <div>
-                <Button type="primary">Bắt đầu game</Button>
-                <br />
-                <br />
-              </div>
+          <>
+            <Button type="default" onClick={() => navigate(-1)}>
+              Trở về
+            </Button>
+            <h2>{quiz.name}</h2>
+            <div>
+              <Button type="primary">Bắt đầu game</Button>
+              <br />
+              <br />
+            </div>
 
-              {(quiz.questions || []).map((qt) => (
-                <Card
-                  key={qt._id}
-                  title={qt.question}
-                  size="small"
-                  style={{ marginBottom: "10px" }}
-                >
-                  <List
-                    itemLayout="horizontal"
-                    dataSource={qt.answers}
-                    renderItem={(answer, index) => (
-                      <List.Item>
-                        <List.Item.Meta
-                          avatar={
-                            qt.correctAnswer === index
-                              ? CorrectIcon
-                              : IncorretIcocn
-                          }
-                          title={<a href="https://ant.design">{answer}</a>}
-                        />
-                      </List.Item>
-                    )}
-                  />
-                </Card>
-              ))}
-            </>
-          )}
+            {(quiz.questions || []).map((qt) => (
+              <Card
+                key={qt._id}
+                title={qt.question}
+                size="small"
+                style={{ marginBottom: "10px" }}
+              >
+                <List
+                  itemLayout="horizontal"
+                  dataSource={qt.answers}
+                  renderItem={(answer, index) => (
+                    <List.Item>
+                      <List.Item.Meta
+                        avatar={
+                          qt.correctAnswer === index
+                            ? CorrectIcon
+                            : IncorretIcocn
+                        }
+                        title={<a href="https://ant.design">{answer}</a>}
+                      />
+                    </List.Item>
+                  )}
+                />
+              </Card>
+            ))}
+          </>
         </div>
       </Content>
     </Layout>
