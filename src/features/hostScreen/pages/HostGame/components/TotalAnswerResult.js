@@ -1,5 +1,7 @@
 import React from "react";
-import { groupBy } from "lodash";
+import { questionTypes } from "consts";
+
+const QUESTION_LABELS = ["A", "B", "C", "D"];
 
 const CheckIcon = () => (
   <svg
@@ -15,33 +17,51 @@ const CheckIcon = () => (
     />
   </svg>
 );
+const sumAnswers = (arr) => {
+  const obj = [0, 0, 0, 0];
+  arr.forEach((item) => {
+    const answers = item.answers[item.answers.length - 1].split("|");
+    answers.forEach((answer) => {
+      obj[answer] += 1;
+    });
+  });
+  return obj;
+};
 
 const TotalAnswerResult = ({ questionResult, questionIndex, question }) => {
   const correctAnswers = question.correctAnswer.split("|").filter((a) => a);
 
-  const calculateAnsersNumber = (index) =>
-    groupBy(questionResult, (p) => p.answers[questionIndex])[index]?.length ||
-    0;
+  const calculateAnsersNumber = (index) => {
+    return sumAnswers(questionResult)[index];
+  };
 
-  const calculateHeight = (index) =>
-    (calculateAnsersNumber(index) / questionResult.length) * 150 + 3;
+  const calculateHeight = (index) => {
+    return (calculateAnsersNumber(index) / questionResult.length) * 150;
+  };
 
   return (
     <div className="total-answer-result">
-      {question.answers.map((answer, index) => (
+      {(question.type === questionTypes.TRUE_FALSE_ANSWER
+        ? [...question.answers].slice(0, 2)
+        : question.answers
+      ).map((answer, index) => (
         <div className={`total-answer total-answer-${index + 1}`} key={index}>
           <div
             className="answer-tree"
             style={{
               height: `${calculateHeight(index)}px`,
             }}
-          ></div>
+          />
+          <div
+            className="answer-tree"
+            style={{
+              height: "30px",
+            }}
+          >
+            {QUESTION_LABELS[index]}{" "}
+            {correctAnswers.includes(answer.index.toString()) && <CheckIcon />}
+          </div>
           <div className="total-number">{calculateAnsersNumber(index)}</div>
-          {correctAnswers.includes(answer.index.toString()) && (
-            <div className="check-icon">
-              <CheckIcon />
-            </div>
-          )}
         </div>
       ))}
     </div>
