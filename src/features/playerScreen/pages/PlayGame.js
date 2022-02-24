@@ -161,11 +161,8 @@ const PlayGame = ({ socket }) => {
   return (
     <div className="player-game__screen">
       <div className="player-info">
-        {/* <div className="player-name">{questionTypeLabels[question.type]}</div>
-        <div className="player-score">{player.score}</div> */}
-         
-        <img src="/img/logo.png" />
-      
+        <div className="player-name">{questionTypeLabels[question.type]}</div>
+        <div className="player-score">{player.score}</div>
       </div>
       {!answered && (
         <Answers
