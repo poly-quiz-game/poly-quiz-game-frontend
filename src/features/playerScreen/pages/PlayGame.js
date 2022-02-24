@@ -148,7 +148,7 @@ const PlayGame = ({ socket }) => {
           <Col span={20} offset={2}>
             <h1>Game over!</h1>
             <p>
-              Điểm đạt được: {playerData.score / 100} /{" "}
+              Điểm đạt được: {playerData.score / 100} /
               {playerData.questionLength}
             </p>
             <Link to="/play/enter-pin">Thoát</Link>
@@ -176,10 +176,18 @@ const PlayGame = ({ socket }) => {
         />
       )}
       {!showResult && answered && <h1>Submited. Waiting for others!</h1>}
-      {showResult && <h1>{isCorrect ? "correct" : "incorrect"}</h1>}
+      {showResult && (
+        <div className="question-answer">
+          <img src={isCorrect ? "/img/true.png" : "/img/false.png"}/>
+          <h1 className="question-tf">{isCorrect ? "Đúng" : "Sai"}</h1>
+          <p>{isCorrect ? "+ 100 " : "+ 0 "} point</p>
+          <h3>Bạn đang ở vị trí số 1</h3>
+        </div>
+      )}
       <div className="question-footer">
         <div className="player-name">{player.name}</div>
-        <div>PIN: {game.pin}</div>
+        <div className="player-score">{player.score}</div>
+        {/* <div>PIN: {game.pin}</div> */}
       </div>
     </div>
   );
