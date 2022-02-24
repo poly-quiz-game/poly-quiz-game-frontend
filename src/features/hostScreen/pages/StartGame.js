@@ -27,13 +27,17 @@ const StartGame = ({ socket }) => {
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
 
-    socket.on("showGamePin", ({ pin }) => {
-      navigate(`/host/lobby/${pin}`);
+    socket.on("lobby-info", ({ hostSocketId }) => {
+      navigate(`/host/lobby/${hostSocketId}`);
+    });
+
+    socket.on("no-quiz-found", () => {
+      alert("no-quiz-found");
     });
   }, [dispatch, params]);
 
   const startGame = () => {
-    socket.emit("host-join", { id: quiz.id });
+    socket.emit("host-create-lobby", { id: quiz.id });
   };
 
   return (
@@ -45,23 +49,25 @@ const StartGame = ({ socket }) => {
           ) : (
             <div>
               <div className="quiz-info">
-                <img
-                  
-                  src="/img/logo.png"
-                />
+                <img src="/img/logo.png" />
                 <h1>{quiz.name}</h1>
                 <div className="box-start">
                   <div className="icon-game">
-                  <img
-                  src="/img/icon.png"
-                />
+                    <img src="/img/icon.png" />
                   </div>
                   <div className="question-number">
                     {(quiz.questions || []).length} câu hỏi
                   </div>
                   <Button
                     size="large"
-                    style={{  backgroundColor: "#399D29",border: "none",color:"#fff",fontSize: "20px",paddingTop:"0",marginTop: "30px"}}
+                    style={{
+                      backgroundColor: "#399D29",
+                      border: "none",
+                      color: "#fff",
+                      fontSize: "20px",
+                      paddingTop: "0",
+                      marginTop: "30px",
+                    }}
                     className="create-room"
                     onClick={startGame}
                   >

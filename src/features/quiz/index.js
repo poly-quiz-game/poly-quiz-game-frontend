@@ -2,7 +2,6 @@ import React from "react";
 import { Route, Routes } from "react-router-dom";
 
 import Quizzes from "./pages/Quizzes";
-import UpdateQuiz from "./pages/UpdateQuiz";
 import DetailQuiz from "./pages/DetailQuiz";
 import CreateQuiz from "./pages/CreateQuiz";
 

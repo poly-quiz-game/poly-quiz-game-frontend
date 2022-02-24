@@ -17,100 +17,33 @@ const CheckIcon = () => (
 );
 
 const TotalAnswerResult = ({ questionResult, questionIndex, question }) => {
+  const correctAnswers = question.correctAnswer.split("|").filter((a) => a);
+
+  const calculateAnsersNumber = (index) =>
+    groupBy(questionResult, (p) => p.answers[questionIndex])[index]?.length ||
+    0;
+
+  const calculateHeight = (index) =>
+    (calculateAnsersNumber(index) / questionResult.length) * 150 + 3;
+
   return (
     <div className="total-answer-result">
-      <div className="total-answer total-answer-1">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[0]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[0]
-            ?.length || 0}
+      {question.answers.map((answer, index) => (
+        <div className={`total-answer total-answer-${index + 1}`} key={index}>
+          <div
+            className="answer-tree"
+            style={{
+              height: `${calculateHeight(index)}px`,
+            }}
+          ></div>
+          <div className="total-number">{calculateAnsersNumber(index)}</div>
+          {correctAnswers.includes(answer.index.toString()) && (
+            <div className="check-icon">
+              <CheckIcon />
+            </div>
+          )}
         </div>
-        {question.correctAnswer === 0 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
-      <div className="total-answer total-answer-2">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[1]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[1]
-            ?.length || 0}
-        </div>
-        {question.correctAnswer === 1 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
-      <div className="total-answer total-answer-3">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[2]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[2]
-            ?.length || 0}
-        </div>
-        {question.correctAnswer === 2 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
-      <div className="total-answer total-answer-4">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[3]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[3]
-            ?.length || 0}
-        </div>
-        {question.correctAnswer === 3 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
+      ))}
     </div>
   );
 };

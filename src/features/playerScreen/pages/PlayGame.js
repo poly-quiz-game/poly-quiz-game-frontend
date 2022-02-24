@@ -1,8 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams, Link } from "react-router-dom";
 import { Row, Col } from "antd";
+import { questionTypes } from "consts";
 
 import "../styles.scss";
+
+const QUESTION_LABELS = ["A", "B", "C", "D"];
+const QUESTION_TRUE_FALSE_LABELS = ["A", "B"];
 
 // chưa trả lời
 // đã trả lời - đợi kết quả
@@ -16,16 +20,17 @@ const PlayGame = ({ socket }) => {
   const [playerData, setPlayerData] = useState({});
   const [player, setPlayer] = useState({});
   const [game, setGame] = useState({});
+  const [question, setQuestion] = useState({});
 
   const params = useParams();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (params.socketId) {
-      socket.emit("player-join-game", { id: params.socketId });
+      socket.emit("player-join-game", { socketId: params.socketId });
     }
 
-    socket.on("noGameFound-player", () => {
+    socket.on("no-game-found", () => {
       navigate(`/play/enter-pin`);
     });
 
@@ -33,29 +38,31 @@ const PlayGame = ({ socket }) => {
       navigate(`/play/enter-pin`);
     });
 
-    socket.on("answerResult-player", (result) => {
-      setIsCorrect(result);
-    });
-
-    socket.on("playerInfo-player", (player) => {
-      setPlayer(player);
-    });
-
-    socket.on("gameInfo-player", (game) => {
-      setGame(game);
-    });
-
-    socket.on("GameOverPlayer", (playerData) => {
+    socket.on("game-over", (playerData) => {
       setGameOver(true);
       setPlayerData(playerData);
     });
 
-    socket.on("questionOver-all", (playersInGame, player) => {
+    // socket.on("answerResult-player", (result) => {
+    //   setIsCorrect(result);
+    // });
+
+    socket.on("player-info", (player) => {
+      setPlayer(player);
+    });
+
+    socket.on("question-started", (question) => {
+      console.log("gameStarted-player", question);
+      setQuestion(question);
+    });
+
+    socket.on("question-over", (isCorrect, player) => {
+      setIsCorrect(isCorrect);
       setShowResult(true);
       setPlayer(player);
     });
 
-    socket.on("nextQuestionPlayer", () => {
+    socket.on("next-question", () => {
       setAnswered(false);
       setIsCorrect(false);
       setShowResult(false);
@@ -66,9 +73,9 @@ const PlayGame = ({ socket }) => {
     };
   }, []);
 
-  const playerAnswer = (num) => {
+  const playerAnswer = (answer) => {
     setAnswered(true);
-    socket.emit("playerAnswer", num);
+    socket.emit("player-answer", answer);
   };
 
   if (gameOver) {
@@ -96,18 +103,18 @@ const PlayGame = ({ socket }) => {
       </div>
       {!answered && (
         <div className="answers">
-          <div className="answer answer-1" onClick={() => playerAnswer(0)}>
-            <div className="answer-label">A</div>
-          </div>
-          <div className="answer answer-2" onClick={() => playerAnswer(1)}>
-            <div className="answer-label">B</div>
-          </div>
-          <div className="answer answer-3" onClick={() => playerAnswer(2)}>
-            <div className="answer-label">C</div>
-          </div>
-          <div className="answer answer-4" onClick={() => playerAnswer(3)}>
-            <div className="answer-label">D</div>
-          </div>
+          {(question.type === questionTypes.TRUE_FALSE_ANSWER
+            ? QUESTION_TRUE_FALSE_LABELS
+            : QUESTION_LABELS
+          ).map((label, index) => (
+            <div
+              className={`answer answer-${index + 1}`}
+              key={index}
+              onClick={() => playerAnswer(index.toString())}
+            >
+              <div className="answer-label">{label}</div>
+            </div>
+          ))}
         </div>
       )}
       {!showResult && answered && <h1>Submited. Waiting for others!</h1>}
