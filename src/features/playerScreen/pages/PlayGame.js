@@ -89,6 +89,8 @@ const PlayGame = ({ socket }) => {
   const [gameOver, setGameOver] = useState(false);
   const [playerData, setPlayerData] = useState({});
   const [player, setPlayer] = useState({});
+  const [score, setScore] = useState(0);
+  const [rank, setRank] = useState(1);
   const [game, setGame] = useState({});
   const [question, setQuestion] = useState({});
 
@@ -118,6 +120,11 @@ const PlayGame = ({ socket }) => {
       setGame(game);
     });
 
+    socket.on("player-score", ({ score, rank }) => {
+      setScore(score);
+      setRank(rank);
+    });
+
     socket.on("question-started", (question) => {
       setAnswered(false);
       setIsCorrect(false);
@@ -125,10 +132,11 @@ const PlayGame = ({ socket }) => {
       setQuestion(question);
     });
 
-    socket.on("question-over", (isCorrect, player) => {
+    socket.on("question-over", (isCorrect) => {
       setIsCorrect(isCorrect);
+      setAnswered(true);
       setShowResult(true);
-      setPlayer(player);
+      socket.emit("get-player-score");
     });
 
     return () => {
@@ -162,7 +170,7 @@ const PlayGame = ({ socket }) => {
     <div className="player-game__screen">
       <div className="player-info">
         <div className="player-name">{questionTypeLabels[question.type]}</div>
-        <div className="player-score">{player.score}</div>
+        <div className="player-score">{score}</div>
       </div>
       {!answered && (
         <Answers
@@ -176,7 +184,9 @@ const PlayGame = ({ socket }) => {
         />
       )}
       {!showResult && answered && <h1>Submited. Waiting for others!</h1>}
-      {showResult && <h1>{isCorrect ? "correct" : "incorrect"}</h1>}
+      {showResult && (
+        <h1>{isCorrect ? `correct - ${rank}` : `incorrect - ${rank}`}</h1>
+      )}
       <div className="question-footer">
         <div className="player-name">{player.name}</div>
         <div>PIN: {game.pin}</div>

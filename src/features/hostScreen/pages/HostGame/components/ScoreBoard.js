@@ -2,7 +2,7 @@ import React from "react";
 import "./styles.scss";
 
 const ScoreBoard = ({
-  questionResult,
+  playerAnswerResult,
   nextQuestion,
   endGame,
   game,
@@ -17,7 +17,7 @@ const ScoreBoard = ({
           {!endGame ? "Tiếp" : "Kết thúc"}
         </div>
         <div className="score-bars">
-          {(questionResult || []).map((player, index) => {
+          {(playerAnswerResult || []).map((player, index) => {
             return (
               <div className="score-bar" key={index}>
                 <div>{player.name}</div>

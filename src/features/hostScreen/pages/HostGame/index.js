@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import TotalAnswerResult from "./components/TotalAnswerResult";
 import ScoreBoard from "./components/ScoreBoard";
@@ -8,7 +8,7 @@ import "../../styles.scss";
 
 const gameStateTypes = {
   LIVE_QUESTION: "liveQuestion",
-  QUESTION_RESULT: "questionResult",
+  QUESTION_RESULT: "playerAnswerResult",
   SCORE_BOARD: "scoreBoard",
   GAME_OVER: "gameOver",
 };
@@ -16,15 +16,18 @@ const gameStateTypes = {
 const HostGame = ({ socket }) => {
   const [question, setQuestion] = useState(null);
   const [game, setGame] = useState({});
+  const [time, setTime] = useState(-1);
 
   const [players, setPlayers] = React.useState([]);
   const [gameState, setGameState] = React.useState(
     gameStateTypes.LIVE_QUESTION
   );
-  const [questionResult, setQuestionResult] = React.useState({});
+  const [playerAnswerResult, setPlayerAnswerResult] = React.useState({});
 
   const params = useParams();
   const navigate = useNavigate();
+  const timer = useRef(null);
+  const prevTime = useRef(null);
 
   useEffect(() => {
     socket.emit("host-start-game", { id: params.id });
@@ -39,16 +42,32 @@ const HostGame = ({ socket }) => {
       }
       setGameState(gameStateTypes.LIVE_QUESTION);
       setQuestion(question);
-      setQuestionResult([]);
+      setPlayerAnswerResult([]);
+      setTime(question.timeLimit / 1000);
     });
 
     socket.on("players-answered", ({ playersInGame, playersAnswered }) => {
       setPlayers({ playersInGame, playersAnswered });
     });
 
-    socket.on("question-over", (res, answer) => {
+    socket.on("get-player-answered-time", (playerId, question) => {
+      socket.emit("player-answered-time", {
+        playerId,
+        time: prevTime.current,
+        question,
+      });
+    });
+
+    socket.on("question-over", () => {
       setGameState(gameStateTypes.QUESTION_RESULT);
-      setQuestionResult(res);
+      setPlayerAnswerResult([]);
+      setTime(null);
+      socket.emit("get-score-board");
+    });
+
+    socket.on("score-board", (playerAnswerResult) => {
+      setPlayerAnswerResult(playerAnswerResult);
+      setTime(null);
     });
 
     socket.on("game-over-host", () => {
@@ -59,6 +78,21 @@ const HostGame = ({ socket }) => {
       socket.emit("disconnect", socket.id);
     };
   }, []);
+
+  useEffect(() => {
+    if (time !== prevTime.current && time !== null) {
+      timer.current = setInterval(() => {
+        setTime((prevTime) => prevTime - 1);
+      }, 1000);
+    }
+    prevTime.current = time;
+    if (time === 0) {
+      socket.emit("time-up");
+    }
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, [time]);
 
   const endGame = () => {
     socket.emit("disconnect", socket.id);
@@ -73,11 +107,9 @@ const HostGame = ({ socket }) => {
     socket.emit("next-question");
   };
 
-  // const { question, gameData, questionResult, gameOver } = state;
-
   const imageContent = (
     <div className="question-image">
-      <div className="time">18</div>
+      <div className="time">{time}</div>
       <div className="image no-image">
         <img src="/img/logo-large.png" />
       </div>
@@ -98,7 +130,7 @@ const HostGame = ({ socket }) => {
       return (
         <ScoreBoard
           question={question}
-          questionResult={questionResult}
+          playerAnswerResult={playerAnswerResult}
           nextQuestion={nextQuestion}
           endGame={gameState === gameStateTypes.GAME_OVER ? endGame : null}
           game={game}
@@ -119,7 +151,7 @@ const HostGame = ({ socket }) => {
             {gameState === gameStateTypes.QUESTION_RESULT ? (
               <TotalAnswerResult
                 question={question}
-                questionResult={questionResult}
+                playerAnswerResult={playerAnswerResult}
                 questionIndex={game.questionIndex}
               />
             ) : (
