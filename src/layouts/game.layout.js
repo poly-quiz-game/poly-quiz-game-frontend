@@ -1,8 +1,8 @@
 import React from "react";
-import { Layout, Menu, Sider } from "antd";
+import { Layout, Menu} from "antd";
 import { Link } from "react-router-dom";
 
-const { Header, Footer, Content } = Layout;
+const {  Content } = Layout;
 
 const GameLayout = ({ children }) => {
   return (

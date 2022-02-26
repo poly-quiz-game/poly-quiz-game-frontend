@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import { Layout, Menu, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -66,6 +66,16 @@ const MainLayout = ({ children }) => {
             </Menu.Item>
             <Menu.Item key="report" icon={<ProfileOutlined />}>
               <Link to="/report" onClick={() => setTab("report")}>
+                Báo cáo
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="Endgame" icon={<ProfileOutlined />}>
+              <Link to="/Endgame" onClick={() => setTab("Endgame")}>
+                Báo cáo
+              </Link>
+            </Menu.Item>
+            <Menu.Item key="listQuiz" icon={<ProfileOutlined />}>
+              <Link to="/listQuiz" onClick={() => setTab("listQuiz")}>
                 Báo cáo
               </Link>
             </Menu.Item>
