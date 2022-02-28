@@ -227,7 +227,8 @@ const PlayGame = ({ socket }) => {
       )}
       <div className="question-footer">
         <div className="player-name">{player.name}</div>
-        <div>PIN: {game.pin}</div>
+        <div className="player-score">{player.score}</div>
+        {/* <div>PIN: {game.pin}</div> */}
       </div>
     </div>
   );
