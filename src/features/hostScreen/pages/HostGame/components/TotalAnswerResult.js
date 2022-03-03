@@ -17,10 +17,11 @@ const CheckIcon = () => (
     />
   </svg>
 );
+
 const sumAnswers = (arr) => {
   const obj = [0, 0, 0, 0];
   arr.forEach((item) => {
-    const answers = item.answers[item.answers.length - 1].split("|");
+    const answers = item.answers[item.answers.length - 1].answer.split("|");
     answers.forEach((answer) => {
       obj[answer] += 1;
     });
@@ -28,15 +29,15 @@ const sumAnswers = (arr) => {
   return obj;
 };
 
-const TotalAnswerResult = ({ questionResult, questionIndex, question }) => {
+const TotalAnswerResult = ({ playerAnswerResult, question }) => {
   const correctAnswers = question.correctAnswer.split("|").filter((a) => a);
 
   const calculateAnsersNumber = (index) => {
-    return sumAnswers(questionResult)[index];
+    return sumAnswers(playerAnswerResult)[index];
   };
 
   const calculateHeight = (index) => {
-    return (calculateAnsersNumber(index) / questionResult.length) * 150;
+    return (calculateAnsersNumber(index) / playerAnswerResult.length) * 150;
   };
 
   return (

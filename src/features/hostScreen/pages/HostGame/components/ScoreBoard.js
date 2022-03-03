@@ -1,12 +1,7 @@
 import React from "react";
 import "./styles.scss";
 
-const ScoreBoard = ({
-  questionResult,
-  nextQuestion,
-  endGame,
-  game,
-}) => {
+const ScoreBoard = ({ playerAnswerResult, nextQuestion, endGame, game }) => {
   return (
     <div className="game__screen">
       <div className="question-info">
@@ -17,14 +12,16 @@ const ScoreBoard = ({
           {!endGame ? "Tiếp" : "Kết thúc"}
         </div>
         <div className="score-bars">
-          {(questionResult || []).map((player, index) => {
-            return (
-              <div className="score-bar" key={index}>
-                <div>{player.name}</div>
-                <div>{player.score}</div>
-              </div>
-            );
-          })}
+          {playerAnswerResult
+            .sort((a, b) => b.score - a.score)
+            .map((player, index) => {
+              return (
+                <div className="score-bar" key={index}>
+                  <div>{player.name}</div>
+                  <div>{player.score}</div>
+                </div>
+              );
+            })}
         </div>
       </div>
       <div className="question-footer">
