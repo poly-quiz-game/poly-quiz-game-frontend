@@ -11,11 +11,29 @@ import "antd/dist/antd.min.css";
 import Report from "./features/report";
 import HostScreen from "./features/hostScreen";
 import Play from "./features/playerScreen";
+import Endgame from "./features/endGame/pages/endGame";
+import Listquiz from "./features/listQuiz/pages/listQuiz";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+      <Route
+          path="listQuiz/*"
+          element={
+            <PrivateRoute>
+              <Listquiz />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="Endgame/*"
+          element={
+            <PrivateRoute>
+              <Endgame />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="quiz/*"
           element={

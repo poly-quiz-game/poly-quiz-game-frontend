@@ -1,0 +1,114 @@
+.main {
+  height: 1000px;
+  background-image: url("../../../../public/img/background_quiz.jpg");
+}
+.container {
+  max-width: 1000px;
+  padding: auto;
+  margin: auto;
+}
+.row {
+  display: flex;
+  gap: 10px;
+}
+.list-quiz-game {
+  max-width: 950px;
+  padding: auto;
+  margin: auto;
+}
+.name-poins {
+  margin-right: 57px;
+  margin-left: auto;
+}
+.name-list {
+  margin-top: 5px;
+  margin-left: 20px;
+  width: 100px;
+}
+.poins {
+  margin-top: 6px;
+}
+.ant-progress-outer {
+  margin-top: 5px;
+  width: 600px;
+  margin-left: 10px;
+}
+.table {
+  padding-bottom: 20px;
+  border-radius: 10px;
+
+  background: rgb(247, 244, 244);
+}
+.index-list {
+  margin-top: 5px;
+  margin-right: 40px;
+}
+.nav-header-top {
+  gap: 105px;
+  padding-top: 20px;
+  margin-left: 34px;
+}
+.icon-times-exit {
+  margin-top: 6px;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+.nav-image-top img {
+  width: 40px;
+  border-radius: 10px;
+}
+li {
+  margin-top: 10px;
+}
+ul li {
+  clear: both;
+  display: inline;
+}
+.list-quiz {
+  margin-top: 10px;
+  padding: 10px;
+  background: rgb(228, 227, 227);
+  border-radius: 10px;
+}
+@media only screen and (min-width: 500px) {
+  .ant-progress-outer {
+    margin-top: 5px;
+    width: 600px;
+    margin-left: 10px;
+  }
+  .table {
+    margin-left: 20px;
+    margin-right: 20px;
+  }
+  .ant-progress-show-info .ant-progress-outer {
+    margin-right: calc(-21em - 227px);
+    padding-right: calc(5em + 457px);
+  }
+}
+@media only screen and (min-width: 600px) {
+  .ant-progress-outer {
+    margin-top: 5px;
+    width: 600px;
+    margin-left: 10px;
+  }
+  .ant-progress-show-info .ant-progress-outer {
+    margin-right: calc(-6em - 175px);
+    padding-right: calc(5em + 234px);
+  }
+}
+@media only screen and (min-width: 1200px) {
+  .ant-progress-show-info .ant-progress-outer {
+    margin-right: calc(-6em - -32px);
+    padding-right: calc(5em + 20px);
+  }
+}
+.ant-progress-inner{
+  border-radius: 5px;
+}
+.ant-progress-bg,
+.ant-progress-success-bg {
+  height: 25px !important;
+  border-radius: 5px;
+}
