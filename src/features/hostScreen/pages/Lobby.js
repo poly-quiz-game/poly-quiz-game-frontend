@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Statistic, Button, Popover, Image } from "antd";
+import { Row, Col, Statistic, Button, Popover, Image, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
 
 import "../styles.scss";
@@ -50,19 +50,22 @@ const Lobby = ({ socket }) => {
   }
 
   return (
-    <div>
-      <div className="lobby__screen">
-        <Row>
-          <Col span={12} offset={6}>
-            <div className="game-info">
-              <h2>Mã Phòng</h2>
-              <Statistic formatter={(val) => val} value={game?.pin} />
-            </div>
-          </Col>
-        </Row>
+    <div className="lobby__screen">
+      <div className="game-info">
+        <div className="game-pin">
+          <h2>Mã phòng:</h2>
+          <Tooltip title="Đã copy" trigger="click">
+            <h1
+              className="pin"
+              onClick={() => navigator.clipboard.writeText(game.pin)}
+            >
+              {game?.pin}
+            </h1>
+          </Tooltip>
+        </div>
       </div>
       <div className="gameinfobottom">
-        <div className="game-logo-start">
+        <div className="game-header">
           <div>
             <Button
               type="primary"
@@ -75,9 +78,6 @@ const Lobby = ({ socket }) => {
             >
               <UserOutlined /> {players?.length}
             </Button>
-          </div>
-          <div className="logo-content">
-            <img src="/img/logo.png"></img>
           </div>
           <div>
             <Button
