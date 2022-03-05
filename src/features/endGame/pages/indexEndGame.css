@@ -78,7 +78,7 @@ ul li {
     width: 600px;
     margin-left: 10px;
   }
-  .table{
+  .table {
     margin-left: 20px;
     margin-right: 20px;
   }
@@ -103,5 +103,12 @@ ul li {
     margin-right: calc(-6em - -32px);
     padding-right: calc(5em + 20px);
   }
-
+}
+.ant-progress-inner{
+  border-radius: 5px;
+}
+.ant-progress-bg,
+.ant-progress-success-bg {
+  height: 25px !important;
+  border-radius: 5px;
 }

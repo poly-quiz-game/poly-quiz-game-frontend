@@ -1,13 +1,16 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./indexListQuiz.css";
 const Listquiz = () => {
   return (
     <div>
-      <div className="mains">
+     <Link to="/quiz">
+     <div className="mains">
         <div className="row nav-header-top">
           <i className="fas fa-times-circle"></i>
         </div>
       </div>
+     </Link>
       <div className="content-main">
         <div className="container">
           <div className="table-content">
