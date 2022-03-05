@@ -11,11 +11,13 @@ import "antd/dist/antd.min.css";
 import Report from "./features/report";
 import HostScreen from "./features/hostScreen";
 import Play from "./features/playerScreen";
+import Home from "./features/home";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<Home />} />
         <Route
           path="quiz/*"
           element={
