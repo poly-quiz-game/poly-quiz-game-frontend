@@ -5,6 +5,7 @@ import ScoreBoard from "./components/ScoreBoard";
 import GameAnswers from "./components/GameAnswers";
 
 import "../../styles.scss";
+import Endgame from "../../../endGame/pages/endGame";
 
 export const gameStateTypes = {
   LIVE_QUESTION: "liveQuestion",
@@ -23,6 +24,7 @@ const HostGame = ({ socket }) => {
     gameStateTypes.LIVE_QUESTION
   );
   const [playerAnswerResult, setPlayerAnswerResult] = React.useState({});
+  const [reportId, setReportId] = React.useState(null);
 
   const params = useParams();
   const navigate = useNavigate();
@@ -70,7 +72,9 @@ const HostGame = ({ socket }) => {
       setTime(null);
     });
 
-    socket.on("game-over-host", () => {
+    socket.on("game-over-host", (rank, playersInGame, reportId) => {
+      console.log(reportId);
+      setReportId(reportId);
       setGameState(gameStateTypes.GAME_OVER);
     });
 
@@ -112,18 +116,8 @@ const HostGame = ({ socket }) => {
   }
 
   switch (gameState) {
-    case gameStateTypes.GAME_OVER:
-    case gameStateTypes.SCORE_BOARD:
-      return (
-        <ScoreBoard
-          question={question}
-          playerAnswerResult={playerAnswerResult}
-          nextQuestion={nextQuestion}
-          endGame={gameState === gameStateTypes.GAME_OVER ? endGame : null}
-          game={game}
-        />
-      );
-    default:
+    case gameStateTypes.LIVE_QUESTION:
+    case gameStateTypes.QUESTION_RESULT:
       return (
         <div className="game__screen">
           <div className="question-info">
@@ -163,6 +157,18 @@ const HostGame = ({ socket }) => {
           </div>
         </div>
       );
+    case gameStateTypes.SCORE_BOARD:
+      return (
+        <ScoreBoard
+          question={question}
+          playerAnswerResult={playerAnswerResult}
+          nextQuestion={nextQuestion}
+          endGame={gameState === gameStateTypes.GAME_OVER ? endGame : null}
+          game={game}
+        />
+      );
+    case gameStateTypes.GAME_OVER:
+      return <Endgame reportId={reportId} />;
   }
 };
 

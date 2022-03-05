@@ -1,16 +1,16 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import "./indexListQuiz.css";
+import "./indexListQuiz.scss";
 const Listquiz = () => {
   return (
-    <div>
-     <Link to="/quiz">
-     <div className="mains">
-        <div className="row nav-header-top">
-          <i className="fas fa-times-circle"></i>
+    <div className="list-quiz">
+      <Link to="/quiz">
+        <div className="mains">
+          <div className="row nav-header-top">
+            <i className="fas fa-times-circle"></i>
+          </div>
         </div>
-      </div>
-     </Link>
+      </Link>
       <div className="content-main">
         <div className="container">
           <div className="table-content">
@@ -66,9 +66,7 @@ const Listquiz = () => {
                 <h3>Review Questions</h3>
                 <h5>Click on the questions to see answers</h5>
               </div>
-              <div className="tables">
-
-              </div>
+              <div className="tables"></div>
             </div>
           </div>
         </div>

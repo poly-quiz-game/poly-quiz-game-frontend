@@ -1,47 +1,48 @@
-.mains {
-  background: black;
-  height: 55px;
-}
-.nav-header-top {
-  padding: 10px;
-}
-.main .fa-times-circle {
-  color: white;
-  background: gray;
-  cursor: pointer;
-  padding: 10px;
-  border-radius: 10px;
-}
-.content-main {
-  height: 1000px;
-  background-image: url("../../../../public/img/background_quiz.jpg");
-}
+.list-quiz {
+  .mains {
+    background: black;
+    height: 55px;
+  }
+  .nav-header-top {
+    padding: 10px;
+  }
+  .main .fa-times-circle {
+    color: white;
+    background: gray;
+    cursor: pointer;
+    padding: 10px;
+    border-radius: 10px;
+  }
+  .content-main {
+    height: 1000px;
+    background-image: url("../../../../public/img/background_quiz.jpg");
+  }
 
-.container {
-  max-width: 1000px;
-  margin: auto;
-  padding: auto;
-}
-.content-top {
-  text-align: center;
-  font-weight: 700;
-  color: white;
-}
-.row{
+  .container {
+    max-width: 1000px;
+    margin: auto;
+    padding: auto;
+  }
+  .content-top {
+    text-align: center;
+    font-weight: 700;
+    color: white;
+  }
+  .row {
     display: flex;
-}
-.table-content {
-  padding-top: 10px;
-  background: rgb(28, 8, 31);
-  border: 1px solid black;
-  border-bottom-right-radius: 10px;
- border-bottom-left-radius:10px ;
-}
-.content-list-user img {
-  width: 70px;
-  border-radius: 5px;
-}
-.content-list-user{
+  }
+  .table-content {
+    padding-top: 10px;
+    background: rgb(28, 8, 31);
+    border: 1px solid black;
+    border-bottom-right-radius: 10px;
+    border-bottom-left-radius: 10px;
+  }
+  .content-list-user img {
+    width: 70px;
+    border-radius: 5px;
+  }
+  .content-list-user {
     color: white;
     margin-top: 20px;
     margin-left: 100px;
@@ -51,25 +52,25 @@
     padding-right: 25px;
     margin-right: 100px;
     border: 1px solid white;
-}
-.content-user-right{
+  }
+  .content-user-right {
     margin-left: 40px;
-}
-.buttons {
+  }
+  .buttons {
     padding: 5px;
     background: rgb(85, 84, 84);
     color: white;
     padding-left: 20px;
     padding-right: 20px;
-    border-radius: 10px ;
-}
-.buttons .fa-user{
+    border-radius: 10px;
+  }
+  .buttons .fa-user {
     margin-right: 10px;
-}
-.content-user-right h5{
+  }
+  .content-user-right h5 {
     color: white;
-}
-.content-list-users{
+  }
+  .content-list-users {
     color: rgb(99, 92, 92);
     margin-top: 20px;
     margin-left: 100px;
@@ -78,10 +79,10 @@
     border-radius: 10px;
     padding-left: 25px;
     padding-right: 25px;
-  
+
     border: 1px solid rgb(255, 255, 255);
-}
-.content-list-userss{
+  }
+  .content-list-userss {
     color: rgb(99, 92, 92);
     margin-top: 20px;
     padding-top: 5px;
@@ -89,76 +90,76 @@
     border-radius: 10px;
     padding-left: 25px;
     padding-right: 25px;
-  
+
     border: 1px solid white;
-}
-.content-row{
+  }
+  .content-row {
     gap: 38px;
-}
-.table-content button{
+  }
+  .table-content button {
     margin-top: 10px;
     padding: 10px;
     border-radius: 10px;
     font-weight: bold;
- width: 800px;
- margin-left: 100px;
- margin-right: 100px;
-}
-.content-list-users .fa-hackerrank {
+    width: 800px;
+    margin-left: 100px;
+    margin-right: 100px;
+  }
+  .content-list-users .fa-hackerrank {
     margin-top: 18px;
     font-size: 20px;
     margin-left: 261px;
-}
-.content-list-userss .fa-hackerrank {
+  }
+  .content-list-userss .fa-hackerrank {
     margin-top: 18px;
     font-size: 20px;
     margin-left: 261px;
-}
-.title-content-quiz{
+  }
+  .title-content-quiz {
     text-align: center;
     color: white;
     margin-top: 20px;
-}
-.quizz-true-list{
+  }
+  .quizz-true-list {
     padding: 40px;
     color: white;
-}
-.quizz-true-lists{
+  }
+  .quizz-true-lists {
     padding: 40px;
     color: white;
-}
-.quizz-true-list h3 {
+  }
+  .quizz-true-list h3 {
     color: white;
-}
-.quizz-true-lists h3 {
+  }
+  .quizz-true-lists h3 {
     color: white;
-}
-.quizz-true-list .fa-times{
+  }
+  .quizz-true-list .fa-times {
     margin-top: 20px;
     font-size: 20px;
     margin-right: 80px;
     margin-left: 50px;
-}
-.quizz-true-lists .fa-check-double{
+  }
+  .quizz-true-lists .fa-check-double {
     margin-right: 80px;
     margin-left: 50px;
     margin-top: 20px;
     font-size: 20px;
-}
-.quizz-true-list h4 {
+  }
+  .quizz-true-list h4 {
     color: white;
-}
-.quizz-true-lists h4 {
+  }
+  .quizz-true-lists h4 {
     color: white;
-}
-.quiz-false-left h3{
+  }
+  .quiz-false-left h3 {
     text-align: center;
-}
-.quiz-true-rigth h3{
+  }
+  .quiz-true-rigth h3 {
     text-align: center;
-}
+  }
 
-.box-content .quizz-true-list{
+  .box-content .quizz-true-list {
     margin-top: 20px;
     padding-top: 5px;
     margin-left: 100px;
@@ -169,8 +170,8 @@
     padding-left: 25px;
     padding-right: 25px;
     border: 1px solid white;
-}
-.box-content .quizz-true-lists{
+  }
+  .box-content .quizz-true-lists {
     margin-top: 20px;
     background: green;
     padding-top: 5px;
@@ -181,24 +182,25 @@
     padding-left: 25px;
     padding-right: 25px;
     border: 1px solid white;
-}
-.table-top-list-name{
+  }
+  .table-top-list-name {
     margin-top: 30px;
     margin-left: 100px;
-}
-.table-top-list-name  h3 {
+  }
+  .table-top-list-name h3 {
     padding: 0;
     color: white;
     margin: 0;
-}
-.table-top-list-name  h5{
+  }
+  .table-top-list-name h5 {
     color: white;
-}
-.nav-header-top .fa-times-circle {
+  }
+  .nav-header-top .fa-times-circle {
     color: white;
     background: rgb(90, 89, 89);
     border: 1px solid white;
     padding: 10px;
     border-radius: 10px;
     cursor: pointer;
+  }
 }
