@@ -1,10 +1,14 @@
 import React from "react";
 import { questionTypes } from "consts";
+import { gameStateTypes } from "../index";
 
-const GameAnswers = ({ question, gameStateTypes, gameState }) => {
+const GameAnswers = ({ question, gameState }) => {
   const { type } = question;
 
-  if (type === questionTypes.TYPE_ANSWER) {
+  if (question.type === questionTypes.TYPE_ANSWER) {
+    if (gameState === gameStateTypes.QUESTION_RESULT) {
+      return null;
+    }
     return (
       <div className="answers">
         <div className="answer-0">

@@ -71,6 +71,28 @@
     flex-wrap: wrap;
     padding: 10px;
     align-content: stretch;
+
+    &.type-answer {
+      .type-answer-input {
+        background-color: #372b84;
+        min-height: unset;
+        padding: 30px;
+        margin: auto;
+        input {
+          font-weight: bold;
+          font-size: 26px;
+          border: 0;
+          &:focus {
+            box-shadow: none !important;
+          }
+          color: #fff;
+          text-shadow: rgb(0 0 0 / 25%) 0px 0.125rem 0px,
+            rgb(0 0 0) 0px 0px 0.125rem;
+          text-align: center;
+          background-color: transparent;
+        }
+      }
+    }
     .answer {
       width: calc(50% - 0.25rem);
       border-radius: 8px;
@@ -190,23 +212,22 @@
     background-color: #fff;
     box-shadow: 0px -2px 4px rgba(0, 0, 0, 0.25);
   }
-  .question-answer{
+  .question-answer {
     background-image: url("https://shimatest.shop/background-dep-cho-powerpoint/imager_2_25831_700.jpg");
     background-repeat: no-repeat;
     background-size: 1920px;
     height: 780px;
-    .question-tf{
-      
+    .question-tf {
       padding-top: 40px;
     }
-    display:flex;
+    display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    img{
+    img {
       padding-top: 100px;
     }
-    h3{
+    h3 {
       padding-top: 20px;
     }
   }

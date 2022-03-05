@@ -6,7 +6,7 @@ import GameAnswers from "./components/GameAnswers";
 
 import "../../styles.scss";
 
-const gameStateTypes = {
+export const gameStateTypes = {
   LIVE_QUESTION: "liveQuestion",
   QUESTION_RESULT: "playerAnswerResult",
   SCORE_BOARD: "scoreBoard",
@@ -107,19 +107,6 @@ const HostGame = ({ socket }) => {
     socket.emit("next-question");
   };
 
-  const imageContent = (
-    <div className="question-image">
-      <div className="time">{time}</div>
-      <div className="image no-image">
-        <img src="/img/logo-large.png" />
-      </div>
-      <div className="player-answered">
-        {players.playersAnswered}/{players.playersInGame}
-        <br /> người đã trả lời
-      </div>
-    </div>
-  );
-
   if (!question) {
     return "";
   }
@@ -155,14 +142,19 @@ const HostGame = ({ socket }) => {
                 questionIndex={game.questionIndex}
               />
             ) : (
-              imageContent
+              <div className="question-image">
+                <div className="time">{time}</div>
+                <div className="image no-image">
+                  <img src={question?.image || "/img/logo-large.png}"} />
+                </div>
+                <div className="player-answered">
+                  {players.playersAnswered}/{players.playersInGame}
+                  <br /> người đã trả lời
+                </div>
+              </div>
             )}
           </div>
-          <GameAnswers
-            question={question}
-            gameStateTypes={gameStateTypes}
-            gameState={gameState}
-          />
+          <GameAnswers question={question} gameState={gameState} />
           <div className="question-footer">
             <div>
               {game.questionIndex + 1}/{game.questionsLength}

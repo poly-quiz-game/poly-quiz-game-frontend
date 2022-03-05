@@ -29,6 +29,18 @@ const sumAnswers = (arr) => {
   return obj;
 };
 
+const sumPlayersTypeQuestion = (question, playerAnswerResult) => {
+  let sum = 0;
+  const correctAnswer = question.answers[0].answer;
+  playerAnswerResult.forEach((item) => {
+    const answer = item.answers[item.answers.length - 1].answer;
+    if (correctAnswer === answer) {
+      sum += 1;
+    }
+  });
+  return sum;
+};
+
 const TotalAnswerResult = ({ playerAnswerResult, question }) => {
   const correctAnswers = question.correctAnswer.split("|").filter((a) => a);
 
@@ -39,6 +51,20 @@ const TotalAnswerResult = ({ playerAnswerResult, question }) => {
   const calculateHeight = (index) => {
     return (calculateAnsersNumber(index) / playerAnswerResult.length) * 150;
   };
+
+  if (question.type === questionTypes.TYPE_ANSWER) {
+    return (
+      <div className="total-answer-result">
+        <div className="answer-item">
+          {question.answers[0].answer}
+          <div className="answer-item-players">
+            {sumPlayersTypeQuestion(question, playerAnswerResult)}
+            <CheckIcon />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="total-answer-result">
