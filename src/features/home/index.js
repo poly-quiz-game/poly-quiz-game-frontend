@@ -181,8 +181,7 @@ const HomeFeature = () => {
                 <TabPane
                   tab={
                     <p>
-                      {""}
-                      <i class="fas fa-chart-bar icons-slider"></i>
+                      <i className="fas fa-chart-bar icons-slider"></i>
                       <br />
                       Hiệu quả
                     </p>
@@ -219,7 +218,6 @@ const HomeFeature = () => {
                   </div>
                 </TabPane>
               </Tabs>
-              ,
             </div>
           </div>
         </div>
