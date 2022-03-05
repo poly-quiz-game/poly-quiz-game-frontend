@@ -4,21 +4,23 @@ import io from "socket.io-client";
 
 import EnterPin from "./pages/EnterPin";
 import PlayGame from "./pages/PlayGame";
-import PreStart from "./pages/PreStart";
+import OnLobby from "./pages/OnLobby";
 
 import "./styles.scss";
+
+const port = process.env.ENDPOINT || "ws://localhost:3005";
 
 const GameFeature = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(`ws://localhost:3005`);
+    const newSocket = io(port);
     setSocket(newSocket);
 
     return () => newSocket.close();
   }, [setSocket]);
 
-  if(!socket) return <div>Connecting</div>
+  if (!socket) return <div>Connecting</div>;
 
   return (
     <Routes>
@@ -32,10 +34,10 @@ const GameFeature = (props) => {
       />
       <Route
         path="/pre-start/:pin&:name"
-        element={<PreStart {...props} socket={socket} />}
+        element={<OnLobby {...props} socket={socket} />}
       />
       <Route
-        path="/play-game/:socketid"
+        path="/play-game/:socketId"
         element={<PlayGame {...props} socket={socket} />}
       />
     </Routes>

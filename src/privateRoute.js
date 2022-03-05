@@ -1,10 +1,10 @@
 import React from "react";
-import { Navigate, Outlet } from "react-router-dom";
+import { Navigate } from "react-router-dom";
 import { getToken } from "./api/axiosClient";
 
-const PrivateRoute = () => {
+const PrivateRoute = ({ children }) => {
   const token = getToken();
-  return token ? <Outlet /> : <Navigate to="/auth/login" />;
+  return token ? children : <Navigate to="/auth/login" />;
 };
 
 export default PrivateRoute;

@@ -6,11 +6,13 @@ import Lobby from "./pages/Lobby";
 import HostGame from "./pages/HostGame";
 import StartGame from "./pages/StartGame";
 
+const port = process.env.ENDPOINT || "ws://localhost:3005";
+
 const HostScreen = (props) => {
   const [socket, setSocket] = useState(null);
 
   useEffect(() => {
-    const newSocket = io(`ws://localhost:3005`);
+    const newSocket = io(port);
     setSocket(newSocket);
 
     return () => newSocket.close();
@@ -20,7 +22,10 @@ const HostScreen = (props) => {
 
   return (
     <Routes>
-      <Route path="/lobby" element={<Lobby {...props} socket={socket} />} />
+      <Route
+        path="/lobby/:hostSocketId"
+        element={<Lobby {...props} socket={socket} />}
+      />
       <Route
         path="/start/:id"
         element={<StartGame {...props} socket={socket} />}

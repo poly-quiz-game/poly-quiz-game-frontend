@@ -2,30 +2,55 @@ import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 import Quiz from "./features/quiz";
-import HostScreen from "./features/hostScreen";
-import PlayerScreen from "./features/playerScreen";
 import Auth from "./features/auth";
-import Sample from "./features/sample";
 
 import PrivateRoute from "./privateRoute";
 import AuthLayout from "layouts/auth.layout";
 
 import "antd/dist/antd.min.css";
 import Report from "./features/report";
+import HostScreen from "./features/hostScreen";
+import Play from "./features/playerScreen";
+import Home from "./features/home";
+import MainLayout from "./layouts/main.layout";
 
 function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<Sample />} />
-        <Route exact path="/quiz/*" element={<PrivateRoute />}>
-          <Route path="/quiz/*" element={<Quiz />} />
-        </Route>
-        <Route exact path="/report/*" element={<PrivateRoute />}>
-          <Route path="/report/*" element={<Report />} />
-        </Route>
-        <Route path="/host/*" element={<HostScreen />} />
-        <Route path="/play/*" element={<PlayerScreen />} />
+        <Route path="/" element={<Home />} />
+        <Route
+          path="quiz/*"
+          element={
+            <PrivateRoute>
+              <Quiz />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/host/*"
+          element={
+            <PrivateRoute>
+              <HostScreen />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/report/*"
+          element={
+            <PrivateRoute>
+              <Report />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/play/*"
+          element={
+            <PrivateRoute>
+              <Play />
+            </PrivateRoute>
+          }
+        />
         <Route
           path="/auth/*"
           element={

@@ -1,10 +1,10 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Layout, Menu, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser, logout } from "features/auth/authSlice";
 import { useDispatch } from "react-redux";
-import { ProfileOutlined } from "@ant-design/icons";
+import { ProfileOutlined, HomeOutlined } from "@ant-design/icons";
 
 import "./styles.scss";
 
@@ -35,6 +35,9 @@ const MainLayout = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  var keyword = location.pathname.replace("/", "");
+  const [tab, setTab] = React.useState(keyword || "home");
+
   const handleLogout = async () => {
     await dispatch(logout());
     navigate("/auth/login");
@@ -45,13 +48,23 @@ const MainLayout = ({ children }) => {
       <Header className="main-header">
         <div className="main-menu">
           <Link to="/quiz">
-            <div className="logo">Poly Quiz game</div>
+            <div className="logo">
+              <img style={{ width: "180px" }} src="/img/logo.png" />
+            </div>
           </Link>
-          <Menu theme="light" mode="horizontal" defaultSelectedKeys={["1"]}>
-            <Menu.Item key="1" icon={PuzzleIcon}>
-              <Link to="/quiz">Quiz</Link>
+          <Menu
+            theme="light"
+            style={{ paddingLeft: "76px", marginLeft: "38px" }}
+            mode="horizontal"
+            defaultSelectedKeys={[tab]}
+          >
+            <Menu.Item key="home" icon={<HomeOutlined />}>
+              <Link to="/">Trang chủ</Link>
             </Menu.Item>
-            <Menu.Item key="2" icon={<ProfileOutlined />}>
+            <Menu.Item key="quiz" icon={PuzzleIcon}>
+              <Link to="/quiz">Thư viện của tôi</Link>
+            </Menu.Item>
+            <Menu.Item key="report" icon={<ProfileOutlined />}>
               <Link to="/report">Báo cáo</Link>
             </Menu.Item>
           </Menu>
@@ -65,10 +78,9 @@ const MainLayout = ({ children }) => {
             </Menu>
           }
         >
-          <div className="current-user avatar">
-          <div>{user.name}</div>
-            <img src="https://picsum.photos/200"/>
-            
+          <div className="current-user">
+            <img width={45} height={45} src={user.picture} />
+            <div>{user.name}</div>
           </div>
         </Dropdown>
       </Header>

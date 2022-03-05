@@ -15,12 +15,12 @@ export const fetchQuizzes = createAsyncThunk("quiz/getAll", async () => {
 });
 
 export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
-  console.log(111);
-  const response = await quizApi.getOne(id);
-  console.log(response);
-  return response.data;
+  return await quizApi.getOne(id);
 });
 
+export const fetchCreateQuiz = createAsyncThunk("quiz/create", async (quiz) => {
+  return await quizApi.create(quiz);
+});
 const quizSlice = createSlice({
   name: "quiz",
   initialState,
@@ -34,6 +34,9 @@ const quizSlice = createSlice({
     addCase(fetchQuiz.pending, (state) => {
       state.loading = true;
     });
+    addCase(fetchCreateQuiz.pending, (state) => {
+      state.loading = true;
+    });
     //   Success
     addCase(fetchQuizzes.fulfilled, (state, action) => {
       state.loading = false;
@@ -43,11 +46,21 @@ const quizSlice = createSlice({
       state.loading = false;
       state.quiz = action.payload;
     });
+    addCase(fetchCreateQuiz.fulfilled, (state, action) => {
+      state.loading = false;
+      state.quiz = action.payload;
+    });
     //   Fail
     addCase(fetchQuizzes.rejected, (state) => {
       state.loading = false;
     });
     addCase(fetchQuiz.rejected, (state) => {
+      state.loading = false;
+    });
+    addCase(fetchCreateQuiz.rejected, (state) => {
+      state.loading = false;
+    });
+    addCase(remove.rejected, (state) => {
       state.loading = false;
     });
   },
