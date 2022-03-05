@@ -4,7 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser, logout } from "features/auth/authSlice";
 import { useDispatch } from "react-redux";
-import { ProfileOutlined } from "@ant-design/icons";
+import { ProfileOutlined, HomeOutlined } from "@ant-design/icons";
 
 import "./styles.scss";
 
@@ -35,9 +35,8 @@ const MainLayout = ({ children }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [tab, setTab] = React.useState(
-    location.pathname.includes("/quiz") ? "quiz" : "report"
-  );
+  var keyword = location.pathname.replace("/", "");
+  const [tab, setTab] = React.useState(keyword || "home");
 
   const handleLogout = async () => {
     await dispatch(logout());
@@ -50,7 +49,7 @@ const MainLayout = ({ children }) => {
         <div className="main-menu">
           <Link to="/quiz">
             <div className="logo">
-              <img style={{width:"180px"}} src="/img/logo.png" />
+              <img style={{ width: "180px" }} src="/img/logo.png" />
             </div>
           </Link>
           <Menu
@@ -59,15 +58,14 @@ const MainLayout = ({ children }) => {
             mode="horizontal"
             defaultSelectedKeys={[tab]}
           >
+            <Menu.Item key="home" icon={<HomeOutlined />}>
+              <Link to="/">Trang chủ</Link>
+            </Menu.Item>
             <Menu.Item key="quiz" icon={PuzzleIcon}>
-              <Link to="/quiz" onClick={() => setTab("quiz")}>
-                Thư viện của tôi
-              </Link>
+              <Link to="/quiz">Thư viện của tôi</Link>
             </Menu.Item>
             <Menu.Item key="report" icon={<ProfileOutlined />}>
-              <Link to="/report" onClick={() => setTab("report")}>
-                Báo cáo
-              </Link>
+              <Link to="/report">Báo cáo</Link>
             </Menu.Item>
             <Menu.Item key="Endgame" icon={<ProfileOutlined />}>
               <Link to="/Endgame" onClick={() => setTab("Endgame")}>
