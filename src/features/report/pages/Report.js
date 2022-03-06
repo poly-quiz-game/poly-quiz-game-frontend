@@ -113,7 +113,7 @@ const Report = () => {
             <List
               bordered
               dataSource={
-                reports.length ? reports : [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+                reports.length ? reports : []
               }
               renderItem={(report) =>
                 loading ? (
@@ -161,7 +161,7 @@ const Report = () => {
                       }
                       title={
                         <Link
-                          to={`/report/detail/${report._id}`}
+                          to={`/report/detail/${report._id}/players`}
                           key={report._id}
                           className="quiz-item-link"
                         >

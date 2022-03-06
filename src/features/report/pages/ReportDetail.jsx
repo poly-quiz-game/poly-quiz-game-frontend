@@ -1,81 +1,215 @@
 import React, { useEffect } from "react";
 import moment from "moment";
 import { useSelector, useDispatch } from "react-redux";
-import { useParams, useNavigate } from "react-router-dom";
-import { Col, Input, Menu, Row, Skeleton, Tabs } from "antd";
+import { useParams, useNavigate, Routes, Route, NavLink } from "react-router-dom";
+import { Button, Col, Dropdown, Input, Menu, Row, Skeleton, Tabs } from "antd";
+import styled from "styled-components";
+import { ReactComponent as DotVertical } from "../../../assets/images/DotsVertical.svg";
 
 import { Link, Outlet } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 import { fetchReport, selectReport } from "../reportSlice";
 import { selectLoading } from "../../hostScreen/quizSlice";
-import Player from "./Player";
-import Question from "./Question";
 
-const ReportDetail = () => {
-  let params = useParams();
-  const dispatch = useDispatch();
+import { ButtonTab } from "./../components/Button";
 
-  const [tab, setTab] = React.useState("players");
+const Main = styled.div`
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: calc(100vh - 3.5rem);
+    overflow: hidden;
+`;
+const Wrapper = styled.div`
+    display: flex;
+    box-sizing: border-box;
+    min-width: 0px;
+    width: 100%;
+    background-color: rgb(255, 255, 255);
+    flex-wrap: wrap;
+    margin: 0px auto;
+`;
 
-  const report = useSelector(selectReport);
-  const loading = useSelector(selectLoading);
+const Flex = styled.div`
+    width: 100%;
+    display: flex;
+`;
+const HeaderLeft = styled.section`
+    width: 100%;
+    display: flex;
+    flex: 5 1 0%;
+    min-height: 12rem;
+    flex-direction: column;
+    -webkit-box-pack: start;
+    justify-content: flex-start;
+    position: relative;
+    z-index: 1;
+`;
+const HeaderRight = styled.section`
+    flex: 2 1 0%;
+    flex-direction: column;
+    padding-top: 1rem;
+    align-items: flex-end;
+    //display: none;
+    position: relative;
+    background: rgb(242, 242, 242);
+`;
+const Container = styled.div`
+    box-sizing: border-box;
+    min-width: 0px;
+    margin: 0px auto;
+    width: 100%;
+    max-width: 1280px;
+    flex-wrap: nowrap;
+    height: fit-content;
+`;
+const TitleTop = styled.div`
+    display: flex;
+    align-items: center;
+    margin: 1.5rem 2rem 0.2rem 0px;
+`;
+const H5 = styled.h5`
+    color: rgb(51, 51, 51);
+    font-size: 1rem;
+    font-weight: bold;
+    line-height: 1.5;
+    letter-spacing: 0.2px;
+    margin: 0;
+`;
+const ReportOption = styled.div`
+    margin-left: auto;
+    margin-right: 0.5rem;
+    color: rgb(51, 51, 51)
+`;
+const InfoReport = styled.div`
+    border-bottom: 1px solid rgb(178, 178, 178);
+    padding: 0.9rem;
+    color: rgb(51, 51, 51);
+    font-size: 0.875rem;
+    letter-spacing: 0.2px;
+    position: relative;
+    z-index: 1;
+`;
+const TitleWrapper = styled.div`
+    display: flex;
+    box-sizing: border-box;
+    margin: 0px;
+    min-width: 0px;
+    max-width: 93%;
+    -webkit-box-align: center;
+    align-items: center;
+`;
+const TitleH2 = styled.h2`
+    align-items: center;
+    color: rgb(51, 51, 51);
+    font-size: 32px;
+    font-weight: 600;
+    line-height: 1.25;
+`;
+const List = styled.ul`
+    margin-top: auto;
+    display: flex;
+    box-shadow: none;
+    padding: 0px;
+    list-style: none
+`;
+const ListItem = styled.li`
+    margin: 0px;
+    padding: 0px;
+    border: 0px;
+    font: inherit;
+`;
+const WrapperTable = styled.div`
+    display: flex;
+    flex-direction: column;
+    margin: 2rem 0rem;
+`;
 
-  useEffect(() => {
-    dispatch(fetchReport(params.id));
-  }, [dispatch]);
+const menu = (
+	<Menu>
+		<Menu.Item key="0">
+			<a>Download report</a>
+		</Menu.Item>
+		<Menu.Item key="1">
+			<a>Move trash</a>
+		</Menu.Item>
+	</Menu>
+);
+const ReportDetail = ({ children }) => {
+	let params = useParams();
+	const dispatch = useDispatch();
 
-  return (
-    <MainLayout>
-      <div className="conten">
-        <Row>
-          <Col span={20} offset={2}>
-            <Row>
-              <Col span={6}>
-                <div>
-                  <h5>Live</h5>
-                  <h2>{report?.quiz?.name}</h2>
-                  <p>{moment(report).format("DD-MM-YYYY HH:mm")}</p>
-                </div>
-              </Col>
-              <Col span={6} offset={12}>
-                <Row>
-                  <div className="synthetic">
-                    <div className="synthetic-div">
-                      <i className="far fa-check-circle"></i>
-                      <p>25 %</p>
-                    </div>
-                    <p>Chính xác</p>
-                  </div>
-                  <div className="synthetic">
-                    <div className="synthetic-div">
-                      <i className="far fa-question-circle"></i>
-                      <p>{report?.quiz?.questions?.length}</p>
-                    </div>
-                    <p>Câu hỏi</p>
-                  </div>
-                  <div className="synthetic">
-                    <div className="synthetic-div">
-                      <i className="fas fa-user-plus"></i>
-                      <p>{report?.players?.length}</p>
-                    </div>
-                    <p>Người tham gia</p>
-                  </div>
-                </Row>
-              </Col>
-            </Row>
-            <Tabs defaultActiveKey="players" onChange={(val) => setTab(val)}>
-              <Tabs.TabPane tab="Người chơi" key="players">
-                <Player report={report} />
-              </Tabs.TabPane>
-              <Tabs.TabPane tab="Câu hỏi" key="questions">
-                <Question report={report} />
-              </Tabs.TabPane>
-            </Tabs>
-          </Col>
-        </Row>
-      </div>
-    </MainLayout>
-  );
+	const [tab, setTab] = React.useState("players");
+
+	const report = useSelector(selectReport);
+	const loading = useSelector(selectLoading);
+
+	useEffect(() => {
+		dispatch(fetchReport(params.id));
+	}, [dispatch]);
+
+	return (
+		<MainLayout>
+			<Main>
+				<Wrapper>
+					<Container>
+						<Flex>
+							<HeaderLeft>
+								<TitleTop>
+									<H5>Report</H5>
+									<ReportOption>Report option</ReportOption>
+									<Dropdown overlay={menu} placement="bottomRight" trigger={["click"]}>
+										<Button icon={<DotVertical/>} type="text"/>
+									</Dropdown>
+								</TitleTop>
+								<TitleWrapper>
+									<TitleH2>Title</TitleH2>
+								</TitleWrapper>
+								<List>
+									<ListItem>
+										{/*<NavLink*/}
+										{/*	to={`/report/detail/${params.id}/players`}*/}
+										{/*	style={({ isActive }) => {*/}
+										{/*		return {*/}
+										{/*			color: isActive ? "red" : ""*/}
+										{/*		};*/}
+										{/*	}}>*/}
+										<ButtonTab
+											to={`/report/detail/${params.id}/players`}
+										>
+											Players
+										</ButtonTab>
+										<ButtonTab
+											to={`/report/detail/${params.id}/questions`}
+										>
+											Questions
+										</ButtonTab>
+										{/*</NavLink>*/}
+										{/*<Link to={`/report/detail/${params.id}/questions`}>*/}
+										{/*	<ButtonTab>Questions</ButtonTab>*/}
+										{/*</Link>*/}
+									</ListItem>
+								</List>
+							</HeaderLeft>
+							<HeaderRight>
+								<InfoReport>January 16, 2022, 5:57 PM</InfoReport>
+								<InfoReport>Hosted by hieupvph12651164</InfoReport>
+							</HeaderRight>
+						</Flex>
+					</Container>
+				</Wrapper>
+				<Wrapper>
+					<Container>
+						<WrapperTable>
+							{children}
+							<Outlet/>
+						</WrapperTable>
+					</Container>
+				</Wrapper>
+			</Main>
+
+		</MainLayout>
+	);
 };
 
 export default ReportDetail;
