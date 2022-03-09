@@ -11,11 +11,11 @@ const EnterPin = ({ socket }) => {
   const [game, setGame] = useState(null);
 
   useEffect(() => {
-    socket.on("gameData-player", (game) => {
+    socket.on("game-info", (game) => {
       setGame(game);
     });
 
-    socket.on("noGameFound-player", () => {
+    socket.on("no-game-found", () => {
       setGame(null);
       setError("Phòng không tồn tại!");
     });

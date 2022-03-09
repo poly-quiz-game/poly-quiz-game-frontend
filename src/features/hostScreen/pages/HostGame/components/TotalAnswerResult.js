@@ -1,5 +1,7 @@
 import React from "react";
-import { groupBy } from "lodash";
+import { questionTypes } from "consts";
+
+const QUESTION_LABELS = ["A", "B", "C", "D"];
 
 const CheckIcon = () => (
   <svg
@@ -16,101 +18,79 @@ const CheckIcon = () => (
   </svg>
 );
 
-const TotalAnswerResult = ({ questionResult, questionIndex, question }) => {
+const sumAnswers = (arr) => {
+  const obj = [0, 0, 0, 0];
+  arr.forEach((item) => {
+    const answers = item.answers[item.answers.length - 1].answer.split("|");
+    answers.forEach((answer) => {
+      obj[answer] += 1;
+    });
+  });
+  return obj;
+};
+
+const sumPlayersTypeQuestion = (question, playerAnswerResult) => {
+  let sum = 0;
+  const correctAnswer = question.answers[0].answer;
+  playerAnswerResult.forEach((item) => {
+    const answer = item.answers[item.answers.length - 1].answer;
+    if (correctAnswer === answer) {
+      sum += 1;
+    }
+  });
+  return sum;
+};
+
+const TotalAnswerResult = ({ playerAnswerResult, question }) => {
+  const correctAnswers = question.correctAnswer.split("|").filter((a) => a);
+
+  const calculateAnsersNumber = (index) => {
+    return sumAnswers(playerAnswerResult)[index];
+  };
+
+  const calculateHeight = (index) => {
+    return (calculateAnsersNumber(index) / playerAnswerResult.length) * 150;
+  };
+
+  if (question.type === questionTypes.TYPE_ANSWER) {
+    return (
+      <div className="total-answer-result">
+        <div className="answer-item">
+          {question.answers[0].answer}
+          <div className="answer-item-players">
+            {sumPlayersTypeQuestion(question, playerAnswerResult)}
+            <CheckIcon />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="total-answer-result">
-      <div className="total-answer total-answer-1">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[0]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[0]
-            ?.length || 0}
-        </div>
-        {question.correctAnswer === 0 && (
-          <div className="check-icon">
-            <CheckIcon />
+      {(question.type === questionTypes.TRUE_FALSE_ANSWER
+        ? [...question.answers].slice(0, 2)
+        : question.answers
+      ).map((answer, index) => (
+        <div className={`total-answer total-answer-${index + 1}`} key={index}>
+          <div
+            className="answer-tree"
+            style={{
+              height: `${calculateHeight(index)}px`,
+            }}
+          />
+          <div
+            className="answer-tree"
+            style={{
+              height: "30px",
+            }}
+          >
+            {QUESTION_LABELS[index]}{" "}
+            {correctAnswers.includes(answer.index.toString()) && <CheckIcon />}
           </div>
-        )}
-      </div>
-      <div className="total-answer total-answer-2">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[1]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[1]
-            ?.length || 0}
+          <div className="total-number">{calculateAnsersNumber(index)}</div>
         </div>
-        {question.correctAnswer === 1 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
-      <div className="total-answer total-answer-3">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[2]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[2]
-            ?.length || 0}
-        </div>
-        {question.correctAnswer === 2 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
-      <div className="total-answer total-answer-4">
-        <div
-          className="answer-tree"
-          style={{
-            height: `${
-              ((groupBy(questionResult, (p) => p.answers[questionIndex])[3]
-                ?.length || 0) /
-                questionResult.length) *
-                150 +
-              3
-            }px`,
-          }}
-        ></div>
-        <div className="total-number">
-          {groupBy(questionResult, (p) => p.answers[questionIndex])[3]
-            ?.length || 0}
-        </div>
-        {question.correctAnswer === 3 && (
-          <div className="check-icon">
-            <CheckIcon />
-          </div>
-        )}
-      </div>
+      ))}
     </div>
   );
 };

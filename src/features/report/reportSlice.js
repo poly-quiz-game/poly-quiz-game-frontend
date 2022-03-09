@@ -3,23 +3,27 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import reportApi from "../../api/reportApi";
 
 const initialState = {
-  loading: false,
   list: [],
+  data: [],
   total: 0,
   report: {},
 };
 
 export const fetchReports = createAsyncThunk(
   "report/getAll",
-  async ({ sortBy, offset, limit, search }) => {
-    const response = await reportApi.getAll({ sortBy, offset, limit, search });
-    return response;
+  async ({ offset, limit, search, sortField, sortDirection }) => {
+    return await reportApi.getAll({
+      offset,
+      limit,
+      search,
+      sortField,
+      sortDirection,
+    });
   }
 );
 
 export const fetchReport = createAsyncThunk("report/getOne", async (id) => {
-  const response = await reportApi.getOne(id);
-  return response.data;
+  return await reportApi.getOne(id);
 });
 
 const reportSlice = createSlice({
@@ -28,35 +32,31 @@ const reportSlice = createSlice({
   reducers: {
     resetReports: (state) => {
       state.list = [];
+      state.data = [];
       state.total = 0;
     },
   },
   extraReducers: ({ addCase }) => {
     //   Loading
     addCase(fetchReports.pending, (state) => {
-      state.loading = true;
+      state.list = state.data.concat(
+        [...new Array(3)].map(() => ({ loading: true }))
+      );
     });
     //   Loading
-    addCase(fetchReport.pending, (state) => {
-      state.loading = true;
-    });
+    addCase(fetchReport.pending, (state) => {});
     //   Success
     addCase(fetchReports.fulfilled, (state, action) => {
-      state.loading = false;
-      state.list = [...state.list, ...action.payload.reports];
+      state.data = [...state.data, ...(action.payload.data || [])];
+      state.list = state.data;
       state.total = action.payload.total;
     });
     addCase(fetchReport.fulfilled, (state, action) => {
-      state.loading = false;
       state.report = action.payload;
     });
     //   Fail
-    addCase(fetchReports.rejected, (state, action) => {
-      state.loading = false;
-    });
-    addCase(fetchReport.rejected, (state, action) => {
-      state.loading = false;
-    });
+    addCase(fetchReports.rejected, (state) => {});
+    addCase(fetchReport.rejected, (state) => {});
   },
 });
 
@@ -67,7 +67,6 @@ export const reportActions = reportSlice.actions;
 export const selectReportList = (state) => state.report.list;
 export const selectReportTotal = (state) => state.report.total;
 export const selectReport = (state) => state.report.report;
-export const selectLoading = (state) => state.report.loading;
 
 // Reducer
 const reportReducer = reportSlice.reducer;

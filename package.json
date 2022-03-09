@@ -73,8 +73,7 @@
   },
   "scripts": {
     "start": "node scripts/start.js",
-    "build": "DISABLE_ESLINT_PLUGIN=true node scripts/build.js",
-    "test": "DISABLE_ESLINT_PLUGIN=true node scripts/test.js"
+    "build": "DISABLE_ESLINT_PLUGIN=true node scripts/build.js"
   },
   "resolutions": {
     "styled-components": "^5"

@@ -1,8 +1,8 @@
 import axios from "axios";
 
-// const baseURL = process.env.ENDPOINT;
-// const baseURL = "http://165.22.53.167:3005/api";
-export const baseURL = process.env.ENDPOINT || "http://localhost:3005/api";
+export const baseURL = process.env.ENDPOINT
+  ? `${process.env.ENDPOINT}/api`
+  : "http://localhost:3005/api";
 
 const axiosClient = axios.create({
   baseURL,

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Statistic, Button, Popover } from "antd";
+import { Row, Col, Statistic, Button, Popover, Image, Tooltip } from "antd";
+import { UserOutlined } from "@ant-design/icons";
 
 import "../styles.scss";
 
@@ -11,37 +12,34 @@ const Lobby = ({ socket }) => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    socket.emit("host-getGame");
+    socket.emit("get-game-info");
 
-    socket.on("noGameFound-host", () => {
+    socket.on("no-game-found", () => {
       navigate(-1);
     });
 
-    socket.on("gameData-host", (res) => {
-      setGame(res);
+    socket.on("game-info", (game) => {
+      setGame(game);
     });
 
-    socket.on("updatePlayerLobby-host", (data) => {
-      console.log("updatePlayerLobby: ", data);
-      setPlayers(data);
-    });
-
-    socket.on("gameStarted", function (id) {
-      navigate(`/host/game/${id}`);
+    socket.on("lobby-players", (players) => {
+      setPlayers(players);
     });
 
     return () => {
-      console.log("disconeect lobby");
       socket.emit("disconnect", socket.id);
+      socket.off("no-game-found");
+      socket.off("game-info");
+      socket.off("lobby-players");
     };
   }, []);
 
   const startGame = () => {
-    socket.emit("startGame");
+    navigate(`/host/game/${socket.id}`);
   };
 
   const kickPlayer = (playerSocketId) => {
-    socket.emit("host-kick-player", {
+    socket.emit("host-kick-player-on-lobby", {
       hostSocketId: socket.id,
       playerSocketId,
     });
@@ -53,36 +51,69 @@ const Lobby = ({ socket }) => {
 
   return (
     <div className="lobby__screen">
-      <Row>
-        <Col span={12} offset={6}>
-          <div className="game-info">
-            <Statistic
-              title="Mã trò chơi"
-              formatter={(val) => val}
-              value={game?.pin}
-            />
-          </div>
-          <br />
-          <h3>Danh sách người chơi:</h3>
+      <div className="game-info">
+        <div className="game-pin">
+          <h2>Mã phòng:</h2>
+          <Tooltip title="Đã copy" trigger="click">
+            <h1
+              className="pin"
+              onClick={() => navigator.clipboard.writeText(game.pin)}
+            >
+              {game?.pin}
+            </h1>
+          </Tooltip>
+        </div>
+      </div>
+      <div className="gameinfobottom">
+        <div className="game-header">
           <div>
-            {players.map((p) => (
-              <Popover content="Kick" key={p.name}>
-                <Button
-                  className="player-name"
-                  onClick={() => kickPlayer(p.playerSocketId)}
-                >
-                  {p.name}
-                </Button>
-              </Popover>
-            ))}
+            <Button
+              type="primary"
+              style={{
+                width: "100%",
+                margin: "0 auto",
+                backgroundColor: "#1F0B40",
+                border: "none",
+              }}
+            >
+              <UserOutlined /> {players?.length}
+            </Button>
           </div>
-          <br />
-          <br />
-          <Button type="primary" onClick={startGame} disabled={!players.length}>
-            Bắt đầu game
-          </Button>
-        </Col>
-      </Row>
+          <div>
+            <Button
+              style={{
+                width: "100%",
+                margin: "0 auto",
+                backgroundColor: "#1F0B40",
+                color: "#fff",
+                border: "none",
+              }}
+              type="primary"
+              onClick={startGame}
+              disabled={!players.length}
+            >
+              Bắt đầu game
+            </Button>
+          </div>
+        </div>
+        <div className="player">
+          <h3>Danh sách người chơi:</h3>
+          {players.map((p) => (
+            <Popover content="Kick" key={p.name}>
+              <Button
+                style={{
+                  marginTop: "5px",
+                }}
+                className="player-name"
+                onClick={() => kickPlayer(p.playerSocketId)}
+              >
+                {p.name}
+              </Button>
+              <br></br>
+            </Popover>
+          ))}
+        </div>
+      </div>
     </div>
   );
 };
