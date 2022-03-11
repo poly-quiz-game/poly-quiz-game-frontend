@@ -19,7 +19,7 @@ import { questionTypes } from "consts";
 import { validateQuestion } from "./utils";
 
 const defaultQuestion = {
-  type: questionTypes.SINGLE_CORRECT_ANSWER,
+  type: { name: questionTypes.SINGLE_CORRECT_ANSWER },
   image: "",
   answers: ["", "", "", ""],
   timeLimit: 20000,

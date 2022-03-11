@@ -177,7 +177,7 @@ const Endgame = ({ report }) => {
                   renderItem={(question, index) => {
                     let countCorrectAnswers = 0;
 
-                    if (question.type === "TYPE_ANSWER") {
+                    if (question?.type?.name === "TYPE_ANSWER") {
                       countCorrectAnswers = sumAnswersTypeAnswerQuestion({
                         players: report.players,
                         correctAnswer: question.answers[0].answer,

@@ -52,7 +52,7 @@ const TotalAnswerResult = ({ playersInGame, question }) => {
     return (calculateAnsersNumber(index) / playersInGame.length) * 150;
   };
 
-  if (question.type === questionTypes.TYPE_ANSWER) {
+  if (question?.type?.name === questionTypes.TYPE_ANSWER) {
     return (
       <div className="total-answer-result">
         <div className="answer-item">
@@ -68,7 +68,7 @@ const TotalAnswerResult = ({ playersInGame, question }) => {
 
   return (
     <div className="total-answer-result">
-      {(question.type === questionTypes.TRUE_FALSE_ANSWER
+      {(question?.type?.name === questionTypes.TRUE_FALSE_ANSWER
         ? [...question.answers].slice(0, 2)
         : question.answers
       ).map((answer, index) => (

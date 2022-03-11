@@ -12,7 +12,7 @@ import {
 } from "./components";
 
 const QuestionAnswers = ({ question, onChangeQuestion }) => {
-  switch (question.type) {
+  switch (question?.type?.name) {
     case questionTypes.SINGLE_CORRECT_ANSWER:
       return (
         <SingleAnswer onChangeQuestion={onChangeQuestion} question={question} />
@@ -64,7 +64,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
 
   const onChangeQuestionType = (type) => {
     const newQuestion = { ...question };
-    if (type === questionTypes.TYPE_ANSWER) {
+    if (type.name === questionTypes.TYPE_ANSWER) {
       newQuestion.correctAnswer = "0";
     } else {
       newQuestion.correctAnswer = "";

@@ -4,7 +4,7 @@ export const validateQuestion = (question) => {
   console.log(question);
   const err = {};
   const correctAnswer = question.correctAnswer.split("|").filter((a) => a);
-  if (question.type === questionTypes.SINGLE_CORRECT_ANSWER) {
+  if (question?.type?.name === questionTypes.SINGLE_CORRECT_ANSWER) {
     if (question.question.trim() === "") {
       err.question = "Câu hỏi không được để trống";
     }
@@ -21,7 +21,7 @@ export const validateQuestion = (question) => {
       err.correctAnswer = "Câu hỏi chỉ được chọn 1 đáp án đúng";
     }
   }
-  if (question.type === questionTypes.MULTIPLE_CORRECT_ANSWER) {
+  if (question?.type?.name === questionTypes.MULTIPLE_CORRECT_ANSWER) {
     if (question.question.trim() === "") {
       err.question = "Câu hỏi không được để trống";
     }
@@ -38,7 +38,7 @@ export const validateQuestion = (question) => {
       err.correctAnswer = "Câu hỏi không được vượt quá 4 đáp án đúng";
     }
   }
-  if (question.type === questionTypes.TRUE_FALSE_ANSWER) {
+  if (question?.type?.name === questionTypes.TRUE_FALSE_ANSWER) {
     if (question.question.trim() === "") {
       err.question = "Câu hỏi không được để trống";
     }
@@ -55,7 +55,7 @@ export const validateQuestion = (question) => {
       err.answers = "Câu hỏi không được vượt quá 2 đáp án";
     }
   }
-  if (question.type === questionTypes.TYPE_ANSWER) {
+  if (question?.type?.name === questionTypes.TYPE_ANSWER) {
     if (question.question.trim() === "") {
       err.question = "Câu hỏi không được để trống";
     }

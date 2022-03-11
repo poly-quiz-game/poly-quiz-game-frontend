@@ -175,7 +175,7 @@ const EndGamePlayer = ({ report }) => {
                   renderItem={(question, index) => {
                     let countCorrectAnswers = 0;
 
-                    if (question.type === "TYPE_ANSWER") {
+                    if (question?.type?.name === "TYPE_ANSWER") {
                       countCorrectAnswers = sumAnswersTypeAnswerQuestion(
                         report.players,
                         question.correctAnswer

@@ -102,20 +102,24 @@ const PlayGame = ({ socket }) => {
   }
 
   const Answers =
-    question.type === questionTypes.TYPE_ANSWER ? TypeAnswer : SelectAnswers;
+    question?.type?.name === questionTypes.TYPE_ANSWER
+      ? TypeAnswer
+      : SelectAnswers;
 
   return (
     <div className="player-game__screen">
       <div className="player-info">
-        <div className="player-name">{questionTypeLabels[question.type]}</div>
+        <div className="player-name">
+          {questionTypeLabels[question?.type?.name]}
+        </div>
         <div className="player-score">{score}</div>
       </div>
       {!answered && (
         <Answers
-          type={question.type}
+          type={question?.type?.name}
           playerAnswer={playerAnswer}
           labels={
-            question.type === questionTypes.TRUE_FALSE_ANSWER
+            question?.type?.name === questionTypes.TRUE_FALSE_ANSWER
               ? QUESTION_TRUE_FALSE_LABELS
               : QUESTION_LABELS
           }
