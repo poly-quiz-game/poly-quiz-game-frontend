@@ -114,6 +114,10 @@ const HostGame = ({ socket }) => {
     socket.emit("next-question");
   };
 
+  const skipQuestion = () => {
+    socket.emit("time-up");
+  };
+
   if (!question) {
     return "";
   }
@@ -135,6 +139,11 @@ const HostGame = ({ socket }) => {
                 Tiếp
               </div>
             )}
+            {gameState === gameStateTypes.LIVE_QUESTION && (
+              <div className="next-btn" onClick={skipQuestion}>
+                Bỏ qua
+              </div>
+            )}
             {gameState === gameStateTypes.QUESTION_RESULT ? (
               <TotalAnswerResult
                 question={question}
@@ -144,7 +153,7 @@ const HostGame = ({ socket }) => {
             ) : (
               <div className="question-image">
                 <div className="time">{time}</div>
-                <div className="image no-image">
+                <div className={`image ${!question.image ? "no-image" : ""}`}>
                   <img src={question?.image || "/img/logo-large.png}"} />
                 </div>
                 <div className="player-answered">

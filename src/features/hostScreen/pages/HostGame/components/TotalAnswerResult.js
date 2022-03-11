@@ -67,7 +67,12 @@ const TotalAnswerResult = ({ playersInGame, question }) => {
   }
 
   return (
-    <div className="total-answer-result">
+    <div
+      className="total-answer-result"
+      style={{
+        backgroundColor: question.image ? "white" : "",
+      }}
+    >
       {(question?.type?.name === questionTypes.TRUE_FALSE_ANSWER
         ? [...question.answers].slice(0, 2)
         : question.answers
