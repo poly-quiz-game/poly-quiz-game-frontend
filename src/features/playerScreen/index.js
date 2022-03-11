@@ -33,7 +33,7 @@ const GameFeature = (props) => {
         element={<EnterPin {...props} socket={socket} />}
       />
       <Route
-        path="/pre-start/:pin&:name"
+        path="/on-lobby/pin=:pin&name=:name&tokenId=:tokenId"
         element={<OnLobby {...props} socket={socket} />}
       />
       <Route

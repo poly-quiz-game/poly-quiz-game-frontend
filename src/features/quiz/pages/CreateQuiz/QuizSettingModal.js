@@ -19,6 +19,7 @@ const QuestionSettingModal = ({
   setQuiz,
   isShowSetting,
   setIsShowSetting,
+  loading: creating,
   submitCreateQuiz,
 }) => {
   const [imageData, setImageData] = useState({
@@ -46,6 +47,9 @@ const QuestionSettingModal = ({
   };
 
   const onFinish = (values) => {
+    if (creating) {
+      return;
+    }
     if (isShowSetting === "save") {
       submitCreateQuiz({ ...values, ...imageData });
       return;

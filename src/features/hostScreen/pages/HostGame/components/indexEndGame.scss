@@ -1,6 +1,6 @@
 .end-game__main {
   min-height: 100vh;
-  background-image: url("../../../../public/img/background_quiz.jpg");
+  background-image: url("../../../../../../public/img/background_quiz.jpg");
   padding: 50px 0 0 0;
   .container {
     width: 80%;
@@ -113,5 +113,6 @@
     display: flex;
     justify-content: center;
     padding: 20px 0;
+    background-color: #fff;
   }
 }

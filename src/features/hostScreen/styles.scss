@@ -44,6 +44,22 @@
   .player {
     text-align: center;
     padding-top: 50px;
+    .player-list {
+      display: flex;
+      width: 80%;
+      max-width: 700px;
+      margin: auto;
+      justify-content: center;
+      flex-wrap: wrap;
+      span {
+        button {
+          margin: 10px;
+          &:hover span {
+            text-decoration: line-through;
+          }
+        }
+      }
+    }
     h3 {
       color: #fff;
     }
@@ -366,23 +382,34 @@
 }
 .start-quiz__screen {
   background-color: #372b84;
-  height: 928px;
-  .quiz-info h1 {
-    padding-top: 20px;
-    background-color: #fff;
-    padding-bottom: 20px;
-    font-family: Georgia, "Times New Roman", Times, serif;
-    font-size: 40px;
-    letter-spacing: 2px;
+  height: 100vh;
+  img {
+    width: 100%;
+    margin: 20px;
   }
-  .box-start {
-    width: 40%;
-    margin: 0 auto;
-    height: 250px;
-    background-color: #3a2456;
-    .question-number {
+  .start-quiz {
+    width: 80%;
+    max-width: 400px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    .quiz-info {
+      // background-color: #fff;
       color: #fff;
-      font-size: 24px;
+      text-align: center;
+      padding: 20px 0;
+      * {
+        color: #fff;
+      }
+      h1 {
+        font-size: 40px;
+        letter-spacing: 2px;
+      }
+    }
+    button.create-room {
+      box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+      width: 100%;
     }
   }
 }

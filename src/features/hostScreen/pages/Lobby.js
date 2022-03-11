@@ -98,20 +98,22 @@ const Lobby = ({ socket }) => {
         </div>
         <div className="player">
           <h3>Danh sách người chơi:</h3>
-          {players.map((p) => (
-            <Popover content="Kick" key={p.name}>
-              <Button
-                style={{
-                  marginTop: "5px",
-                }}
-                className="player-name"
-                onClick={() => kickPlayer(p.playerSocketId)}
-              >
-                {p.name}
-              </Button>
-              <br></br>
-            </Popover>
-          ))}
+          <div className="player-list">
+            {players.map((p) => (
+              <Popover content="Kick" key={p.name}>
+                <Button
+                  style={{
+                    marginTop: "5px",
+                  }}
+                  className="player-name"
+                  onClick={() => kickPlayer(p.playerSocketId)}
+                >
+                  {p.name}
+                </Button>
+                <br></br>
+              </Popover>
+            ))}
+          </div>
         </div>
       </div>
     </div>

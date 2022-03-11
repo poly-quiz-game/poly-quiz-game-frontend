@@ -1,10 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
 const _ = require("lodash");
-import { useEffect } from "react";
 import { Progress, List, Row, Col, Tabs, Button } from "antd";
 
-import reportApi from "../../../api/reportApi";
 import "./indexEndGame.scss";
 
 const checkIsCorrectAnswer = (
@@ -39,8 +37,7 @@ const getPlayerCorrectAnswers = ({ answers, questions }) => {
 const sumAnswers = (arr) => {
   const obj = [0, 0, 0, 0];
   arr.forEach((item) => {
-    const answers =
-      item.playerAnswers[item.playerAnswers.length - 1].answer.split("|");
+    const answers = item.answers[item.answers.length - 1].answer.split("|");
     answers.forEach((answer) => {
       obj[answer] += 1;
     });
@@ -48,10 +45,10 @@ const sumAnswers = (arr) => {
   return obj;
 };
 
-const sumAnswersTypeAnswerQuestion = (playerAnswerResult, correctAnswer) => {
+const sumAnswersTypeAnswerQuestion = (playersInGame, correctAnswer) => {
   let sum = 0;
-  playerAnswerResult.forEach((item) => {
-    const answer = item.playerAnswers[item.playerAnswers.length - 1].answer;
+  playersInGame.forEach((item) => {
+    const answer = item.answers[item.answers.length - 1].answer;
     if (correctAnswer === answer) {
       sum += 1;
     }
@@ -59,21 +56,11 @@ const sumAnswersTypeAnswerQuestion = (playerAnswerResult, correctAnswer) => {
   return sum;
 };
 
-const Endgame = ({ reportId }) => {
-  const [reportData, setReportData] = React.useState({
-    players: [],
-    reportQuestions: [],
-  });
-
-  useEffect(() => {
-    const getReportDetail = async () => {
-      const res = await reportApi.getOne(reportId);
-      console.log(res);
-      setReportData(res);
-    };
-
-    getReportDetail();
-  }, []);
+const EndGamePlayer = ({ report }) => {
+  // const [report, setReportData] = React.useState({
+  //   players: [],
+  //   questions: [],
+  // });
 
   return (
     <div className="end-game__main">
@@ -104,11 +91,11 @@ const Endgame = ({ reportId }) => {
               </Row>
               <div className="list-player">
                 <List
-                  dataSource={reportData.players}
+                  dataSource={report.players}
                   renderItem={(player, index) => {
                     const percent = getPlayerCorrectAnswers({
-                      answers: player.playerAnswers,
-                      questions: reportData.reportQuestions,
+                      answers: player.answers,
+                      questions: report.questions,
                     });
                     return (
                       <List.Item>
@@ -131,7 +118,7 @@ const Endgame = ({ reportId }) => {
                             style={{ textAlign: "center" }}
                           >
                             <strong>
-                              {percent} / {reportData.reportQuestions.length}
+                              {percent} / {report.questions.length}
                             </strong>
                           </Col>
                           <Col
@@ -146,15 +133,11 @@ const Endgame = ({ reportId }) => {
                             <Progress
                               type="circle"
                               percent={
-                                ((percent / reportData.reportQuestions.length) *
-                                  100) |
-                                0
+                                ((percent / report.questions.length) * 100) | 0
                               }
                               success={{
                                 percent:
-                                  ((percent /
-                                    reportData.reportQuestions.length) *
-                                    100) |
+                                  ((percent / report.questions.length) * 100) |
                                   0,
                               }}
                               width={50}
@@ -188,19 +171,19 @@ const Endgame = ({ reportId }) => {
               </Row>
               <div className="list-player">
                 <List
-                  dataSource={[...reportData.reportQuestions]}
+                  dataSource={[...report.questions]}
                   renderItem={(question, index) => {
                     let countCorrectAnswers = 0;
 
                     if (question.type === "TYPE_ANSWER") {
                       countCorrectAnswers = sumAnswersTypeAnswerQuestion(
-                        reportData.players,
+                        report.players,
                         question.correctAnswer
                       );
                     } else {
-                      countCorrectAnswers = sumAnswers(
-                        reportData.players || []
-                      )[question.correctAnswer];
+                      countCorrectAnswers = sumAnswers(report.players || [])[
+                        question.correctAnswer
+                      ];
                     }
                     return (
                       <List.Item>
@@ -229,14 +212,14 @@ const Endgame = ({ reportId }) => {
                               type="circle"
                               percent={
                                 ((countCorrectAnswers /
-                                  reportData.reportQuestions.length) *
+                                  report.questions.length) *
                                   100) |
                                 0
                               }
                               success={{
                                 percent:
                                   ((countCorrectAnswers /
-                                    reportData.reportQuestions.length) *
+                                    report.questions.length) *
                                     100) |
                                   0,
                               }}
@@ -264,4 +247,4 @@ const Endgame = ({ reportId }) => {
   );
 };
 
-export default Endgame;
+export default EndGamePlayer;

@@ -21,6 +21,11 @@ export const fetchQuiz = createAsyncThunk("quiz/getOne", async (id) => {
 export const fetchCreateQuiz = createAsyncThunk("quiz/create", async (quiz) => {
   return await quizApi.create(quiz);
 });
+
+export const fetchUpdateQuiz = createAsyncThunk("quiz/update", async (quiz) => {
+  return await quizApi.update(quiz);
+});
+
 const quizSlice = createSlice({
   name: "quiz",
   initialState,

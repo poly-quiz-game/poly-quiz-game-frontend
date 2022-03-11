@@ -1,9 +1,8 @@
 import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams, useNavigate } from "react-router-dom";
-import { Skeleton, Row, Col, Switch, Button, Image } from "antd";
-
-import MainLayout from "layouts/main.layout";
+import { Skeleton, Button } from "antd";
+import { UserOutlined, QuestionCircleOutlined } from "@ant-design/icons";
 
 import { fetchQuiz, selectQuiz, selectLoading } from "../quizSlice";
 
@@ -42,40 +41,29 @@ const StartGame = ({ socket }) => {
 
   return (
     <div className="start-quiz__screen">
-      <Row>
-        <Col span={12} offset={6}>
-          {loading ? (
-            <Skeleton />
-          ) : (
-            <div>
-              <div className="quiz-info">
-                <img src="/img/logo.png" />
-                <h1>{quiz.name}</h1>
-                <div className="box-start">
-                  <div className="icon-game">
-                    <img src="/img/icon.png" />
-                  </div>
-                  <div className="question-number">
-                    {(quiz.questions || []).length} câu hỏi
-                  </div>
-                  <Button
-                    size="large"
-                    style={{
-                      backgroundColor: "#399D29",
-                      border: "none",
-                      color: "#fff",
-                      fontSize: "20px",
-                      paddingTop: "0",
-                      marginTop: "30px",
-                    }}
-                    className="create-room"
-                    onClick={startGame}
-                  >
-                    Tiếp tục
-                  </Button>
-                </div>
-              </div>
-              {/* <div className="room-settings">
+      {loading ? (
+        <Skeleton />
+      ) : (
+        <div className="start-quiz">
+          <img src="/img/logo.png" />
+          <div className="quiz-info">
+            <h1>{quiz.name}</h1>
+            <h3>
+              <QuestionCircleOutlined /> {(quiz.questions || []).length} câu hỏi
+            </h3>
+            <h3>
+              <UserOutlined /> Cho phép {quiz.numberOfPlayer} người tham gia
+            </h3>
+          </div>
+          <Button
+            size="large"
+            className="create-room"
+            type="primary"
+            onClick={startGame}
+          >
+            Tiếp tục
+          </Button>
+          {/* <div className="room-settings">
                   <div className="setting-option">
                     <h3>Hiển thị câu hỏi, câu trả lời trên máy người chơi</h3>
                     <Switch
@@ -109,10 +97,8 @@ const StartGame = ({ socket }) => {
                     />
                   </div>
                 </div> */}
-            </div>
-          )}
-        </Col>
-      </Row>
+        </div>
+      )}
     </div>
   );
 };

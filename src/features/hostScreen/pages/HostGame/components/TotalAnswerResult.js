@@ -29,10 +29,10 @@ const sumAnswers = (arr) => {
   return obj;
 };
 
-const sumPlayersTypeQuestion = (question, playerAnswerResult) => {
+const sumPlayersTypeQuestion = (question, playersInGame) => {
   let sum = 0;
   const correctAnswer = question.answers[0].answer;
-  playerAnswerResult.forEach((item) => {
+  playersInGame.forEach((item) => {
     const answer = item.answers[item.answers.length - 1].answer;
     if (correctAnswer === answer) {
       sum += 1;
@@ -41,15 +41,15 @@ const sumPlayersTypeQuestion = (question, playerAnswerResult) => {
   return sum;
 };
 
-const TotalAnswerResult = ({ playerAnswerResult, question }) => {
+const TotalAnswerResult = ({ playersInGame, question }) => {
   const correctAnswers = question.correctAnswer.split("|").filter((a) => a);
 
   const calculateAnsersNumber = (index) => {
-    return sumAnswers(playerAnswerResult)[index];
+    return sumAnswers(playersInGame)[index];
   };
 
   const calculateHeight = (index) => {
-    return (calculateAnsersNumber(index) / playerAnswerResult.length) * 150;
+    return (calculateAnsersNumber(index) / playersInGame.length) * 150;
   };
 
   if (question.type === questionTypes.TYPE_ANSWER) {
@@ -58,7 +58,7 @@ const TotalAnswerResult = ({ playerAnswerResult, question }) => {
         <div className="answer-item">
           {question.answers[0].answer}
           <div className="answer-item-players">
-            {sumPlayersTypeQuestion(question, playerAnswerResult)}
+            {sumPlayersTypeQuestion(question, playersInGame)}
             <CheckIcon />
           </div>
         </div>

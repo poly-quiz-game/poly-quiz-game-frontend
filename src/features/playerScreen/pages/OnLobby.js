@@ -13,14 +13,17 @@ const OnLobby = ({ socket }) => {
     socket.emit("player-join-lobby", { name: params.name, pin: params.pin });
 
     socket.on("no-game-found", function () {
+      alert("Phòng không tồn tại!");
       navigate("/play/enter-pin");
     });
 
     socket.on("get-kicked", function () {
+      alert("Bạn đã bị kick ra khỏi phòng!");
       navigate("/play/enter-pin");
     });
 
     socket.on("host-disconnrected", function () {
+      alert("Host đã ngắt kết nối!");
       navigate("/play/enter-pin");
     });
 
