@@ -13,12 +13,10 @@ const QuestionOption = ({
   useEffect(() => {
     const getQuestionTypes = async () => {
       const questionTypes = await questionTypeApi.getAll();
-      setQuestionTypes(questionTypes.data);
+      setQuestionTypes(questionTypes.data.filter((q) => q.isActive));
     };
     getQuestionTypes();
   }, [questionTypeLabels]);
-
-  console.log(questionTypes, questionTypeLabels);
 
   return (
     <div className="question-options">
