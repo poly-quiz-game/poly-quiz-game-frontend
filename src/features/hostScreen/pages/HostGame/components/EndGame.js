@@ -168,7 +168,7 @@ const Endgame = ({ report }) => {
                   <strong>Câu hỏi</strong>
                 </Col>
                 <Col className="player-progress" span={8}>
-                  Tỉ lệ người tham gia trả lời đúng
+                  Tỉ lệ trả lời đúng
                 </Col>
               </Row>
               <div className="list-player">

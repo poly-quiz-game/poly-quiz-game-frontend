@@ -13,21 +13,30 @@ const antIcon = <LoadingOutlined style={{ fontSize: 111 }} spin />;
 const QUESTION_LABELS = ["A", "B", "C", "D"];
 const QUESTION_TRUE_FALSE_LABELS = ["A", "B"];
 
-// chưa trả lời
-// đã trả lời - đợi kết quả
-// đã trả lời - đã có kết quả
+// hiện câu hỏi - showQuestion
+// đợi kết quả - waitingResult
+// hiện kết quả - showResult
+// kết thúc game - endGame
+
+const QUESTION_STATES = {
+  showQuestion: "showQuestion",
+  waitingResult: "waitingResult",
+  showResult: "showResult",
+  endGame: "endGame",
+};
 
 const PlayGame = ({ socket }) => {
-  const [isCorrect, setIsCorrect] = useState(false);
-  const [answered, setAnswered] = useState(false);
-  const [showResult, setShowResult] = useState(false);
-  const [gameOver, setGameOver] = useState(false);
-  const [playerData, setPlayerData] = useState({});
-  const [player, setPlayer] = useState({});
-  const [score, setScore] = useState(0);
-  const [rank, setRank] = useState(1);
-  const [game, setGame] = useState({});
-  const [question, setQuestion] = useState({});
+  const [state, setState] = useState({
+    gameState: QUESTION_STATES.showQuestion,
+    isCorrect: null,
+    question: {},
+    playerData: {
+      rank: -1,
+      score: 0,
+    },
+    gameData: {},
+    endGameData: {},
+  });
 
   const prevScore = useRef(null);
 
@@ -47,33 +56,53 @@ const PlayGame = ({ socket }) => {
       navigate(`/play/enter-pin`);
     });
 
-    socket.on("game-over", (playerData) => {
-      setGameOver(true);
-      setPlayerData(playerData);
+    socket.on("game-over", (endGameData) => {
+      setState((prevState) => ({
+        ...prevState,
+        gameState: QUESTION_STATES.endGame,
+        endGameData,
+      }));
     });
 
     socket.on("player-info", (player, game) => {
-      setPlayer(player);
-      setGame(game);
+      setState((prevState) => ({
+        ...prevState,
+        playerData: {
+          ...prevState.playerData,
+          ...player,
+        },
+        gameData: {
+          ...prevState.gameData,
+          ...game,
+        },
+      }));
     });
 
     socket.on("player-score", ({ score, rank }) => {
-      setScore(score);
-      prevScore.current = score;
-      setRank(rank);
+      setState((prevState) => ({
+        ...prevState,
+        playerData: {
+          ...prevState.playerData,
+          score,
+          rank,
+        },
+      }));
     });
 
     socket.on("question-started", (question) => {
-      setAnswered(false);
-      setIsCorrect(false);
-      setShowResult(false);
-      setQuestion(question);
+      setState((prevState) => ({
+        ...prevState,
+        gameState: QUESTION_STATES.showQuestion,
+        question,
+      }));
     });
 
     socket.on("question-over", (isCorrect) => {
-      setIsCorrect(isCorrect);
-      setAnswered(true);
-      setShowResult(true);
+      setState((prevState) => ({
+        ...prevState,
+        gameState: QUESTION_STATES.showResult,
+        isCorrect,
+      }));
       socket.emit("get-player-score");
     });
 
@@ -82,29 +111,44 @@ const PlayGame = ({ socket }) => {
     };
   }, []);
 
+  useEffect(() => {
+    prevScore.current = state.playerData.score;
+  }, [state]);
+
   const playerAnswer = (answer) => {
-    setAnswered(true);
     socket.emit("player-answer", answer);
+    setState((prevState) => ({
+      ...prevState,
+      gameState: QUESTION_STATES.waitingResult,
+    }));
   };
 
-  if (gameOver) {
-    return (
-      <div className="game__screen">
-        <Row>
-          <Col span={20} offset={2}>
-            <h1>Game over!</h1>
-            <p>Điểm đạt được: {playerData.score}</p>
-            <Link to="/play/enter-pin">Thoát</Link>
-          </Col>
-        </Row>
-      </div>
-    );
-  }
+  const { gameState, isCorrect, question, playerData, gameData, endGameData } =
+    state;
 
   const Answers =
     question?.type?.name === questionTypes.TYPE_ANSWER
       ? TypeAnswer
       : SelectAnswers;
+
+  if (gameState === QUESTION_STATES.endGame) {
+    return (
+      <div className="player-game__screen">
+        <div className="player-info">
+          <div className="player-name">{playerData.name}</div>
+          <div className="player-score">{playerData.score}</div>
+        </div>
+        <div className="question-answer-result">
+          <div className="player-game-result">
+            <h3>Bạn đã đạt top</h3>
+            <h1 className="top">{playerData.rank}</h1>
+            <br />
+            <Button type="primary">Đóng</Button>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="player-game__screen">
@@ -112,9 +156,9 @@ const PlayGame = ({ socket }) => {
         <div className="player-name">
           {questionTypeLabels[question?.type?.name]}
         </div>
-        <div className="player-score">{score}</div>
+        <div className="player-score">{playerData.score}</div>
       </div>
-      {!answered && (
+      {gameState === QUESTION_STATES.showQuestion && (
         <Answers
           type={question?.type?.name}
           playerAnswer={playerAnswer}
@@ -125,7 +169,7 @@ const PlayGame = ({ socket }) => {
           }
         />
       )}
-      {!showResult && answered && (
+      {gameState === QUESTION_STATES.waitingResult && (
         <>
           <div
             style={{
@@ -140,7 +184,7 @@ const PlayGame = ({ socket }) => {
           <h3 style={{ textAlign: "center" }}>Chờ người chơi khác</h3>
         </>
       )}
-      {showResult && (
+      {gameState === QUESTION_STATES.showResult && (
         <div className="question-answer">
           {isCorrect ? (
             <svg
@@ -162,13 +206,17 @@ const PlayGame = ({ socket }) => {
           <h1 style={{ color: "#fff" }} className="question-tf">
             {isCorrect ? "Đúng" : "Sai"}
           </h1>
-          <p>{isCorrect ? `+ ${score - prevScore.current} ` : "+ 0 "} point</p>
-          <h3 style={{ color: "#fff" }}>Bạn đang ở vị trí số {rank}</h3>
+          <p style={{ color: "#fff" }}>
+            + {playerData.score - prevScore.current} điểm
+          </p>
+          <h3 style={{ color: "#fff" }}>
+            Bạn đang ở vị trí số {playerData.rank}
+          </h3>
         </div>
       )}
       <div className="question-footer">
-        <div className="player-name">{player.name}</div>
-        <div className="player-score">{player.score}</div>
+        <div className="player-name">{playerData.name}</div>
+        <div className="player-score">{playerData.score}</div>
       </div>
     </div>
   );

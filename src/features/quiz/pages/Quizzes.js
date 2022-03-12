@@ -31,7 +31,7 @@ const Quizzes = () => {
     limit: LIMIT,
     search: "",
     sortDirection: "desc",
-    sortField: "createdAt",
+    sortField: "updatedAt",
   });
 
   const [loadingState, setLoadingState] = useState({
@@ -145,7 +145,7 @@ const Quizzes = () => {
                           </div>
                           <div>
                             <CalendarOutlined />{" "}
-                            {moment(quiz.createdAt).format(
+                            {moment(quiz.updatedAt).format(
                               "DD/MM/YYYY - HH:mm"
                             )}
                           </div>
