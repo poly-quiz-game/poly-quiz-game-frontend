@@ -215,7 +215,9 @@
   .question-answer {
     background-image: url("https://shimatest.shop/background-dep-cho-powerpoint/imager_2_25831_700.jpg");
     background-repeat: no-repeat;
+    background-size: cover;
     height: 86vh;
+    color: #fff;
     .question-tf {
       padding-top: 40px;
     }
@@ -228,6 +230,20 @@
     }
     h3 {
       padding-top: 20px;
+      color: #fff;
+    }
+  }
+  .question-answer-result {
+    height: 86vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    .player-game-result {
+      text-align: center;
+      h1.top {
+        font-size: 80px;
+        color: #1368ce;
+      }
     }
   }
 }
