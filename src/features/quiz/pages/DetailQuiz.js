@@ -208,7 +208,8 @@ const DetailQuiz = () => {
                      <div className="answer-icon">
                      {(qt.type.name == 'SINGLE_CORRECT_ANSWER') ? (Number(qt.correctAnswer) === as.index
                          ? CorrectIcon
-                         : IncorretIcocn):"Huy"}
+                         : IncorretIcocn):(qt.correctAnswer.search(index) != (-1)) ? CorrectIcon
+                         : IncorretIcocn}
                      </div>
                    </div>
                  )) : (qt.answers.slice(0, 1) || []).map((as, index) => (
