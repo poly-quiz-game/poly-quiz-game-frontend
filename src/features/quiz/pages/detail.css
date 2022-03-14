@@ -10,6 +10,11 @@ table {
   .title{
     padding-top: 20px;
     padding-left: 20px;
+    
+  }
+  .title h2{
+    font-size: 24px;
+    text-overflow: clip;
   }
   .title h3{
     
@@ -79,21 +84,19 @@ table {
   }
   .question h3{
     font-size: 24px;
-    padding-left: 15px;
+    padding-left: 25px;
     font-weight: 500;
    
   }
-  .quiz-img{
-    padding-top: 20px;
-  }
   .quizquestion{
+    padding: 24px 33px;
     background-color: #fff;
-    border-radius: 20px;
-    height: 335px;;
+    border-radius: 10px;
     margin-bottom: 28px;}
   .quizzquestion-top{
     display:flex;
     justify-content: space-between;
+    margin-bottom: 20px;
   }
   .quizquestion-left {
     padding-left: 20px;
@@ -101,10 +104,11 @@ table {
   .quizquestion-left h4{
     font-weight: 300;
     font-size: 24px;
+    padding-top: 10px;
   }
   .quizquestion-left h5{
     font-weight: 500;
-    font-size: 18px;
+    font-size: 24px;
   }
   .quizquestion-right{
     position: relative;
@@ -136,14 +140,13 @@ table {
   .answer-question-left{
     background-color: #C4C4C4;
     border-radius: 25px;
-    width: 25px;
-    height: 25px;
+    width: 30px;
+    height: 30px;
     
   }
   .answer-question-left h3{
     font-size: 18px;
     text-align: center;
-    margin-top: -2px;
   }
   .answer-question-right{
     font-size: 18px;
@@ -152,4 +155,9 @@ table {
   .answer-icon{
     width: 25px;
     height: 25px;
+  }
+  .timeLimit{
+    display: flex;
+    font-size: 18px;
+    margin-top: 40px;
   }
