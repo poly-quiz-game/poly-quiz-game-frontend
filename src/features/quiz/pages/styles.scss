@@ -137,6 +137,9 @@
           padding: 5px;
 
           .quiz-name {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
             margin-right: 10px;
             width: 170px;
             font-weight: bold;

@@ -195,7 +195,7 @@ const CreateQuiz = () => {
           <div className="left">
             <div className="logo">LOGO</div>
             <div className="quiz-settings">
-              <div className={`${!quiz.name ? "blured" : ""} quiz-name`}>
+              <div className={`${!quiz.name ? "blured " : ""}quiz-name`}>
                 {quiz.name || "Nhập tên quiz"}
               </div>
               <Button
