@@ -47,6 +47,9 @@ if (!checkRequiredFiles([paths.appHtml, paths.appIndexJs])) {
 const DEFAULT_PORT = process.env.port || 8080;
 const HOST = process.env.HOST || "0.0.0.0";
 
+console.log("PORT: ", DEFAULT_PORT);
+console.log("HOST: ", HOST);
+
 if (process.env.HOST) {
   console.log(
     chalk.cyan(
