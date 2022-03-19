@@ -18,8 +18,8 @@ const EnterPin = ({ socket }) => {
     });
 
     socket.on("get-kicked", () => {
-      alert("Bạn đã bị kick ra khỏi phòng!");
-      navigate("/play/enter-pin");
+      setError("Bị kick ra khỏi phòng");
+      setIsOnLobby(false);
     });
 
     socket.on("game-started", () => {
@@ -30,9 +30,9 @@ const EnterPin = ({ socket }) => {
       setIsOnLobby(true);
     });
 
-    socket.on("no-game-found", () => {
+    socket.on("no-game-found", (error) => {
       setGame(null);
-      setError("Phòng không tồn tại!");
+      setError(error || "Phòng không tồn tại!");
     });
 
     return () => {
