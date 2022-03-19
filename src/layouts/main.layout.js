@@ -40,7 +40,7 @@ const MainLayout = ({ children }) => {
 
   const handleLogout = async () => {
     await dispatch(logout());
-    navigate("/auth/login");
+    navigate("/");
   };
 
   return (
@@ -58,9 +58,6 @@ const MainLayout = ({ children }) => {
             mode="horizontal"
             defaultSelectedKeys={[tab]}
           >
-            <Menu.Item key="home" icon={<HomeOutlined />}>
-              <Link to="/">Trang chủ</Link>
-            </Menu.Item>
             <Menu.Item key="quiz" icon={PuzzleIcon}>
               <Link to="/quiz">Quiz</Link>
             </Menu.Item>

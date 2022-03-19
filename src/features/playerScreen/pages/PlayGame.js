@@ -123,6 +123,10 @@ const PlayGame = ({ socket }) => {
     }));
   };
 
+  const onDisconnect = () => {
+    socket.disconnect();
+  };
+
   const { gameState, isCorrect, question, playerData, gameData, endGameData } =
     state;
 
@@ -143,7 +147,9 @@ const PlayGame = ({ socket }) => {
             <h3>Bạn đã đạt top</h3>
             <h1 className="top">{playerData.rank}</h1>
             <br />
-            <Button type="primary">Đóng</Button>
+            <Button type="primary" onClick={onDisconnect}>
+              Đóng
+            </Button>
           </div>
         </div>
       </div>
