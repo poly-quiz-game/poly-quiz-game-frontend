@@ -85,14 +85,14 @@ const HomeFeature = () => {
               tác để thu hút bất kỳ người học nào.
             </p>
             {/* <button className="started-btn"> */}
-              <GoogleLogin
-                clientId={process.env.REACT_APP_O2AUTH_CLIENT_ID}
-                buttonText="Login with google"
-                onSuccess={responseGoogle}
-                onFailure={responseGoogle}
-                cookiePolicy={"single_host_origin"}
-                hostedDomain="fpt.edu.vn"
-              />
+            <GoogleLogin
+              clientId={process.env.REACT_APP_O2AUTH_CLIENT_ID}
+              buttonText="Login with google"
+              onSuccess={responseGoogle}
+              onFailure={responseGoogle}
+              cookiePolicy={"single_host_origin"}
+              hostedDomain="fpt.edu.vn"
+            />
             {/* </button> */}
           </div>
           <div className="banner">
