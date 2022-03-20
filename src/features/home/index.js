@@ -60,8 +60,10 @@ const HomeFeature = () => {
 
   const responseGoogle = async ({ tokenId }) => {
     try {
-      await dispatch(login({ tokenId }));
-      navigate("/quiz");
+      if (tokenId) {
+        await dispatch(login({ tokenId }));
+        navigate("/quiz");
+      }
     } catch (error) {
       console.log(error);
     }
@@ -69,8 +71,7 @@ const HomeFeature = () => {
 
   const { TabPane } = Tabs;
   const token = getToken();
-
-  if (token) {
+  if (token && token.length > 0) {
     return <Navigate to="/quiz" />;
   }
 
