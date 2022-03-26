@@ -9,6 +9,10 @@ const homeApi = {
       headers: authHeader(),
     });
   },
+  getTopMaster() {
+    const url = `${path}/top-master`;
+    return axiosClient.get(url);
+  },
 };
 
 export default homeApi;

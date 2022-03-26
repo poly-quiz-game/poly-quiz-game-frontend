@@ -1,16 +1,15 @@
-import React, { useEffect, useState } from "react";
-import { Link, Navigate } from "react-router-dom";
-import { Card, Col, Row, Tabs } from "antd";
-import io from "socket.io-client";
+import { Card, Col, List, Row, Tabs } from "antd";
 import homeApi from "api/homeApi";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import GoogleLogin from "react-google-login";
+import InfiniteScroll from "react-infinite-scroll-component";
 import { useDispatch } from "react-redux";
-
+import { Link, Navigate, useNavigate } from "react-router-dom";
+import io from "socket.io-client";
 import { getToken } from "../../api/axiosClient";
-import "./styles.scss";
 import logo from "../../assets/logo.png";
 import { login } from "./authSlice";
+import "./styles.scss";
 
 const port = process.env.ENDPOINT || "ws://localhost:3005";
 
@@ -175,7 +174,9 @@ const HomeFeature = () => {
             </Col>
           </Row>
         </div>
-
+        <div>
+          <ListTopMaster />
+        </div>
         <div className="testimonials">
           <div className="title">
             <h2>Đã được yêu thích bởi các chuyên gia Fpoly!!!</h2>
@@ -445,6 +446,51 @@ const HomeFeature = () => {
           </ul>
         </div>
       </footer>
+    </div>
+  );
+};
+
+const ListTopMaster = () => {
+  const [data, setData] = useState([]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const { topMaster } = await homeApi.getTopMaster();
+      console.log(topMaster);
+      setData(topMaster);
+    };
+
+    fetchData();
+  }, []);
+  return (
+    <div style={{margin: "25px 0 0 0"}}>
+      <h2 style={{textAlign: 'center', fontSize: '30px'}}><b>Top 5 cao thủ</b></h2>
+      <div
+        id="scrollableDiv"
+        style={{
+          overflow: "auto",
+          padding: "0 16px",
+          border: "1px solid rgba(140, 140, 140, 0.35)",          
+        }}
+      >
+        <InfiniteScroll dataLength={data.length}>
+          <List
+            dataSource={data}
+            renderItem={(item) => (
+              <List.Item key={item.id}>
+                <div style={{ marginRight: "20px" }}>
+                  <h2>1</h2>
+                </div>
+                <List.Item.Meta
+                  title={<div href="https://ant.design">{item.name}</div>}
+                  description={item.email}
+                />
+                <div>Score: {item.score}</div>
+              </List.Item>
+            )}
+          />
+        </InfiniteScroll>
+      </div>
     </div>
   );
 };
