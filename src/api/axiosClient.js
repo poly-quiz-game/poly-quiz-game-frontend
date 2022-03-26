@@ -1,3 +1,4 @@
+import { message } from "antd";
 import axios from "axios";
 
 export const baseURL = process.env.ENDPOINT
@@ -30,6 +31,7 @@ export const authHeader = () => ({
 
 axiosClient.interceptors.response.use(
   function (response) {
+    console.log(response);
     return response.data;
   },
   function (error) {
@@ -40,6 +42,17 @@ axiosClient.interceptors.response.use(
       return (location.href = "/auth/login");
     }
 
+    if(status === 400){
+      if(error.response.data.error === "This user doesn't exist"){
+        return (location.href = "/auth/regist");
+      }
+      if(error.response.data.error === "Your account is locked"){
+        const error = () => {
+          message.error(`Tài khoản của bạn đã bị khóa, hay liên hệ admin để mở khóa`);
+        };
+        error();
+      }
+    }
     return Promise.reject(error);
   }
 );
