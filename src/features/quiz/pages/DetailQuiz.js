@@ -2,10 +2,11 @@ import React, { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
-import { Space, Button, Layout, Menu, Image } from "antd";
+import { Space, Button, Layout, Menu, Image, Collapse } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { FaUserAlt, FaEllipsisV, FaPencilAlt } from "react-icons/fa";
-import { CheckCircleFilled, CloseCircleFilled } from "@ant-design/icons";
+import { CheckCircleFilled, CloseCircleFilled,CaretRightOutlined,FieldTimeOutlined } from "@ant-design/icons";
+import { questionTypeLabels, questionTypes } from "consts";
 
 import MainLayout from "layouts/main.layout";
 import { Link } from "react-router-dom";
@@ -15,12 +16,13 @@ import { fetchQuiz, selectQuiz, remove } from "../quizSlice";
 import "./detail.css";
 import { showDeleteConfirm } from "../../../confirm/DeleteConfirm";
 const { Content, Sider } = Layout;
-
+const { Panel } = Collapse;
 const CorrectIcon = (
   <span style={{ color: "#52c41a" }}>
     <CheckCircleFilled />
   </span>
 );
+
 const IncorretIcocn = (
   <span style={{ color: "#eb2f96" }}>
     <CloseCircleFilled />
@@ -34,10 +36,11 @@ const DetailQuiz = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const quiz = useSelector(selectQuiz);
   const navigate = useNavigate();
+  const test = quiz.questions;
+
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
   }, [dispatch, params]);
-
   return (
     <MainLayout>
       <Layout>
@@ -62,7 +65,12 @@ const DetailQuiz = () => {
                   }
                 />
                 <div className="title">
-                  <h2>Tên: {quiz.name}</h2>
+                  <h2>
+                    Tên:{" "}
+                    {quiz.name?.length > 18
+                      ? quiz.name.substring(0, 15) + "..."
+                      : quiz.name}
+                  </h2>
                 </div>
                 <div className="number-play">
                   <div className="content">
@@ -131,75 +139,102 @@ const DetailQuiz = () => {
                 Câu hỏi <span>({quiz.questions?.length})</span>
               </h3>
             </div>
-            <Content
-              className="site-layout-background"
-              style={{
-                padding: 24,
-                margin: 0,
-                minHeight: 1000,
-              }}
+            {(quiz.questions || []).map((qt, i) => (
+            <Collapse
+              bordered={false}
+              defaultActiveKey={["1"]}
+              expandIcon={({ isActive }) => (
+                <CaretRightOutlined rotate={isActive ? 90 : 0} />
+              )}
+              className="site-collapse-custom-collapse"
             >
-              {(quiz.questions || []).map((qt, i) => (
-                <div className="quizquestion" key={qt.id}>
-                  <div className="quizzquestion-top">
-                    <div className="quizquestion-left">
-                      <h4>{i + 1}-Câu hỏi</h4>
-                      <h5>{qt.question}</h5>
-                    </div>
-                    <div className="quizquestion-right">
-                      <Image
-                        style={{
-                          width: "234px",
-                          height: "119px",
-                          paddingTop: "5px",
-                          borderRadius: "15px",
-                          marginRight: "20px",
-                          display: "block",
-                        }}
-                        src={
-                          qt.image === ""
-                            ? "https://tintuckhanhhoa.com/uploads/no_image_available.jpg"
-                            : qt.image
-                        }
-                      ></Image>
-                      <Button
-                        style={{
-                          position: "absolute",
-                          backgroundColor: "#151414",
-                          color: "#fff",
-                          borderRadius: "5px",
-                          opacity: "70%",
-                          border: 0,
-                          marginTop: "85px",
-                          marginLeft: "-80px",
-                        }}
-                      >
-                        20s
-                      </Button>
-                    </div>
-                  </div>
-                  <div className="quizzquestion-bottom">
-                    {(qt.answers || []).map((as, index) => (
-                      <div className="answer" key={index}>
-                        <div className="answer-question">
-                          <div className="answer-question-left">
-                            <h3>{QUESTION_LABELS[index]}</h3>
-                          </div>
-                          <div className="answer-question-right">
-                            <h4>{as.answer}</h4>
-                          </div>
-                        </div>
-                        <div className="answer-icon">
-                          {qt.correctAnswer === as.index
-                            ? CorrectIcon
-                            : IncorretIcocn}
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              ))}
-            </Content>
+              <Panel
+                header={questionTypeLabels[qt.type.name]}
+                key="1"
+                className="site-collapse-custom-panel"
+              >
+                <div className="quizzquestion-top">
+                     <div className="quizquestion-left">
+                       <h5>{qt.question?.length > 80 ? (qt.question.substring(0,75)+"...") : qt.question}</h5>
+                       <div className="timeLimit"><FieldTimeOutlined style={{ fontSize: '32px',marginRight:"20px" }} />  Thời gian trả lời: {qt.timeLimit/1000} giây </div>
+                     </div>
+                     <div className="quizquestion-right">
+                       <Image
+                         style={{
+                           width: "234px",
+                           height: "119px",
+                           paddingTop: "5px",
+                           borderRadius: "4px",
+                           marginRight: "20px",
+                           display: "block",
+                         }}
+                         src={
+                           qt.image === ""
+                             ? "https://tintuckhanhhoa.com/uploads/no_image_available.jpg"
+                             : qt.image
+                         }
+                       ></Image>
+                     </div>
+                   </div>
+                <div className="quizzquestion-bottom">
+               {(qt.type.name == 'TRUE_FALSE_ANSWER') ? (qt.answers.slice(0, 2) || []).map((as, index) => (
+                   <div className="answer" key={index}>
+                     <div className="answer-question">
+                       <div className="answer-question-left">
+                         <h3>{QUESTION_LABELS[index]}</h3>
+                       </div>
+                       <div className="answer-question-right">
+
+                         <h4>{as.answer}</h4>
+                       </div>
+                     </div>
+                     <div className="answer-icon">
+                       {Number(qt.correctAnswer) === as.index
+                        ? CorrectIcon
+                         : IncorretIcocn}
+                     </div>
+                   </div>
+                 )) : (qt.type.name == 'SINGLE_CORRECT_ANSWER' || 'MULTIPLE_CORRECT_ANSWER') ? (qt.answers || []).map((as, index) => (
+                   <div className="answer" key={index}>
+                     <div className="answer-question">
+                       <div className="answer-question-left">
+                         <h3>{QUESTION_LABELS[index]}</h3>
+                       </div>
+                       <div className="answer-question-right">
+
+                         <h4>{as.answer}</h4>
+                       </div>
+                     </div>
+                     <div className="answer-icon">
+                     {(qt.type.name == 'SINGLE_CORRECT_ANSWER') ? (Number(qt.correctAnswer) === as.index
+                         ? CorrectIcon
+                         : IncorretIcocn):(qt.correctAnswer.search(index) != (-1)) ? CorrectIcon
+                         : IncorretIcocn}
+                     </div>
+                   </div>
+                 )) : (qt.answers.slice(0, 1) || []).map((as, index) => (
+                   <div className="answer" key={index}>
+                     <div className="answer-question">
+                       <div className="answer-question-left">
+                         <h3>{QUESTION_LABELS[index]}</h3>
+                       </div>
+                       <div className="answer-question-right">
+
+                         <h4>{as.answer}</h4>
+                       </div>
+                     </div>
+                     <div className="answer-icon">
+                    {Number(qt.correctAnswer) === as.index
+                         ? CorrectIcon
+                         : IncorretIcocn}
+                     </div>
+                   </div>
+                ))}
+
+               </div>
+              </Panel>
+            </Collapse>))}
+            
           </Layout>
         </Layout>
       </Layout>

@@ -9,13 +9,17 @@ import { useNavigate } from "react-router";
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
 import QuizSettingModal from "./QuizSettingModal";
-import { fetchCreateQuiz, fetchQuiz } from "../../../hostScreen/quizSlice";
+import {
+  fetchCreateQuiz,
+  fetchUpdateQuiz,
+  fetchQuiz,
+} from "../../../hostScreen/quizSlice";
 import ValidateQuizModal from "./ValidateQuizModal";
 import { questionTypes } from "consts";
 import { validateQuestion } from "./utils";
 
 const defaultQuestion = {
-  type: questionTypes.SINGLE_CORRECT_ANSWER,
+  type: { name: questionTypes.SINGLE_CORRECT_ANSWER },
   image: "",
   answers: ["", "", "", ""],
   timeLimit: 20000,
@@ -23,7 +27,7 @@ const defaultQuestion = {
   correctAnswer: "",
 };
 
-const quizzes = [
+const mockQuestions = [
   {
     type: questionTypes.MULTIPLE_CORRECT_ANSWER,
     image:
@@ -61,8 +65,9 @@ const quizzes = [
 const CreateQuiz = () => {
   const dispatch = useDispatch();
   const [activeQuestion, setActiveQuestion] = useState(0);
-  const [questions, setQuestions] = useState(quizzes);
+  const [questions, setQuestions] = useState([defaultQuestion]);
   const [isShowSetting, setIsShowSetting] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [quiz, setQuiz] = useState({
     name: "",
     coverImage: "",
@@ -104,6 +109,9 @@ const CreateQuiz = () => {
   };
 
   const submitCreateQuiz = async (customData = {}) => {
+    if (loading) {
+      return;
+    }
     if (errors.filter((e) => !_.isEmpty(e)).length) {
       setIsShowValidateModal(true);
       return;
@@ -115,16 +123,70 @@ const CreateQuiz = () => {
     const newQuiz = { ...quiz, questions, ...customData };
 
     try {
-      await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+      setLoading(true);
+      if (!params.id) {
+        await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+      } else {
+        newQuiz.id = Number(params.id);
+        await dispatch(fetchUpdateQuiz(newQuiz)).unwrap();
+      }
+      setLoading(false);
       navigate("/quiz");
     } catch (error) {
+      setLoading(false);
       console.log(error);
     }
   };
 
-  // useEffect(() => {
-  //   dispatch(fetchQuiz(params.id));
-  // }, [dispatch, params]);
+  useEffect(() => {
+    if (params.id) {
+      dispatch(fetchQuiz(params.id)).then(
+        ({
+          payload: {
+            id,
+            name,
+            coverImage,
+            backgroundImage,
+            needLogin,
+            music,
+            numberOfPlayer,
+            questions,
+          },
+        }) => {
+          setQuiz({
+            id,
+            name,
+            coverImage,
+            backgroundImage,
+            needLogin,
+            music,
+            numberOfPlayer,
+          });
+          setQuestions(
+            questions.map(
+              ({
+                id,
+                type,
+                image,
+                answers,
+                timeLimit,
+                question,
+                correctAnswer,
+              }) => ({
+                id,
+                type,
+                image,
+                timeLimit,
+                question,
+                correctAnswer,
+                answers: [...answers.map((a) => a.answer)],
+              })
+            )
+          );
+        }
+      );
+    }
+  }, [params.id, dispatch]);
 
   return (
     <div className="create-quiz">
@@ -133,7 +195,7 @@ const CreateQuiz = () => {
           <div className="left">
             <div className="logo">LOGO</div>
             <div className="quiz-settings">
-              <div className={`${!quiz.name ? "blured" : ""} quiz-name`}>
+              <div className={`${!quiz.name ? "blured " : ""}quiz-name`}>
                 {quiz.name || "Nhập tên quiz"}
               </div>
               <Button
@@ -148,7 +210,11 @@ const CreateQuiz = () => {
             <Link to="/quiz">
               <Button>Thoát</Button>
             </Link>
-            <Button type="primary" onClick={() => submitCreateQuiz()}>
+            <Button
+              type="primary"
+              onClick={() => submitCreateQuiz()}
+              loading={loading}
+            >
               Lưu
             </Button>
           </div>
@@ -189,6 +255,7 @@ const CreateQuiz = () => {
           setIsShowSetting={setIsShowSetting}
           submitCreateQuiz={submitCreateQuiz}
           quiz={quiz}
+          loading={loading}
           setQuiz={setQuiz}
         />
       </Modal>

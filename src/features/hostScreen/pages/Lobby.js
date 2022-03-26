@@ -1,13 +1,35 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Row, Col, Statistic, Button, Popover, Image, Tooltip } from "antd";
+import { Button, Popover, Tooltip } from "antd";
 import { UserOutlined } from "@ant-design/icons";
+import music from "../../../assets/Welcome-to-Planet-Urf.mp3";
 
 import "../styles.scss";
+
+const useAudio = (url) => {
+  const [audio] = useState(new Audio(url));
+  const [playing, setPlaying] = useState(true);
+
+  const toggle = () => setPlaying(!playing);
+
+  useEffect(() => {
+    playing ? audio.play() : audio.pause();
+  }, [playing]);
+
+  useEffect(() => {
+    audio.addEventListener("ended", () => setPlaying(false));
+    return () => {
+      audio.removeEventListener("ended", () => setPlaying(false));
+    };
+  }, []);
+
+  return [playing, toggle];
+};
 
 const Lobby = ({ socket }) => {
   const [game, setGame] = useState(null);
   const [players, setPlayers] = useState([]);
+  const [playing, toggle] = useAudio(music);
 
   const navigate = useNavigate();
 
@@ -66,7 +88,7 @@ const Lobby = ({ socket }) => {
       </div>
       <div className="gameinfobottom">
         <div className="game-header">
-          <div>
+          <div style={{ display: "flex" }}>
             <Button
               type="primary"
               style={{
@@ -74,9 +96,26 @@ const Lobby = ({ socket }) => {
                 margin: "0 auto",
                 backgroundColor: "#1F0B40",
                 border: "none",
+                marginRight: "10px",
               }}
             >
               <UserOutlined /> {players?.length}
+            </Button>
+            <Button
+              type="primary"
+              onClick={toggle}
+              style={{
+                width: "100%",
+                margin: "0 auto",
+                backgroundColor: "#1F0B40",
+                border: "none",
+              }}
+            >
+              {playing ? (
+                <i className="fas fa-volume-up"></i>
+              ) : (
+                <i className="fas fa-volume-mute"></i>
+              )}
             </Button>
           </div>
           <div>
@@ -90,7 +129,7 @@ const Lobby = ({ socket }) => {
               }}
               type="primary"
               onClick={startGame}
-              disabled={!players.length}
+              // disabled={!players.length}
             >
               Bắt đầu game
             </Button>
@@ -98,20 +137,22 @@ const Lobby = ({ socket }) => {
         </div>
         <div className="player">
           <h3>Danh sách người chơi:</h3>
-          {players.map((p) => (
-            <Popover content="Kick" key={p.name}>
-              <Button
-                style={{
-                  marginTop: "5px",
-                }}
-                className="player-name"
-                onClick={() => kickPlayer(p.playerSocketId)}
-              >
-                {p.name}
-              </Button>
-              <br></br>
-            </Popover>
-          ))}
+          <div className="player-list">
+            {players.map((p) => (
+              <Popover content="Kick" key={p.name}>
+                <Button
+                  style={{
+                    marginTop: "5px",
+                  }}
+                  className="player-name"
+                  onClick={() => kickPlayer(p.playerSocketId)}
+                >
+                  {p.name}
+                </Button>
+                <br></br>
+              </Popover>
+            ))}
+          </div>
         </div>
       </div>
     </div>

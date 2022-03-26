@@ -32,11 +32,15 @@ const quizApi = {
       headers: authHeader(),
     });
   },
-  update(id) {
-    const url = `${path}/${id}`;
-    return axiosClient.put(url, {
-      headers: authHeader(),
-    });
+  update(quiz) {
+    const url = `${path}/${quiz.id}`;
+    return axiosClient.put(
+      url,
+      { quiz },
+      {
+        headers: authHeader(),
+      }
+    );
   },
   delete(id) {
     const url = `${path}/${id}`;

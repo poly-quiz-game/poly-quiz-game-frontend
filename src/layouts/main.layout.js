@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useEffect} from "react";
 import { Layout, Menu, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
@@ -42,7 +42,6 @@ const MainLayout = ({ children }) => {
     await dispatch(logout());
     navigate("/auth/login");
   };
-
   return (
     <Layout>
       <Header className="main-header">
@@ -62,7 +61,7 @@ const MainLayout = ({ children }) => {
               <Link to="/">Trang chủ</Link>
             </Menu.Item>
             <Menu.Item key="quiz" icon={PuzzleIcon}>
-              <Link to="/quiz">Thư viện của tôi</Link>
+              <Link to="/quiz">Quiz</Link>
             </Menu.Item>
             <Menu.Item key="report" icon={<ProfileOutlined />}>
               <Link to="/report">Báo cáo</Link>
@@ -72,16 +71,18 @@ const MainLayout = ({ children }) => {
         <Dropdown
           overlay={
             <Menu>
-              <Menu.Item key="3" danger>
+              <Menu.Item key="1" danger>
                 <a onClick={handleLogout}>Đăng xuất</a>
               </Menu.Item>
             </Menu>
           }
         >
-          <div className="current-user">
-            <img width={45} height={45} src={user.picture} />
-            <div>{user.name}</div>
-          </div>
+          <Link to="/profile">
+            <div className="current-user">
+              <img width={45} height={45} src={user.picture} />
+              <div>{user.name}</div>
+            </div>
+          </Link>
         </Dropdown>
       </Header>
       <Content>

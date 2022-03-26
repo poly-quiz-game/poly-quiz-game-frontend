@@ -25,8 +25,20 @@ const reportApi = {
       }
     );
   },
-  getOne(id) {
-    const url = `${path}/${id}`;
+  getPlayerInReport({id,offset,limit}) {
+    const url = `${path}/${id}/players?offset=${offset}&limit=${limit}`;
+    return axiosClient.get(url, {
+      headers: authHeader(),
+    });
+  },
+  getAllAnswerOfOnePlayer(id, playerId) {
+    const url = `${path}/${id}/players/${playerId}`;
+    return axiosClient.get(url, {
+      headers: authHeader(),
+    });
+  },
+  getQuestionsInReport({id,offset,limit}) {
+    const url = `${path}/${id}/questions?offset=${offset}&limit=${limit}`;
     return axiosClient.get(url, {
       headers: authHeader(),
     });

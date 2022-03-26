@@ -1,9 +1,10 @@
-import React, { useEffect, useState } from 'react'
-import { Menu, Row, Table, Input, Modal } from 'antd'
-import { Link, useParams } from 'react-router-dom'
+import React, {useEffect, useState} from 'react'
+import {Menu, Row, Table, Input, Modal} from 'antd'
+import {Link, useParams} from 'react-router-dom'
 import ReportDetail from './ReportDetail'
 import styled from 'styled-components'
 import reportApi from 'api/reportApi'
+import {formatNumber, getTypeQuestion} from "../../../utils";
 
 const Container = styled.div`
   -webkit-box-flex: 1;
@@ -54,90 +55,100 @@ const InfoRankUser = styled.div`
   margin: 2rem 0px;
 `
 const data = [
-  { name: 'hieupv', rank: 1, correctAnswersCount: 2, answersCount: 3, unansweredCount: 1, totalPoints: 1890 },
+    {id: 1, question: 'cau hoi 1', type: 1, Answered: 3, correctIncorrect: 1},
 ]
 const columns = [
-  {
-    title: 'Nick name',
-    dataIndex: 'name',
-    // sorter: true,
-    // render: (name) => `${name.first} ${name.last}`,
-    width: '40%',
-  },
-  {
-    title: 'Rank',
-    sorter: true,
-    dataIndex: 'rank',
-    width: '15%',
-  },
-  {
-    title: 'Correct answers',
-    sorter: true,
-    dataIndex: 'correctAnswersCount',
-    width: '15%',
-  },
-  {
-    title: 'Unanswered',
-    sorter: true,
-    dataIndex: 'unansweredCount',
-    width: '15%',
-  },
-  {
-    title: 'Final score',
-    sorter: true,
-    dataIndex: 'totalPoints',
-    width: '15%',
-  },
-]
-const ReportPlayerEntities = ({ report }) => {
-  const [state, setState] = useState({
-    data: [],
-    pagination: {
-      current: 1,
-      pageSize: 10,
+    {
+        title: 'Câu hỏi',
+        dataIndex: 'blockTitle',
+        // sorter: true,
+        // render: (name) => `${name.first} ${name.last}`,
+        width: '40%',
     },
-    loading: false,
-  })
-  const { id } = useParams()
+    {
+        title: 'Loại',
+        sorter: true,
+        dataIndex: 'type',
+        width: '15%',
+    },
+    {
+        title: 'Câu trả lời',
+        sorter: true,
+        dataIndex: 'displayText',
+        width: '15%',
+    },
+    {
+        title: 'Trạng thái',
+        sorter: true,
+        dataIndex: 'status',
+        width: '15%',
+    },
+    {
+        title: 'Thời gian',
+        sorter: true,
+        dataIndex: 'time',
+        width: '15%',
+    },
+    // {
+    //     title: 'Points',
+    //     sorter: true,
+    //     dataIndex: 'point',
+    //     width: '15%',
+    // },
+]
+const ReportPlayerEntities = ({id, player}) => {
+    const [playerAnswer, setPlayerAnswer] = useState([])
+    const [loading, setLoading] = useState(false)
+    const fetchData = async () => {
+        setLoading(true)
+        const data = await reportApi.getAllAnswerOfOnePlayer(id, player?.id)
+        setPlayerAnswer(data)
+        // console.log('data', data)
 
-  return (
-    <>
-      <TableWrapper>
-        <Container>
-          <WrapRankUser>
-            <PercentageAnswererWrap>
-              <PercentageAnswerer>
-                <span>50%</span>
-                <span>correct</span>
-              </PercentageAnswerer>
-            </PercentageAnswererWrap>
-            <InfoRankUserWrap>
-              <InfoRankUser>Rank</InfoRankUser>
-              <InfoRankUser>Rank</InfoRankUser>
-            </InfoRankUserWrap>
-          </WrapRankUser>
+        setLoading(false)
+    }
+    useEffect(() => {
+        player?.id && fetchData && fetchData()
+        console.log('player', player)
 
-          <Wrapper>
-            <StyledTable
-              columns={columns}
-              onRow={(record, rowIndex) => {
-                return {
-                  onClick: (event) => {
-                    setIsModalVisible(true)
-                  }, // click row
-                }
-              }}
-              // rowKey={record => record.login.uuid}
-              dataSource={data}
-              // pagination={pagination}
-              // loading={loading}
-              // onChange={this.handleTableChange}
-            />
-          </Wrapper>
-        </Container>
-      </TableWrapper>
-    </>
-  )
+    }, [setPlayerAnswer]);
+    return (
+        <>
+            <TableWrapper>
+                <Container>
+                    <WrapRankUser>
+                        <PercentageAnswererWrap>
+                            <PercentageAnswerer>
+                                <span>{formatNumber(player.correctAnswersCount / (player.correctAnswersCount + player.unansweredCount))} đúng</span>
+                            </PercentageAnswerer>
+                        </PercentageAnswererWrap>
+                        <InfoRankUserWrap>
+                            <InfoRankUser>Xếp hạng {player.rank}</InfoRankUser>
+                            {/*<InfoRankUser>Questions answered</InfoRankUser>*/}
+                        </InfoRankUserWrap>
+                    </WrapRankUser>
+
+                    <Wrapper>
+                        <StyledTable
+                            columns={columns}
+                            onRow={(record, rowIndex) => {
+                                return {
+                                    onClick: (event) => {
+                                        // setIsModalVisible(true)
+                                    }, // click row
+                                }
+                            }}
+                            // rowKey={record => record.login.uuid}
+                            dataSource={playerAnswer}
+                            pagination={false}
+                            loading={loading}
+                            // onChange={this.handleTableChange}
+                        />
+                    </Wrapper>
+                </Container>
+            </TableWrapper>
+        </>
+    )
 }
 
 export default ReportPlayerEntities

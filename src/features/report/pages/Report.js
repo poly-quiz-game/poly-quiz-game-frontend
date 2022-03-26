@@ -137,7 +137,7 @@ const Report = () => {
                       avatar={<Avatar src={report?.quiz?.coverImage || 'report.jpg'} />}
                       title={
                         <Link to={`/report/detail/${report.id}`} key={report.id} className='quiz-item-link'>
-                          {report.name}{' '}
+                          {report.name}
                         </Link>
                       }
                     />

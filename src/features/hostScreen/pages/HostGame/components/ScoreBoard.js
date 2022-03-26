@@ -1,7 +1,7 @@
 import React from "react";
 import "./styles.scss";
 
-const ScoreBoard = ({ playerAnswerResult, nextQuestion, endGame, game }) => {
+const ScoreBoard = ({ playersInGame, nextQuestion, endGame, game }) => {
   return (
     <div className="game__screen">
       <div className="question-info">
@@ -12,7 +12,7 @@ const ScoreBoard = ({ playerAnswerResult, nextQuestion, endGame, game }) => {
           {!endGame ? "Tiếp" : "Kết thúc"}
         </div>
         <div className="score-bars">
-          {playerAnswerResult
+          {playersInGame
             .sort((a, b) => b.score - a.score)
             .map((player, index) => {
               return (

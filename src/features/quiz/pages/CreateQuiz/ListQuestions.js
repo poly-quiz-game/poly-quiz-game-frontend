@@ -26,7 +26,7 @@ const AnswersPreview = ({
         >
           <div className="question-index" {...provided.dragHandleProps}>
             <h3>
-              {i + 1}. {questionTypeLabels[question.type]}
+              {i + 1}. {questionTypeLabels[question?.type?.name]}
             </h3>
             {!_.isEmpty(error) && (
               <div className="question-error-sticky">
@@ -167,10 +167,10 @@ const ListQuestions = ({
                   const isActive = activeQuestion === i;
                   const error = errors[i];
                   let answers = [...question.answers];
-                  if (question.type === questionTypes.TRUE_FALSE_ANSWER) {
+                  if (question?.type?.name === questionTypes.TRUE_FALSE_ANSWER) {
                     answers = answers.slice(0, 2);
                   }
-                  if (question.type === questionTypes.TYPE_ANSWER) {
+                  if (question?.type?.name === questionTypes.TYPE_ANSWER) {
                     answers = answers.slice(0, 1);
                     correctAnswer = [];
                   }

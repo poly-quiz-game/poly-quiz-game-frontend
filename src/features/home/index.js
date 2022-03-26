@@ -10,7 +10,7 @@ const HomeFeature = () => {
   const token = getToken();
   return (
     <MainLayout>
-      <div>
+      <div className="home__screen">
         <div className="home">
           <div className="header-banner">
             <div className="title">
@@ -42,8 +42,8 @@ const HomeFeature = () => {
             </div>
             <div className="content">
               <div className="content-title">
-                “Tôi đã được trải nghiệm PolyQuizzGame và nó không bao giờ khiến
-                bạn thất vọng! Sự phấn khích trên khuôn mặt của họ là tất cả!!
+                {'"'}Tôi đã được trải nghiệm PolyQuizzGame và nó không bao giờ
+                khiến bạn thất vọng!{'"'}
               </div>
               <div className="author">
                 <img src="https://scontent.fhan2-2.fna.fbcdn.net/v/t1.6435-9/120931967_4533919993316474_476842443670207113_n.jpg?_nc_cat=110&ccb=1-5&_nc_sid=174925&_nc_ohc=Ks8J7XfxN_MAX83mZk8&_nc_ht=scontent.fhan2-2.fna&oh=00_AT_qpwuigao2QJMGodnD-sEmem1VjA2aJC1LX2SB6ktGPQ&oe=623F71B9" />

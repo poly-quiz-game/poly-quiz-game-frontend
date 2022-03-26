@@ -4,7 +4,7 @@ import io from "socket.io-client";
 
 import EnterPin from "./pages/EnterPin";
 import PlayGame from "./pages/PlayGame";
-import OnLobby from "./pages/OnLobby";
+// import OnLobby from "./pages/OnLobby";
 
 import "./styles.scss";
 
@@ -32,10 +32,10 @@ const GameFeature = (props) => {
         path="/enter-pin/:pin"
         element={<EnterPin {...props} socket={socket} />}
       />
-      <Route
-        path="/pre-start/:pin&:name"
+      {/* <Route
+        path="/on-lobby/pin=:pin&name=:name&tokenId=:tokenId"
         element={<OnLobby {...props} socket={socket} />}
-      />
+      /> */}
       <Route
         path="/play-game/:socketId"
         element={<PlayGame {...props} socket={socket} />}

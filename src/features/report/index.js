@@ -4,7 +4,6 @@ import ReportDetailPlayers from './pages/ReportDetailPlayers'
 import ReportDetailQuestion from './pages/ReportDetailQuestion'
 
 import Report from './pages/Report'
-import ReportDetail from './pages/ReportDetail'
 
 const ReportFeature = (props) => {
   return (

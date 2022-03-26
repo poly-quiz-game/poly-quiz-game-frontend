@@ -4,8 +4,8 @@ import { gameStateTypes } from "../index";
 
 const GameAnswers = ({ question, gameState }) => {
   const { type } = question;
-
-  if (question.type === questionTypes.TYPE_ANSWER) {
+  console.log(111, question);
+  if (type.name === questionTypes.TYPE_ANSWER) {
     if (gameState === gameStateTypes.QUESTION_RESULT) {
       return null;
     }

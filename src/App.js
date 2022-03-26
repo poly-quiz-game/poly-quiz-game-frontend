@@ -11,6 +11,7 @@ import Report from "./features/report";
 import HostScreen from "./features/hostScreen";
 import Play from "./features/playerScreen";
 import Home from "./features/home";
+import UserProfile from "./features/userProfile";
 
 function App() {
   return (
@@ -46,6 +47,14 @@ function App() {
           element={
             <PrivateRoute>
               <Play />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/profile/*"
+          element={
+            <PrivateRoute>
+              <UserProfile />
             </PrivateRoute>
           }
         />

@@ -1,17 +1,19 @@
-import React, { useEffect } from 'react'
-import moment from 'moment'
-import { useSelector, useDispatch } from 'react-redux'
-import { useParams, useNavigate, Routes, Route, NavLink } from 'react-router-dom'
-import { Button, Col, Dropdown, Input, Menu, Row, Skeleton, Tabs } from 'antd'
+import React, {useEffect, useState} from 'react'
+import {useSelector, useDispatch} from 'react-redux'
+import {useParams, useNavigate, Routes, Route, NavLink} from 'react-router-dom'
+import {Button, Col, Dropdown, Input, Menu, Row, Skeleton, Tabs} from 'antd'
 import styled from 'styled-components'
-import { ReactComponent as DotVertical } from '../../../assets/images/DotsVertical.svg'
+import {ReactComponent as DotVertical} from '../../../assets/images/DotsVertical.svg'
 
-import { Link, Outlet } from 'react-router-dom'
+import {Link, Outlet} from 'react-router-dom'
 import MainLayout from 'layouts/main.layout'
-import { fetchReport, selectReport } from '../reportSlice'
-import { selectLoading } from '../../hostScreen/quizSlice'
+import {fetchReport, selectReport} from '../reportSlice'
+import {selectLoading} from '../../hostScreen/quizSlice'
 
-import { ButtonTab } from './../components/Button'
+import {ButtonTab} from './../components/Button'
+import reportApi from "../../../api/reportApi";
+import moment from "moment";
+import {selectUser} from "../../auth/authSlice";
 
 const Main = styled.div`
   display: block;
@@ -126,48 +128,48 @@ const WrapperTable = styled.div`
 `
 
 const menu = (
-  <Menu>
-    <Menu.Item key='0'>
-      <a>Download report</a>
-    </Menu.Item>
-    <Menu.Item key='1'>
-      <a>Move trash</a>
-    </Menu.Item>
-  </Menu>
+    <Menu>
+        <Menu.Item key='0'>
+            <a>Download report</a>
+        </Menu.Item>
+        <Menu.Item key='1'>
+            <a>Move trash</a>
+        </Menu.Item>
+    </Menu>
 )
-const ReportDetail = ({ children }) => {
-  let params = useParams()
-  //   const dispatch = useDispatch()
+const ReportDetail = ({children}) => {
+    const {id} = useParams()
+    const user = useSelector(selectUser);
 
-  //   const [tab, setTab] = React.useState('players')
+    const [info, setInfo] = useState()
+    const fetchData = async () => {
+        const data = await reportApi.getOne(id)
+        setInfo({createdAt: data.createdAt, name: data.name})
+    }
+    useEffect(() => {
+        fetchData && fetchData()
+    }, [])
 
-  //   const report = useSelector(selectReport)
-  //   const loading = useSelector(selectLoading)
-
-  //   useEffect(() => {
-  //     dispatch(fetchReport(params.id))
-  //   }, [dispatch])
-
-  return (
-    <MainLayout>
-      <Main>
-        <Wrapper>
-          <Container>
-            <Flex>
-              <HeaderLeft>
-                <TitleTop>
-                  <H5>Report</H5>
-                  <ReportOption>Report option</ReportOption>
-                  <Dropdown overlay={menu} placement='bottomRight' trigger={['click']}>
-                    <Button icon={<DotVertical />} type='text' />
-                  </Dropdown>
-                </TitleTop>
-                <TitleWrapper>
-                  <TitleH2>Title</TitleH2>
-                </TitleWrapper>
-                <List>
-                  <ListItem>
-                    {/* <NavLink
+    return (
+        <MainLayout>
+            <Main>
+                <Wrapper>
+                    <Container>
+                        <Flex>
+                            <HeaderLeft>
+                                <TitleTop>
+                                    <H5>Report</H5>
+                                    <ReportOption>Report option</ReportOption>
+                                    <Dropdown overlay={menu} placement='bottomRight' trigger={['click']}>
+                                        <Button icon={<DotVertical/>} type='text'/>
+                                    </Dropdown>
+                                </TitleTop>
+                                <TitleWrapper>
+                                    <TitleH2>{info?.name && ""}</TitleH2>
+                                </TitleWrapper>
+                                <List>
+                                    <ListItem>
+                                        {/* <NavLink
                       to={`/report/detail/${params.id}/players`}
                       style={({ isActive }) => {
                         return {
@@ -175,32 +177,32 @@ const ReportDetail = ({ children }) => {
                         }
                       }}
                     > */}
-                    <ButtonTab to={`/report/detail/${params.id}/players`}>Players</ButtonTab>
-                    {/* </NavLink> */}
-                    {/* <Link to={`/report/detail/${params.id}/questions`}> */}
-                    <ButtonTab to={`/report/detail/${params.id}/questions`}>Questions</ButtonTab>
-                    {/* </Link> */}
-                  </ListItem>
-                </List>
-              </HeaderLeft>
-              <HeaderRight>
-                <InfoReport>January 16, 2022, 5:57 PM</InfoReport>
-                <InfoReport>Hosted by hieupvph12651164</InfoReport>
-              </HeaderRight>
-            </Flex>
-          </Container>
-        </Wrapper>
-        <Wrapper>
-          <Container>
-            <WrapperTable>
-              {children}
-              <Outlet />
-            </WrapperTable>
-          </Container>
-        </Wrapper>
-      </Main>
-    </MainLayout>
-  )
+                                        <ButtonTab to={`/report/detail/${id}/players`}>Players</ButtonTab>
+                                        {/* </NavLink> */}
+                                        {/* <Link to={`/report/detail/${params.id}/questions`}> */}
+                                        <ButtonTab to={`/report/detail/${id}/questions`}>Questions</ButtonTab>
+                                        {/* </Link> */}
+                                    </ListItem>
+                                </List>
+                            </HeaderLeft>
+                            <HeaderRight>
+                                <InfoReport>{moment(info?.createdAt).format("DD/MM/YYYY - HH:mm")}</InfoReport>
+                                <InfoReport>{`Hosted by ${user.name}`}</InfoReport>
+                            </HeaderRight>
+                        </Flex>
+                    </Container>
+                </Wrapper>
+                <Wrapper>
+                    <Container>
+                        <WrapperTable>
+                            {children}
+                            <Outlet/>
+                        </WrapperTable>
+                    </Container>
+                </Wrapper>
+            </Main>
+        </MainLayout>
+    )
 }
 
 export default ReportDetail
