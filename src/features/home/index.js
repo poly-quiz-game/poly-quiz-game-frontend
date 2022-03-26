@@ -477,15 +477,15 @@ const ListTopMaster = () => {
           <List
             dataSource={data}
             renderItem={(item) => (
-              <List.Item key={item.id}>
+              <List.Item key={item.key}>
                 <div style={{ marginRight: "20px" }}>
-                  <h2>1</h2>
+                  <h2>{item.key}</h2>
                 </div>
                 <List.Item.Meta
                   title={<div href="https://ant.design">{item.name}</div>}
                   description={item.email}
                 />
-                <div>Score: {item.score}</div>
+                <div>Tổng điểm: {item.score}</div>
               </List.Item>
             )}
           />
