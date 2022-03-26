@@ -56,7 +56,7 @@ const AnswersPreview = ({
                 className="action-button duplicate-button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  addQuestion(question);
+                  addQuestion({ ...question, id: undefined });
                 }}
               >
                 <svg
@@ -167,7 +167,9 @@ const ListQuestions = ({
                   const isActive = activeQuestion === i;
                   const error = errors[i];
                   let answers = [...question.answers];
-                  if (question?.type?.name === questionTypes.TRUE_FALSE_ANSWER) {
+                  if (
+                    question?.type?.name === questionTypes.TRUE_FALSE_ANSWER
+                  ) {
                     answers = answers.slice(0, 2);
                   }
                   if (question?.type?.name === questionTypes.TYPE_ANSWER) {

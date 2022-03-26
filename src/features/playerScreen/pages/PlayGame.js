@@ -97,11 +97,12 @@ const PlayGame = ({ socket }) => {
       }));
     });
 
-    socket.on("question-over", (isCorrect) => {
+    socket.on("question-over", (isCorrect, streak) => {
       setState((prevState) => ({
         ...prevState,
         gameState: QUESTION_STATES.showResult,
         isCorrect,
+        streak,
       }));
       socket.emit("get-player-score");
     });
