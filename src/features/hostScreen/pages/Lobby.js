@@ -2,35 +2,15 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Popover, Tooltip } from "antd";
 import { UserOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
-import music from "../../../assets/Welcome-to-Planet-Urf.mp3";
+import music from "../../../assets/game_theme.mp3";
 
 import "../styles.scss";
-
-const useAudio = (url) => {
-  const [audio] = useState(new Audio(url));
-  const [playing, setPlaying] = useState(true);
-
-  const toggle = () => setPlaying(!playing);
-
-  useEffect(() => {
-    playing ? audio.play() : audio.pause();
-  }, [playing]);
-
-  useEffect(() => {
-    audio.addEventListener("ended", () => setPlaying(false));
-    return () => {
-      audio.removeEventListener("ended", () => setPlaying(false));
-    };
-  }, []);
-
-  return [playing, toggle];
-};
 
 const Lobby = ({ socket }) => {
   const [game, setGame] = useState(null);
   const [isLocked, setIsLocked] = useState(false);
   const [players, setPlayers] = useState([]);
-  const [playing, toggle] = useAudio(music);
+  const [playing, setPlaying] = useState(true);
 
   const navigate = useNavigate();
 
@@ -57,6 +37,7 @@ const Lobby = ({ socket }) => {
       socket.off("no-game-found");
       socket.off("game-info");
       socket.off("lobby-players");
+      // document.removeEventListener("ended", () => setPlaying(false));
     };
   }, []);
 
@@ -81,6 +62,11 @@ const Lobby = ({ socket }) => {
 
   return (
     <div className="lobby__screen">
+      {playing && (
+        <audio autoPlay loop>
+          <source src={music} type="audio/mpeg" />
+        </audio>
+      )}
       <div className="game-info">
         <div className="game-pin">
           <h2>Mã phòng:</h2>
@@ -113,7 +99,9 @@ const Lobby = ({ socket }) => {
             <Button
               size="large"
               type="primary"
-              onClick={toggle}
+              onClick={() => {
+                setPlaying(!playing);
+              }}
               style={{
                 width: "100%",
                 margin: "0 auto",
