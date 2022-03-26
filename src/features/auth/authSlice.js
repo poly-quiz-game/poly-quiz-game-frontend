@@ -23,6 +23,10 @@ export const logout = createAsyncThunk("auth/logout", async () => {
   return await authApi.logout();
 });
 
+export const add = createAsyncThunk("user/addUser", async (user) => {
+  await authApi.add(user);
+});
+
 const authSlice = createSlice({
   name: "auth",
   initialState,
