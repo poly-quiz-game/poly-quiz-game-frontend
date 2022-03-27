@@ -97,11 +97,12 @@ const PlayGame = ({ socket }) => {
       }));
     });
 
-    socket.on("question-over", (isCorrect) => {
+    socket.on("question-over", (isCorrect, streak) => {
       setState((prevState) => ({
         ...prevState,
         gameState: QUESTION_STATES.showResult,
         isCorrect,
+        streak,
       }));
       socket.emit("get-player-score");
     });
@@ -121,6 +122,10 @@ const PlayGame = ({ socket }) => {
       ...prevState,
       gameState: QUESTION_STATES.waitingResult,
     }));
+  };
+
+  const onDisconnect = () => {
+    socket.disconnect();
   };
 
   const { gameState, isCorrect, question, playerData, gameData, endGameData } =
@@ -143,7 +148,9 @@ const PlayGame = ({ socket }) => {
             <h3>Bạn đã đạt top</h3>
             <h1 className="top">{playerData.rank}</h1>
             <br />
-            <Button type="primary">Đóng</Button>
+            <Button type="primary" onClick={onDisconnect}>
+              Đóng
+            </Button>
           </div>
         </div>
       </div>

@@ -4,6 +4,8 @@ import TotalAnswerResult from "./components/TotalAnswerResult";
 import ScoreBoard from "./components/ScoreBoard";
 import GameAnswers from "./components/GameAnswers";
 import EndGame from "./components/EndGame";
+import liveQuestionSound from "../../../../assets/question_live_sound_2.mp3";
+import endQuestionSound from "../../../../assets/end_question_sound.mp3";
 
 import "../../styles.scss";
 
@@ -18,6 +20,7 @@ const HostGame = ({ socket }) => {
   const [question, setQuestion] = useState(null);
   const [game, setGame] = useState({});
   const [time, setTime] = useState(-1);
+  const [audioOn, setAudioOn] = useState(true);
 
   const [players, setPlayers] = React.useState([]);
   const [gameState, setGameState] = React.useState(
@@ -130,6 +133,16 @@ const HostGame = ({ socket }) => {
           className="game__screen"
           style={{ backgroundImage: `url(${game?.quizData?.backgroundImage})` }}
         >
+          {audioOn && gameState === gameStateTypes.LIVE_QUESTION && (
+            <audio autoPlay loop>
+              <source src={liveQuestionSound} type="audio/mpeg" />
+            </audio>
+          )}
+          {audioOn && gameState === gameStateTypes.QUESTION_RESULT && (
+            <audio autoPlay>
+              <source src={endQuestionSound} type="audio/mpeg" />
+            </audio>
+          )}
           <div className="question-info">
             <h1 className="question">{question.question}</h1>
           </div>

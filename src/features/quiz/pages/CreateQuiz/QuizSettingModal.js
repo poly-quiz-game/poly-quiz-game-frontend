@@ -81,7 +81,7 @@ const QuestionSettingModal = ({
         <InputNumber min={1} max={100} />
       </Form.Item>
       <Form.Item label="Người tham gia cần đăng nhập" name="needLogin">
-        <Switch />
+        <Switch defaultChecked={quiz.needLogin} />
       </Form.Item>
       <Form.Item label="Ảnh bìa" name="coverImage">
         <div className="image-container">

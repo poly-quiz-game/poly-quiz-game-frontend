@@ -27,10 +27,6 @@ const authApi = {
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
   },
-  add(user) {
-    const url = "/user";
-    return axiosClient.post(url, user);
-  },
 };
 
 export default authApi;
