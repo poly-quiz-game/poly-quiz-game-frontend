@@ -92,7 +92,7 @@ const columns = [
     },
 ]
 function correctAnswer (user) {
-    return user?.playerAnswers.reduce((acc, cur) => {
+    return (user?.playerAnswers || []).reduce((acc, cur) => {
         const result =  user.report.reportQuestions.filter(reportQ => reportQ.id === cur.questionId)
         return result[0].correctAnswer === cur.answer ? acc + 1 : acc
     }, 0)
@@ -132,7 +132,7 @@ const ReportDetailPlayers = ({report}) => {
                     rank: index + 1,
                     name: user.name,
                     correctAnswersCount: correctAnswer(user),
-                    unansweredCount: user.playerAnswers.length - correctAnswer(user),
+                    unansweredCount: (user.playerAnswers || []).length - correctAnswer(user),
                     totalPoints: user.score
                 }
             }),
