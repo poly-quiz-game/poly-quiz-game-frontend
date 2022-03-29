@@ -70,6 +70,7 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
+  background: no-repeat;
   .question-info {
     z-index: 100;
     width: 100%;
@@ -256,7 +257,7 @@
 
       .image {
         max-height: 100%;
-        width: 60%;
+        width: 100%;
         text-align: center;
 
         &.no-image {
