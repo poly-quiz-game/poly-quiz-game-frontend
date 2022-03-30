@@ -182,7 +182,10 @@ const ListQuestions = ({
                       i={i}
                       key={i}
                       isActive={isActive}
-                      setActiveQuestion={setActiveQuestion}
+                      setActiveQuestion={(val) => {
+                        console.log("setActiveQuestion: ", val);
+                        setActiveQuestion(val);
+                      }}
                       error={error}
                       addQuestion={addQuestion}
                       deleteQuestion={deleteQuestion}

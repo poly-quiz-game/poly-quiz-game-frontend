@@ -31,7 +31,6 @@ export const authHeader = () => ({
 
 axiosClient.interceptors.response.use(
   function (response) {
-    console.log(response);
     return response.data;
   },
   function (error) {
