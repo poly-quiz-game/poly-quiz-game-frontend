@@ -15,7 +15,7 @@ const QuestionOption = ({
   useEffect(() => {
     const getQuestionTypes = async () => {
       const questionTypes = await questionTypeApi.getAll();
-      setQuestionTypes(questionTypes.data.filter((q) => q.isActive));
+      setQuestionTypes(questionTypes.data.filter((q) => q.isActive).sort((a, b) => a.id - b.id));
     };
     const getQuestionTimes = async () => {
       const questionTimes = await questionTimeApi.getAll();

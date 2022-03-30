@@ -97,7 +97,7 @@ const CreateQuiz = () => {
 
   const deleteQuestion = (index) => {
     if (questions.length === 1) return;
-    if (activeQuestion === index && activeQuestion > 0)
+    if (activeQuestion === index && activeQuestion > 0 || activeQuestion === questions.length - 1) 
       setActiveQuestion(activeQuestion - 1);
     setQuestions(questions.filter((q, i) => i !== index));
   };
