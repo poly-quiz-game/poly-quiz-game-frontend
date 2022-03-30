@@ -1,4 +1,4 @@
-import { Card, Col, List, Row, Tabs } from "antd";
+import { Avatar, Card, Col, List, Row, Tabs } from "antd";
 import homeApi from "api/homeApi";
 import React, { useEffect, useState } from "react";
 import GoogleLogin from "react-google-login";
@@ -482,6 +482,7 @@ const ListTopMaster = () => {
                   <h2>{item.key}</h2>
                 </div>
                 <List.Item.Meta
+                  avatar={<Avatar src={!item.avatar ? 'https://www.google.com/url?sa=i&url=https%3A%2F%2Fchiase24.com%2Favatar-hai-huoc.html&psig=AOvVaw14EHhmbf58voT4DOsubNU-&ust=1648740083402000&source=images&cd=vfe&ved=0CAsQjRxqFwoTCOiH5s2R7vYCFQAAAAAdAAAAABAE' : item.avatar} />}
                   title={<div href="https://ant.design">{item.name}</div>}
                   description={item.email}
                 />
