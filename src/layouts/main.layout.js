@@ -1,10 +1,11 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Layout, Menu, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser, logout } from "features/auth/authSlice";
 import { useDispatch } from "react-redux";
-import { ProfileOutlined, HomeOutlined } from "@ant-design/icons";
+import { ProfileOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet";
 
 import "./styles.scss";
 
@@ -30,7 +31,7 @@ const PuzzleIcon = (
   </svg>
 );
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, title }) => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -44,6 +45,11 @@ const MainLayout = ({ children }) => {
   };
   return (
     <Layout>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{title || "Poly Quiz Game"}</title>
+      </Helmet>
+
       <Header className="main-header">
         <div className="main-menu">
           <Link to="/quiz">

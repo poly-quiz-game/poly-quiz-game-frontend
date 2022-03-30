@@ -27,7 +27,7 @@ const Deltai = (props) => {
   console.log(state);
   return (
     <div>
-      <MainLayout>
+      <MainLayout title="Chi tiết quiz | Poly Quiz Game">
         <Layout className="container row">
           <form>
             <div className="header">

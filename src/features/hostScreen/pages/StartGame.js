@@ -27,12 +27,15 @@ const StartGame = ({ socket }) => {
     dispatch(fetchQuiz(params.id));
 
     socket.on("lobby-info", ({ hostSocketId }) => {
-      navigate(`/host/lobby/${hostSocketId}`);
+      navigate(`/host/play/lobby/${hostSocketId}`);
     });
 
     socket.on("no-quiz-found", () => {
       alert("no-quiz-found");
     });
+    if (socket?.disconnected) {
+      socket.connect();
+    }
   }, [dispatch, params]);
 
   const startGame = () => {

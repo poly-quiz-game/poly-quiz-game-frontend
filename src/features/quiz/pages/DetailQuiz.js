@@ -5,7 +5,12 @@ import { useNavigate } from "react-router";
 import { Space, Button, Layout, Menu, Image, Collapse } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
 import { FaUserAlt, FaEllipsisV, FaPencilAlt } from "react-icons/fa";
-import { CheckCircleFilled, CloseCircleFilled,CaretRightOutlined,FieldTimeOutlined } from "@ant-design/icons";
+import {
+  CheckCircleFilled,
+  CloseCircleFilled,
+  CaretRightOutlined,
+  FieldTimeOutlined,
+} from "@ant-design/icons";
 import { questionTypeLabels, questionTypes } from "consts";
 
 import MainLayout from "layouts/main.layout";
@@ -36,13 +41,12 @@ const DetailQuiz = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const quiz = useSelector(selectQuiz);
   const navigate = useNavigate();
-  const test = quiz.questions;
 
   useEffect(() => {
     dispatch(fetchQuiz(params.id));
   }, [dispatch, params]);
   return (
-    <MainLayout>
+    <MainLayout title={quiz.name ? `${quiz.name} | Poly Quiz Game` : ""}>
       <Layout>
         <Layout>
           <Sider width={200} className="site-layout-background">
@@ -140,101 +144,115 @@ const DetailQuiz = () => {
               </h3>
             </div>
             {(quiz.questions || []).map((qt, i) => (
-            <Collapse
-              bordered={false}
-              defaultActiveKey={["1"]}
-              expandIcon={({ isActive }) => (
-                <CaretRightOutlined rotate={isActive ? 90 : 0} />
-              )}
-              className="site-collapse-custom-collapse"
-            >
-              <Panel
-                header={questionTypeLabels[qt.type.name]}
-                key="1"
-                className="site-collapse-custom-panel"
+              <Collapse
+                key={i}
+                bordered={false}
+                defaultActiveKey={["1"]}
+                expandIcon={({ isActive }) => (
+                  <CaretRightOutlined rotate={isActive ? 90 : 0} />
+                )}
+                className="site-collapse-custom-collapse"
               >
-                <div className="quizzquestion-top">
-                     <div className="quizquestion-left">
-                       <h5>{qt.question?.length > 80 ? (qt.question.substring(0,75)+"...") : qt.question}</h5>
-                       <div className="timeLimit"><FieldTimeOutlined style={{ fontSize: '32px',marginRight:"20px" }} />  Thời gian trả lời: {qt.timeLimit/1000} giây </div>
-                     </div>
-                     <div className="quizquestion-right">
-                       <Image
-                         style={{
-                           width: "234px",
-                           height: "119px",
-                           paddingTop: "5px",
-                           borderRadius: "4px",
-                           marginRight: "20px",
-                           display: "block",
-                         }}
-                         src={
-                           qt.image === ""
-                             ? "https://tintuckhanhhoa.com/uploads/no_image_available.jpg"
-                             : qt.image
-                         }
-                       ></Image>
-                     </div>
-                   </div>
-                <div className="quizzquestion-bottom">
-               {(qt.type.name == 'TRUE_FALSE_ANSWER') ? (qt.answers.slice(0, 2) || []).map((as, index) => (
-                   <div className="answer" key={index}>
-                     <div className="answer-question">
-                       <div className="answer-question-left">
-                         <h3>{QUESTION_LABELS[index]}</h3>
-                       </div>
-                       <div className="answer-question-right">
-
-                         <h4>{as.answer}</h4>
-                       </div>
-                     </div>
-                     <div className="answer-icon">
-                       {Number(qt.correctAnswer) === as.index
-                        ? CorrectIcon
-                         : IncorretIcocn}
-                     </div>
-                   </div>
-                 )) : (qt.type.name == 'SINGLE_CORRECT_ANSWER' || 'MULTIPLE_CORRECT_ANSWER') ? (qt.answers || []).map((as, index) => (
-                   <div className="answer" key={index}>
-                     <div className="answer-question">
-                       <div className="answer-question-left">
-                         <h3>{QUESTION_LABELS[index]}</h3>
-                       </div>
-                       <div className="answer-question-right">
-
-                         <h4>{as.answer}</h4>
-                       </div>
-                     </div>
-                     <div className="answer-icon">
-                     {(qt.type.name == 'SINGLE_CORRECT_ANSWER') ? (Number(qt.correctAnswer) === as.index
-                         ? CorrectIcon
-                         : IncorretIcocn):(qt.correctAnswer.search(index) != (-1)) ? CorrectIcon
-                         : IncorretIcocn}
-                     </div>
-                   </div>
-                 )) : (qt.answers.slice(0, 1) || []).map((as, index) => (
-                   <div className="answer" key={index}>
-                     <div className="answer-question">
-                       <div className="answer-question-left">
-                         <h3>{QUESTION_LABELS[index]}</h3>
-                       </div>
-                       <div className="answer-question-right">
-
-                         <h4>{as.answer}</h4>
-                       </div>
-                     </div>
-                     <div className="answer-icon">
-                    {Number(qt.correctAnswer) === as.index
-                         ? CorrectIcon
-                         : IncorretIcocn}
-                     </div>
-                   </div>
-                ))}
-
-               </div>
-              </Panel>
-            </Collapse>))}
-            
+                <Panel
+                  header={questionTypeLabels[qt.type.name]}
+                  key="1"
+                  className="site-collapse-custom-panel"
+                >
+                  <div className="quizzquestion-top">
+                    <div className="quizquestion-left">
+                      <h5>
+                        {qt.question?.length > 80
+                          ? qt.question.substring(0, 75) + "..."
+                          : qt.question}
+                      </h5>
+                      <div className="timeLimit">
+                        <FieldTimeOutlined
+                          style={{ fontSize: "32px", marginRight: "20px" }}
+                        />{" "}
+                        Thời gian trả lời: {qt.timeLimit / 1000} giây{" "}
+                      </div>
+                    </div>
+                    <div className="quizquestion-right">
+                      <Image
+                        style={{
+                          width: "234px",
+                          height: "119px",
+                          paddingTop: "5px",
+                          borderRadius: "4px",
+                          marginRight: "20px",
+                          display: "block",
+                        }}
+                        src={
+                          qt.image === ""
+                            ? "https://tintuckhanhhoa.com/uploads/no_image_available.jpg"
+                            : qt.image
+                        }
+                      ></Image>
+                    </div>
+                  </div>
+                  <div className="quizzquestion-bottom">
+                    {qt.type.name == "TRUE_FALSE_ANSWER"
+                      ? (qt.answers.slice(0, 2) || []).map((as, index) => (
+                          <div className="answer" key={index}>
+                            <div className="answer-question">
+                              <div className="answer-question-left">
+                                <h3>{QUESTION_LABELS[index]}</h3>
+                              </div>
+                              <div className="answer-question-right">
+                                <h4>{as.answer}</h4>
+                              </div>
+                            </div>
+                            <div className="answer-icon">
+                              {Number(qt.correctAnswer) === as.index
+                                ? CorrectIcon
+                                : IncorretIcocn}
+                            </div>
+                          </div>
+                        ))
+                      : qt.type.name === "SINGLE_CORRECT_ANSWER" ||
+                        qt.type.name === "MULTIPLE_CORRECT_ANSWER"
+                      ? (qt.answers || []).map((as, index) => (
+                          <div className="answer" key={index}>
+                            <div className="answer-question">
+                              <div className="answer-question-left">
+                                <h3>{QUESTION_LABELS[index]}</h3>
+                              </div>
+                              <div className="answer-question-right">
+                                <h4>{as.answer}</h4>
+                              </div>
+                            </div>
+                            <div className="answer-icon">
+                              {qt.type.name == "SINGLE_CORRECT_ANSWER"
+                                ? Number(qt.correctAnswer) === as.index
+                                  ? CorrectIcon
+                                  : ''
+                                : qt.correctAnswer.search(index) != -1
+                                ? CorrectIcon
+                                : ''}
+                            </div>
+                          </div>
+                        ))
+                      : (qt.answers.slice(0, 1) || []).map((as, index) => (
+                          <div className="answer" key={index}>
+                            <div className="answer-question">
+                              <div className="answer-question-left">
+                                <h3>{QUESTION_LABELS[index]}</h3>
+                              </div>
+                              <div className="answer-question-right">
+                                <h4>{as.answer}</h4>
+                              </div>
+                            </div>
+                            <div className="answer-icon">
+                              {Number(qt.correctAnswer) === as.index
+                                ? CorrectIcon
+                                : ''}
+                            </div>
+                          </div>
+                        ))}
+                  </div>
+                </Panel>
+              </Collapse>
+            ))}
           </Layout>
         </Layout>
       </Layout>

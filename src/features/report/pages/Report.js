@@ -60,7 +60,7 @@ const Report = () => {
   const { initLoading, loading } = loadingState
 
   return (
-    <MainLayout>
+    <MainLayout title="Danh sách báo cáo | Poly Quiz Game">
       <div className='reports' id='reportsDiv'>
         <div className='header'>
           <div className='title-top-list-quiz'>

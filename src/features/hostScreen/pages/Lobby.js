@@ -33,16 +33,18 @@ const Lobby = ({ socket }) => {
       setPlayers(players);
     });
 
+    if (socket?.disconnected) {
+      socket.connect();
+    }
     return () => {
       socket.off("no-game-found");
       socket.off("game-info");
       socket.off("lobby-players");
-      // document.removeEventListener("ended", () => setPlaying(false));
     };
   }, []);
 
   const startGame = () => {
-    navigate(`/host/game/${socket.id}`);
+    navigate(`/host/play/game/${socket.id}`);
   };
 
   const onLockLobby = () => {

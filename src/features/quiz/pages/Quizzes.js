@@ -70,7 +70,7 @@ const Quizzes = () => {
   const { initLoading, loading } = loadingState;
 
   return (
-    <MainLayout>
+    <MainLayout title="Danh sách quiz | Poly Quiz Game">
       <div className="quizzes" id="quizzesDiv">
         <div className="quizzes-header">
           <div className="quizzes-search">

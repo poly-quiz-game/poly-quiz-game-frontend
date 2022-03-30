@@ -34,10 +34,6 @@ const EnterPin = ({ socket }) => {
       setGame(null);
       setError(error || "Phòng không tồn tại!");
     });
-
-    return () => {
-      socket.emit("disconnect", socket.id);
-    };
   }, []);
 
   const checkGame = (pin) => {

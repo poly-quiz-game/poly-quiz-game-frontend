@@ -5,6 +5,7 @@ import _ from "lodash";
 import { Button, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { Helmet } from "react-helmet";
 
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
@@ -97,7 +98,10 @@ const CreateQuiz = () => {
 
   const deleteQuestion = (index) => {
     if (questions.length === 1) return;
-    if (activeQuestion === index && activeQuestion > 0 || activeQuestion === questions.length - 1) 
+    if (
+      (activeQuestion === index && activeQuestion > 0) ||
+      activeQuestion === questions.length - 1
+    )
       setActiveQuestion(activeQuestion - 1);
     setQuestions(questions.filter((q, i) => i !== index));
   };
@@ -190,10 +194,15 @@ const CreateQuiz = () => {
 
   return (
     <div className="create-quiz">
+      <Helmet>
+        <title>Tạo quiz | Poly Quiz</title>
+      </Helmet>
       <div className="header">
         <div className="header-content">
           <div className="left">
-            <div className="logo">LOGO</div>
+            <div className="logo">
+              <img style={{ width: "100%" }} src="/img/logo.png" />
+            </div>
             <div className="quiz-settings">
               <div className={`${!quiz.name ? "blured " : ""}quiz-name`}>
                 {quiz.name || "Nhập tên quiz"}

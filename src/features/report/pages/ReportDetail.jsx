@@ -151,7 +151,7 @@ const ReportDetail = ({children}) => {
     }, [])
 
     return (
-        <MainLayout>
+        <MainLayout title="Chi tiết báo cáo | Poly Quiz Game">
             <Main>
                 <Wrapper>
                     <Container>

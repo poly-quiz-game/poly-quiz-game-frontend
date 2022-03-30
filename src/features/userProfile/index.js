@@ -17,7 +17,7 @@ const UserProfile = (props) => {
   const navigate = useNavigate();
   const user = useSelector(selectUser);
   return (
-    <MainLayout>
+    <MainLayout title={`${user.name} | Poly Quiz Game`}>
       <div className="profile">
         <div className="profile-header">
           <div className="profile-avatar">

@@ -1,5 +1,16 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
+import {
+  useNavigate,
+  useParams,
+  UNSAFE_NavigationContext as NavigationContext,
+} from "react-router-dom";
+
 import TotalAnswerResult from "./components/TotalAnswerResult";
 import ScoreBoard from "./components/ScoreBoard";
 import GameAnswers from "./components/GameAnswers";
@@ -8,6 +19,42 @@ import liveQuestionSound from "../../../../assets/question_live_sound_2.mp3";
 import endQuestionSound from "../../../../assets/end_question_sound.mp3";
 
 import "../../styles.scss";
+
+export function useBlocker(blocker, when = true) {
+  const { navigator } = useContext(NavigationContext);
+
+  useEffect(() => {
+    if (!when) return;
+
+    const unblock = navigator.block((tx) => {
+      const autoUnblockingTx = {
+        ...tx,
+        retry() {
+          // Automatically unblock the transition so it can play all the way
+          // through before retrying it. TODO: Figure out how to re-enable
+          // this block if the transition is cancelled for some reason.
+          unblock();
+          tx.retry();
+        },
+      };
+
+      blocker(autoUnblockingTx);
+    });
+
+    return unblock;
+  }, [navigator, blocker, when]);
+}
+export function usePrompt(message, when = true) {
+  const blocker = useCallback(
+    (tx) => {
+      // eslint-disable-next-line no-alert
+      if (window.confirm(message)) tx.retry();
+    },
+    [message]
+  );
+
+  useBlocker(blocker, when);
+}
 
 export const gameStateTypes = {
   LIVE_QUESTION: "liveQuestion",
@@ -33,6 +80,21 @@ const HostGame = ({ socket }) => {
   const navigate = useNavigate();
   const timer = useRef(null);
   const prevTime = useRef(null);
+
+  usePrompt(
+    "Bạn có chắc muốn thoát game này không?",
+    gameState !== gameStateTypes.GAME_OVER
+  );
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      socket.disconnect();
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     socket.emit("host-start-game", { id: params.id });
@@ -82,10 +144,11 @@ const HostGame = ({ socket }) => {
     socket.on("game-over-host", (rank, playersInGame, report) => {
       setReport(report);
       setGameState(gameStateTypes.GAME_OVER);
+      socket.disconnect();
     });
 
     return () => {
-      socket.emit("disconnect", socket.id);
+      socket.disconnect();
     };
   }, []);
 
@@ -105,7 +168,7 @@ const HostGame = ({ socket }) => {
   }, [time]);
 
   const endGame = () => {
-    socket.emit("disconnect", socket.id);
+    socket.disconnect();
     navigate(`/quiz`);
   };
 
