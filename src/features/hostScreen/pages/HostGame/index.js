@@ -83,12 +83,12 @@ const HostGame = ({ socket }) => {
 
   usePrompt(
     "Bạn có chắc muốn thoát game này không?",
-    gameState !== gameStateTypes.GAME_OVER
+    socket.connected && gameState !== gameStateTypes.GAME_OVER
   );
 
   useEffect(() => {
     window.addEventListener("beforeunload", () => {
-      socket.disconnect();
+      console.log('quit game')
     });
 
     return () => {

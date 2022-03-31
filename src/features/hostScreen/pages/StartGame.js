@@ -39,7 +39,8 @@ const StartGame = ({ socket }) => {
   }, [dispatch, params]);
 
   const startGame = () => {
-    socket.emit("host-create-lobby", { id: quiz.id });
+    const user  = JSON.parse(localStorage.getItem("user"));
+    socket.emit("host-create-lobby", { id: quiz.id, user });
   };
 
   return (

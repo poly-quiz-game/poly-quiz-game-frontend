@@ -21,6 +21,10 @@ const Lobby = ({ socket }) => {
       navigate(-1);
     });
 
+    socket.on("game-stoped", () => {
+      navigate(-1);
+    });
+
     socket.on("game-info", (game) => {
       setGame(game);
     });
