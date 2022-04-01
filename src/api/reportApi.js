@@ -25,6 +25,12 @@ const reportApi = {
       }
     );
   },
+  getOne(id) {
+    const url = `${path}/${id}`;
+    return axiosClient.get(url, {
+      headers: authHeader(),
+    });
+  },
   getPlayerInReport({id,offset,limit}) {
     const url = `${path}/${id}/players?offset=${offset}&limit=${limit}`;
     return axiosClient.get(url, {

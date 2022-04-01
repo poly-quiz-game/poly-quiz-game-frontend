@@ -124,7 +124,7 @@ const ListItem = styled.li`
 const WrapperTable = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 2rem 0rem;
+  margin: 0;
 `
 
 const menu = (

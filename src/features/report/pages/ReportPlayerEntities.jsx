@@ -138,7 +138,7 @@ const ReportPlayerEntities = ({id, player}) => {
                                     }, // click row
                                 }
                             }}
-                            // rowKey={record => record.login.uuid}
+                            rowKey={record => record.id}
                             dataSource={playerAnswer}
                             pagination={false}
                             loading={loading}
