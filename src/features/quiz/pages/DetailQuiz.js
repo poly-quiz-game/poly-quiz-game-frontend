@@ -33,19 +33,14 @@ const IncorretIcocn = (
     <CloseCircleFilled />
   </span>
 );
-const QUESTION_LABELS = ["A", "B", "C", "D"];
+const QUESTION_COLOR = [
+  { border: "2px solid rgb(226, 27, 60)" },
+  { border: "2px solid rgb(19, 104, 206)" },
+  { border: "2px solid rgb(216, 158, 0)" },
+  { border: "2px solid rgb(38, 137, 12)" },
+];
 
-// const fetchData = () => {
-//   if (!loadingState.initLoading) {
-//     setLoadingState({ ...loadingState, loading: true });
-//   }
-//   if (loadingState.initLoading || loadingState.loading) {
-//     return;
-//   }
-//   dispatch(fetchQuizzes(metadata)).then(() => {
-//     setLoadingState({ initLoading: false, loading: false });
-//   });
-// };
+const QUESTION_LABELS = ["A", "B", "C", "D"];
 
 const DetailQuiz = () => {
   let params = useParams();
@@ -53,28 +48,35 @@ const DetailQuiz = () => {
   const user = JSON.parse(localStorage.getItem("user"));
   const quiz = useSelector(selectQuiz);
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    dispatch(fetchQuiz(params.id));
-    // fetchData();
+  useEffect(async () => {
+    await dispatch(fetchQuiz(params.id));
+    await setLoading(false);
   }, [dispatch, params]);
 
   return (
     <>
-      <Skeleton title={false} loading={quiz.loading} active>
-        <MainLayout
-          title={quiz.name ? `${quiz.name} | Poly Quiz Game` : ""}
-          loading={quiz.loading}
-          active
-        >
+      <MainLayout
+        title={quiz.name ? `${quiz.name} | Poly Quiz Game` : ""}
+        loading={quiz.loading}
+        active
+      >
+        {loading ? (
+          <div className="loading">
+            <Skeleton title={false} loading={loading} active></Skeleton>
+            <Skeleton title={false} loading={loading} active></Skeleton>
+          </div>
+        ) : (
           <Layout>
             <Layout>
               <div className="question-header">
-                <div className="quiz-img">
+                <div className="question-header-top">
                   <Image
                     style={{
-                      width: "332px",
-                      height: "218px",
+                      borderRadius: "4px",
+                      width: "150px",
+                      margin: "15px 0px 0px 31px",
                     }}
                     src={
                       quiz.coverImage === ""
@@ -82,42 +84,30 @@ const DetailQuiz = () => {
                         : quiz.coverImage
                     }
                   />
-                  <div>
-                    <div className="title">
+                  <div className="header-title-content">
+                    <div className="title number-play">
                       <h2>
-                        Tên:{" "}
+                        <span>Tên:</span>
                         {quiz.name?.length > 18
                           ? quiz.name.substring(0, 15) + "..."
                           : quiz.name}
                       </h2>
-                    </div>
-                    <div className="description">
-                      <h5>
-                        Mô tả: <span>{quiz.description}</span>
-                      </h5>
-                    </div>
-                    <div className="number-play">
-                      <div className="content">
-                        <h4>{quiz.reports?.length} lượt</h4>
-                      </div>
                       <div className="button-icon">
-                        <div>
+                        <div className="quiz-edit-delete">
                           <Link
                             to={`/quiz/update/${quiz.id}`}
                             style={{ color: "black", fontSize: "14px" }}
                           >
-                            <FaPencilAlt />
+                            <FaPencilAlt fontSize={11} />{" "}
+                            <span style={{ paddingLeft: "3px" }}>Sửa</span>
                           </Link>
                         </div>
-                        <div>
-                          <Space size="middle">
+                        <div className="quiz-edit-delete">
+                          <Space>
                             <DeleteOutlined
                               style={{
                                 cursor: "pointer",
                                 color: "black",
-                                paddingBottom: "5px",
-                                paddingRight: "5px",
-                                paddingLeft: "5px",
                               }}
                               onClick={() => {
                                 showDeleteConfirm(quiz.name, async () => {
@@ -127,33 +117,45 @@ const DetailQuiz = () => {
                                 });
                               }}
                             />
+                            Xóa
                           </Space>
-                        </div>
-                        <div>
-                          <FaEllipsisV />
                         </div>
                       </div>
                     </div>
-                    <div className="button">
-                      <div className="button1">
-                        <Button
-                          className="button-start"
-                          style={{ backgroundColor: "#416CDA" }}
-                        >
-                          <Link
-                            to={`/host/start/${quiz.id}`}
-                            style={{ color: "#fff", fontSize: "14px" }}
-                          >
-                            Bắt đầu game
-                          </Link>
-                        </Button>
+                    <div className="description">
+                      <h5>
+                        Mô tả: <span>{quiz.description}</span>
+                      </h5>
+                    </div>
+                    <div className="content-title">
+                      <div className="content">
+                        <h4>{quiz.reports?.length} lượt chơi</h4>
                       </div>
                     </div>
                   </div>
                 </div>
+                <div className="question-header-bottom">
+                  <div className="avata">
+                    <img src={user.picture} />
+                    <span>{user.name}</span>
+                  </div>
+                  <div className="button1">
+                    <Button
+                      className="button-start"
+                      style={{ backgroundColor: "#416CDA", borderRadius: "4px" }}
+                    >
+                      <Link
+                        to={`/host/start/${quiz.id}`}
+                        style={{ color: "#fff", fontSize: "14px" }}
+                      >
+                        Bắt đầu game
+                      </Link>
+                    </Button>
+                  </div>
+                </div>
               </div>
 
-              <Layout style={{ padding: "0 24px 24px", paddingLeft: "150px" }}>
+              <Layout style={{ margin: "0px 250px 24px" }}>
                 <div className="question">
                   <h3>
                     Câu hỏi <span>({quiz.questions?.length})</span>
@@ -162,12 +164,13 @@ const DetailQuiz = () => {
                 {(quiz.questions || []).map((qt, i) => (
                   <Collapse
                     key={i}
+                    defaultActiveKey={['1']}
                     bordered={false}
-                    defaultActiveKey={["1"]}
                     expandIcon={({ isActive }) => (
                       <CaretRightOutlined rotate={isActive ? 90 : 0} />
                     )}
                     className="site-collapse-custom-collapse"
+                    style={{ marginBottom: "16px" }}
                   >
                     <Panel
                       header={questionTypeLabels[qt.type.name]}
@@ -183,15 +186,14 @@ const DetailQuiz = () => {
                           </h5>
                           <div className="timeLimit">
                             <FieldTimeOutlined
-                              style={{ fontSize: "32px", marginRight: "20px" }}
-                            />{" "}
-                            Thời gian trả lời: {qt.timeLimit / 1000} giây{" "}
+                              style={{ fontSize: "20px", marginRight: "20px" }}
+                            />
+                            Thời gian trả lời: {qt.timeLimit / 1000} giây
                           </div>
                         </div>
                         <div className="quizquestion-right">
                           <Image
                             style={{
-                              width: "234px",
                               height: "119px",
                               paddingTop: "5px",
                               borderRadius: "4px",
@@ -211,18 +213,24 @@ const DetailQuiz = () => {
                           ? (qt.answers.slice(0, 2) || []).map((as, index) => (
                               <div className="answer" key={index}>
                                 <div className="answer-question">
-                                  <div className="answer-question-left">
-                                    <h3>{QUESTION_LABELS[index]}</h3>
+                                  <div
+                                    className="answer-question-left"
+                                    style={QUESTION_COLOR[index]}
+                                  >
+                                    <h3 color="#fff">
+                                      {QUESTION_LABELS[index]}
+                                    </h3>
                                   </div>
                                   <div className="answer-question-right">
                                     <h4>{as.answer}</h4>
                                   </div>
                                 </div>
-                                <div className="answer-icon">
-                                  {Number(qt.correctAnswer) === as.index
-                                    ? CorrectIcon
-                                    : IncorretIcocn}
-                                </div>
+
+                                {Number(qt.correctAnswer) === as.index ? (
+                                  <div className="answer-icon active"></div>
+                                ) : (
+                                  <div className="answer-icon"></div>
+                                )}
                               </div>
                             ))
                           : qt.type.name === "SINGLE_CORRECT_ANSWER" ||
@@ -230,39 +238,51 @@ const DetailQuiz = () => {
                           ? (qt.answers || []).map((as, index) => (
                               <div className="answer" key={index}>
                                 <div className="answer-question">
-                                  <div className="answer-question-left">
-                                    <h3>{QUESTION_LABELS[index]}</h3>
+                                  <div
+                                    className="answer-question-left"
+                                    style={QUESTION_COLOR[index]}
+                                  >
+                                    <h3 color="#fff">
+                                      {QUESTION_LABELS[index]}
+                                    </h3>
                                   </div>
                                   <div className="answer-question-right">
                                     <h4>{as.answer}</h4>
                                   </div>
                                 </div>
-                                <div className="answer-icon">
-                                  {qt.type.name == "SINGLE_CORRECT_ANSWER"
-                                    ? Number(qt.correctAnswer) === as.index
-                                      ? CorrectIcon
-                                      : ""
-                                    : qt.correctAnswer.search(index) != -1
-                                    ? CorrectIcon
-                                    : ""}
-                                </div>
+                                {qt.type.name == "SINGLE_CORRECT_ANSWER" ? (
+                                  Number(qt.correctAnswer) === as.index ? (
+                                    <div className="answer-icon active"></div>
+                                  ) : (
+                                    <div className="answer-icon"></div>
+                                  )
+                                ) : qt.correctAnswer.search(index) != -1 ? (
+                                  <div className="answer-icon active"></div>
+                                ) : (
+                                  <div className="answer-icon"></div>
+                                )}
                               </div>
                             ))
                           : (qt.answers.slice(0, 1) || []).map((as, index) => (
                               <div className="answer" key={index}>
                                 <div className="answer-question">
-                                  <div className="answer-question-left">
-                                    <h3>{QUESTION_LABELS[index]}</h3>
+                                  <div
+                                    className="answer-question-left"
+                                    style={QUESTION_COLOR[index]}
+                                  >
+                                    <h3 color="#fff">
+                                      {QUESTION_LABELS[index]}
+                                    </h3>
                                   </div>
                                   <div className="answer-question-right">
                                     <h4>{as.answer}</h4>
                                   </div>
                                 </div>
-                                <div className="answer-icon">
-                                  {Number(qt.correctAnswer) === as.index
-                                    ? CorrectIcon
-                                    : ""}
-                                </div>
+                                {Number(qt.correctAnswer) === as.index ? (
+                                  <div className="answer-icon active"></div>
+                                ) : (
+                                  <div className="answer-icon"></div>
+                                )}
                               </div>
                             ))}
                       </div>
@@ -272,8 +292,8 @@ const DetailQuiz = () => {
               </Layout>
             </Layout>
           </Layout>
-        </MainLayout>
-      </Skeleton>
+        )}
+      </MainLayout>
     </>
   );
 };
