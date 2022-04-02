@@ -194,7 +194,7 @@ const HostGame = ({ socket }) => {
       return (
         <div
           className="game__screen"
-          style={{ backgroundImage: `url(${game?.quizData?.backgroundImage})` }}
+          style={{ backgroundImage: `url(${game?.quizData?.backgroundImage}); backgroundSize: cover` }}
         >
           {audioOn && gameState === gameStateTypes.LIVE_QUESTION && (
             <audio autoPlay loop>
