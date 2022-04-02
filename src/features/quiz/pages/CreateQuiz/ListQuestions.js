@@ -56,7 +56,7 @@ const AnswersPreview = ({
                 className="action-button duplicate-button"
                 onClick={(e) => {
                   e.stopPropagation();
-                  addQuestion({ ...question, id: undefined });
+                  addQuestion(i);
                 }}
               >
                 <svg

@@ -18,7 +18,7 @@ const GameAnswers = ({ question, gameState }) => {
   }
 
   let answers = question.answers;
-  if (type === questionTypes.TRUE_FALSE_ANSWER) {
+  if (type.name === questionTypes.TRUE_FALSE_ANSWER) {
     answers = question.answers.slice(0, 2);
   }
 
