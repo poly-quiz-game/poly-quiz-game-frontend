@@ -165,7 +165,7 @@ const ReportDetail = ({children}) => {
                                     </Dropdown>
                                 </TitleTop>
                                 <TitleWrapper>
-                                    <TitleH2>{info?.name && ""}</TitleH2>
+                                    <TitleH2>{info?.name || ''}</TitleH2>
                                 </TitleWrapper>
                                 <List>
                                     <ListItem>

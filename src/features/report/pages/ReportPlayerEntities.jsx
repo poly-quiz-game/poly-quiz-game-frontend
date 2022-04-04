@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Menu, Row, Table, Input, Modal} from 'antd'
+import {Menu, Row, Table, Input, Modal, Progress, Col} from 'antd'
 import {Link, useParams} from 'react-router-dom'
 import ReportDetail from './ReportDetail'
 import styled from 'styled-components'
@@ -25,6 +25,7 @@ const Wrapper = styled.div`
   box-shadow: rgb(0 0 0 / 15%) 0px 1px 4px 0px;
   background-color: rgb(255, 255, 255);
   border-radius: 5px;
+  margin: 2rem;
 `
 const StyledTable = styled((props) => <Table {...props} />)`
   && tbody > tr:hover > td {
@@ -36,17 +37,33 @@ const PercentageAnswererWrap = styled.div`
   display: flex;
   -webkit-box-align: center;
   align-items: center;
-  padding: 0px 2rem;
+  padding: 0 2rem;
   flex: 1 1 0%;
+  gap: 2rem;
+  font-size: 20px;
+  font-weight: bold;
 `
 const PercentageAnswerer = styled.div`
   -webkit-box-pack: start;
   justify-content: flex-start;
+  flex-direction: row;
+`
+const InfoWrap = styled.div`
+  display: flex;
+  flex: 1 1 0%;
   flex-direction: column;
 `
 const InfoRankUserWrap = styled.div`
+  border-bottom: 1px solid rgb(178, 178, 178);
+  min-height: 50px;
   display: flex;
-  flex: 2 1 0%;
+  margin: 0px 2rem;
+  -webkit-box-align: center;
+  align-items: center;
+  -webkit-box-pack: start;
+  justify-content: space-between;
+`
+const ScoreWrap = styled.div`
 `
 const InfoRankUser = styled.div`
   display: flex;
@@ -119,13 +136,30 @@ const ReportPlayerEntities = ({id, player}) => {
                     <WrapRankUser>
                         <PercentageAnswererWrap>
                             <PercentageAnswerer>
-                                <span>{formatNumber(player.correctAnswersCount / (player.correctAnswersCount + player.unansweredCount))} đúng</span>
+                                <Progress type="circle" width='70px' strokeWidth='15' strokeColor="rgb(38, 137, 12)"
+                                          percent={player.correctAnswersCount} format={() => ``}/>
                             </PercentageAnswerer>
+                            <Row gutter={[2, 2]} justify='space-between'>
+                                <Col span={24}>
+                                    <span>{formatNumber(player.correctAnswersCount)} </span>
+                                </Col>
+                                <Col span={24}>
+                                    <span>Đúng</span>
+                                </Col>
+                            </Row>
                         </PercentageAnswererWrap>
-                        <InfoRankUserWrap>
-                            <InfoRankUser>Xếp hạng {player.rank}</InfoRankUser>
-                            {/*<InfoRankUser>Questions answered</InfoRankUser>*/}
-                        </InfoRankUserWrap>
+                        <InfoWrap>
+                            <InfoRankUserWrap>
+                                <div>Xếp hạng</div>
+                                <div>{player.rank}</div>
+                            </InfoRankUserWrap>
+                            <InfoRankUserWrap>
+                                <div>Final score</div>
+                                <div>{player.totalPoints}</div>
+                            </InfoRankUserWrap>
+
+                        </InfoWrap>
+                        {/*<InfoRankUser>Questions answered</InfoRankUser>*/}
                     </WrapRankUser>
 
                     <Wrapper>

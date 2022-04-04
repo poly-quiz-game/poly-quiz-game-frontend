@@ -1,15 +1,17 @@
-import React, {useEffect, useState} from 'react'
-import {Menu, Row, Table, Input, Modal} from 'antd'
-import {Link, useParams} from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { Menu, Row, Table, Input, Modal, Progress, Col } from 'antd'
+import { Link, useParams } from 'react-router-dom'
 import ReportDetail from './ReportDetail'
 import styled from 'styled-components'
 import reportApi from 'api/reportApi'
-import ReportPlayerEntities from './ReportPlayerEntities'
+import ReportQuestionEntities from './ReportQuestionEntites'
+import { ReactComponent as UserIcon } from '../../../assets/images/UserIcon.svg'
+import { formatNumber } from '../../../utils'
 
 const WrapSearch = styled.div`
   display: flex;
   border-radius: 0.2rem 0.2rem 0px 0px;
-  border: 1px solid rgb(204, 204, 204);
+  //border: 1px solid rgb(204, 204, 204);
   flex-direction: row;
   align-items: flex-end;
   padding-right: 0.3rem;
@@ -43,133 +45,147 @@ const TableWrapper = styled.div`
   margin: 2rem 0rem;
 `
 const Wrapper = styled.div`
-  box-shadow: rgb(0 0 0 / 15%) 0px 1px 4px 0px;
   background-color: rgb(255, 255, 255);
   border-radius: 5px;
 `
 const StyledTable = styled((props) => <Table {...props} />)`
+  box-shadow: rgb(0 0 0 / 15%) 0px 1px 4px 0px;
   && tbody > tr:hover > td {
     background: rgb(242, 242, 242);
     cursor: pointer;
   }
 `
 
-const data = [
-    {id: 1, name: 'hieupv', rank: 1, correctAnswersCount: 2, unansweredCount: 1, totalPoints: 1890},
-]
 const columns = [
-    {
-        title: 'Câu hỏi',
-        dataIndex: 'name',
-        // sorter: true,
-        // render: (name) => `${name.first} ${name.last}`,
-        width: '60%',
-    },
-    {
-        title: 'Loại',
-        sorter: true,
-        dataIndex: 'rank',
-        width: '20%',
-    },
-    {
-        title: 'Đúng/Sai',
-        sorter: true,
-        dataIndex: 'correctAnswersCount',
-        width: '20%',
-    },
-]
-function correctAnswer (user) {
-    return user?.playerAnswers.reduce((acc, cur) => {
-        const result =  user.report.reportQuestions.filter(reportQ => reportQ.id === cur.questionId)
-        return result[0].correctAnswer === cur.answer ? acc + 1 : acc
-    }, 0)
-}
-const ReportDetailQuestion = ({report}) => {
-    const [players, setPlayers] = useState({
-        data: [],
-        loading: false,
-    })
-    const [limit, setLimit] = useState(10)
-    const {id} = useParams()
-
-    const [isModalVisible, setIsModalVisible] = useState(false)
-    const [player, setPlayer] = useState('')
-
-    const showModal = () => {
-        setIsModalVisible(true)
-    }
-
-    const handleOk = () => {
-        setIsModalVisible(false)
-    }
-
-    const handleCancel = () => {
-        setIsModalVisible(false)
-    }
-    const fetchData = async () => {
-        setPlayers((state) => ({
-            ...state,
-            loading: true
-        }))
-        const data = await reportApi.getQuestionsInReport({id, offset: 0, limit: limit})
-        setPlayers({
-            data: data && data.length > 0 && data.map((user, index) => {
-                return {
-                    id: user.id,
-                    rank: index + 1,
-                    name: user.name,
-                    correctAnswersCount: correctAnswer(user),
-                    unansweredCount: user.playerAnswers.length - correctAnswer(user),
-                    totalPoints: user.score
-                }
-            }),
-            loading: false
-        })
-    }
-    useEffect(() => {
-        fetchData && fetchData()
-    }, [setPlayer])
-
-    return (
+  {
+    title: 'Câu hỏi',
+    dataIndex: 'question',
+    sorter: true,
+    // align: 'center',
+    render: (question) => `${question}`,
+    width: '40%',
+  },
+  {
+    title: 'Loại câu hỏi',
+    sorter: true,
+    align: 'right',
+    dataIndex: 'type',
+    width: '15%',
+  },
+  {
+    title: 'Tỉ lệ trả lời đúng',
+    sorter: true,
+    dataIndex: 'correct',
+    align: 'right',
+    render: (correct, reportQuestion) => {
+      return (
         <>
-            <ReportDetail>
-                <TableWrapper>
-                    <Wrapper>
-                        <div style={{width: '100%'}}>
-                            <WrapSearch>
-                                <WrapInputSearch>
-                                    <DivInput>
-                                        <InputSearch placeholder='Search'/>
-                                    </DivInput>
-                                </WrapInputSearch>
-                            </WrapSearch>
-                        </div>
-                        <StyledTable
-                            columns={columns}
-                            onRow={(record, rowIndex) => {
-                                return {
-                                    onClick: (event) => {
-                                        setPlayer(record)
-                                        setIsModalVisible(true)
-                                    }, // click row
-                                }
-                            }}
-                            rowKey={record => record.id}
-                            dataSource={players?.data.length?players?.data : []}
-                            pagination={false}
-                            loading={players.loading}
-                            // onChange={this.handleTableChange}
-                        />
-                    </Wrapper>
-                </TableWrapper>
-                {isModalVisible && (
-                    <Modal title={player?.name} width={1080} visible={true} onOk={handleOk} onCancel={handleCancel}>
-                        <ReportPlayerEntities id={id} player={player}/>
-                    </Modal>
-                )}
-            </ReportDetail>
+          <Row gutter={[4, 4]} justify='end' align='middle'>
+            <Col span={4}>
+              <Progress
+                type='circle'
+                width='35px'
+                strokeWidth='15'
+                strokeColor='rgb(38, 137, 12)'
+                percent={(correct * 100) / reportQuestion.totalReport}
+                format={() => ``}
+              />
+            </Col>
+            <Col span={4} align='center'>
+              {formatNumber((correct * 0.1) / reportQuestion.totalReport)}
+            </Col>
+          </Row>
         </>
-    )
+      )
+    },
+    width: '15%',
+  },
+]
+function correctAnswer(user) {
+  return user?.playerAnswers.reduce((acc, cur) => {
+    const result = user.report.reportQuestions.filter((reportQ) => reportQ.id === cur.questionId)
+    return result[0].correctAnswer === cur.answer ? acc + 1 : acc
+  }, 0)
+}
+const ReportDetailPlayers = () => {
+  const [reports, setReports] = useState({
+    data: [],
+    loading: false,
+  })
+  const [limit, setLimit] = useState(10)
+  const { id } = useParams()
+
+  const [isModalVisible, setIsModalVisible] = useState(false)
+  const [report, setReport] = useState('')
+
+  const showModal = () => {
+    setIsModalVisible(true)
+  }
+
+  const handleOk = () => {
+    setIsModalVisible(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalVisible(false)
+  }
+  const fetchData = async () => {
+    setReports((state) => ({
+      ...state,
+      loading: true,
+    }))
+    const data = await reportApi.getQuestionsInReport({ id, offset: 0, limit: limit })
+    console.log('data', data)
+    setReports({
+      data: data,
+      loading: false,
+    })
+  }
+  useEffect(() => {
+    fetchData && fetchData()
+  }, [setReport])
+
+  return (
+    <>
+      <ReportDetail>
+        <TableWrapper>
+          <Wrapper>
+            <div style={{ width: '100%' }}>
+              <WrapSearch>
+                <WrapInputSearch>
+                  <DivInput>
+                    <InputSearch placeholder='Search' />
+                  </DivInput>
+                </WrapInputSearch>
+              </WrapSearch>
+            </div>
+            <StyledTable
+              columns={columns}
+              onRow={(record, rowIndex) => {
+                return {
+                  onClick: (event) => {
+                    console.log(record)
+                    setReport(record)
+                    setIsModalVisible(true)
+                  }, // click row
+                }
+              }}
+              rowKey={(record) => record.id}
+              dataSource={reports?.data.length ? reports?.data : []}
+              pagination={false}
+              loading={reports.loading}
+              // onChange={this.handleTableChange}
+            />
+          </Wrapper>
+        </TableWrapper>
+        {isModalVisible && (
+          <Modal title={report?.question} width={1080} visible={true} footer={null} onCancel={handleCancel}>
+            <ReportQuestionEntities id={id} question={report} />
+          </Modal>
+        )}
+      </ReportDetail>
+    </>
+  )
 }
 
-export default ReportDetailQuestion
+export default ReportDetailPlayers

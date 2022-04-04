@@ -78,6 +78,7 @@ const columns = [
         dataIndex: 'correctAnswersCount',
         align: 'right',
         render: (correctAnswersCount) => {
+            console.log('correctAnswersCount', correctAnswersCount)
             return (
                 <>
                     <Row gutter={[4, 4]} justify='space-between'>
@@ -207,7 +208,7 @@ const ReportDetailPlayers = ({report}) => {
                     </Wrapper>
                 </TableWrapper>
                 {isModalVisible && (
-                    <Modal title={player?.name} width={1080} visible={true} onOk={handleOk} onCancel={handleCancel}>
+                    <Modal title={player?.name} width={1080} visible={true} footer={null} onCancel={handleCancel} >
                         <ReportPlayerEntities id={id} player={player}/>
                     </Modal>
                 )}
