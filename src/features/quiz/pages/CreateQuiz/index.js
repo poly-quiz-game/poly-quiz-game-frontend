@@ -91,6 +91,7 @@ const CreateQuiz = () => {
   const addQuestion = (question) => {
     if (typeof question === "number") {
       const questionCopy = questions[question];
+      delete questionCopy.id;
       const newQuestions = [...questions];
       newQuestions.splice(activeQuestion + 1, 0, questionCopy || defaultQuestion);
       setQuestions(newQuestions);
