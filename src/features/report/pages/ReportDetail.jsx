@@ -124,7 +124,7 @@ const ListItem = styled.li`
 const WrapperTable = styled.div`
   display: flex;
   flex-direction: column;
-  margin: 2rem 0rem;
+  margin: 0;
 `
 
 const menu = (
@@ -165,7 +165,7 @@ const ReportDetail = ({children}) => {
                                     </Dropdown>
                                 </TitleTop>
                                 <TitleWrapper>
-                                    <TitleH2>{info?.name && ""}</TitleH2>
+                                    <TitleH2>{info?.name || ''}</TitleH2>
                                 </TitleWrapper>
                                 <List>
                                     <ListItem>
