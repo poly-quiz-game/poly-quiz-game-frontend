@@ -99,13 +99,20 @@ const SelectYoutubeVideoModal = ({
   };
 
   return (
-    <Modal visible={visible} onCancel={() => setVisible(false)} footer={null}>
+    <Modal
+      visible={visible}
+      onCancel={() => setVisible(false)}
+      footer={null}
+      style={{ top: 20 }}
+    >
       <div>
+        <h3>Youtube tìm kiếm</h3>
         <div className="youtube-search-input">
           <Input
-            placeholder="Search"
+            placeholder="Nhập từ khoá, url..."
             onChange={(e) => setSearch(e.target.value)}
             value={search}
+            style={{ marginBottom: "12px" }}
           />
         </div>
         <div className="youtube-search-result">
@@ -114,10 +121,9 @@ const SelectYoutubeVideoModal = ({
               <div
                 key={video.id.videoId}
                 className="youtube-search-result-item"
+                style={{ display: "flex", marginBottom: "4px" }}
                 onClick={() => {
                   setQuestionMedia({
-                    // startTime: 0,
-                    // endTime: video.snippet.duration,
                     fileType: "video",
                     url: video.id.videoId,
                   });
@@ -127,11 +133,12 @@ const SelectYoutubeVideoModal = ({
                 <img
                   src={video.snippet.thumbnails.default.url}
                   alt={video.snippet.title}
+                  style={{ marginRight: "8px" }}
                 />
                 <div className="youtube-search-result-item-info">
-                  <div className="youtube-search-result-item-title">
+                  <h4 className="youtube-search-result-item-title">
                     {video.snippet.title}
-                  </div>
+                  </h4>
                   <div className="youtube-search-result-item-duration">
                     {getDurationText(video.contentDetails.duration)}
                   </div>

@@ -634,6 +634,23 @@
     }
   }
 }
+.youtube-search-result {
+  max-height: 75vh;
+  overflow: auto;
+  .youtube-search-result-item {
+    cursor: pointer;
+    padding: 2px;
+    border-radius: 2px;
+    &:hover {
+      background-color: #e21b3c;
+      color: #fff;
+      transition: all 0.2s ease 0s;
+      h4 {
+        color: #fff;
+      }
+    }
+  }
+}
 
 .question-errors {
   .question-error-item {
