@@ -11,8 +11,8 @@ export const showDeleteConfirm = (content, callback) => {
     okText: "Xoá",
     okType: "danger",
     cancelText: "Huỷ",
-    onOk() {
-      callback();
+    async onOk() {
+      await callback();
       message.success(`Xóa ${content} thành công`);
     },
   });
