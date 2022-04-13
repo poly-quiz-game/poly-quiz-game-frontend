@@ -2,6 +2,8 @@ import React from "react";
 import { questionTypes } from "consts";
 import { gameStateTypes } from "../index";
 
+const QUESTION_LABELS = ["A", "B", "C", "D"];
+
 const GameAnswers = ({ question, gameState }) => {
   const { type } = question;
   if (type.name === questionTypes.TYPE_ANSWER) {
@@ -37,7 +39,7 @@ const GameAnswers = ({ question, gameState }) => {
               (isCorrect ? "correct" : "in-correct")
             }`}
           >
-            <div className="answer-label">A</div>
+            <div className="answer-label">{QUESTION_LABELS[i]}</div>
             <div className="answer-content">{answer.answer}</div>
             {gameState === gameStateTypes.QUESTION_RESULT && isCorrect && (
               <div className="correct-checkbox">

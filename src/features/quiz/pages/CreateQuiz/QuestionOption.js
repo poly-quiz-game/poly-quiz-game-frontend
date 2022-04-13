@@ -2,7 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Select } from "antd";
 import questionTypeApi from "api/questionTypeApi";
 import questionTimeApi from "api/questionTimeApi";
-import { questionTypeLabels, questionTimeLimitOptions } from "consts";
+import { questionTypeLabels } from "consts";
 
 const QuestionOption = ({
   onChangeQuestionType,
@@ -15,7 +15,9 @@ const QuestionOption = ({
   useEffect(() => {
     const getQuestionTypes = async () => {
       const questionTypes = await questionTypeApi.getAll();
-      setQuestionTypes(questionTypes.data.filter((q) => q.isActive).sort((a, b) => a.id - b.id));
+      setQuestionTypes(
+        questionTypes.data.filter((q) => q.isActive).sort((a, b) => a.id - b.id)
+      );
     };
     const getQuestionTimes = async () => {
       const questionTimes = await questionTimeApi.getAll();

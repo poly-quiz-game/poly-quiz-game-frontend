@@ -55,7 +55,7 @@ export const getTimeString = (time) => {
         }
         return `${diffMinutes} phút trước`;
       }
-      return `${diffHours}:${diffMinutes} giờ trước`;
+      return `${diffHours} giờ trước`;
     }
 
     const diffDays = Math.abs(date.getDate() - new Date().getDate());

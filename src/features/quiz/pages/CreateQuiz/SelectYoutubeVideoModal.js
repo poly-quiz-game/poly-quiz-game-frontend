@@ -1,0 +1,147 @@
+import React, { useEffect, useState, useRef } from "react";
+import { Button, Modal, Input } from "antd";
+import axios from "axios";
+
+const youtubeSearchApi = axios.create({
+  baseURL: "https://www.googleapis.com/youtube/v3/",
+  params: {
+    part: "snippet",
+    maxResults: 10,
+    key: "AIzaSyAWONe5t-o1_5JSMpaF2wqU35R35fKDaks",
+    type: "video",
+    safeSearch: "moderate",
+    videoEmbeddable: true,
+  },
+});
+
+const youtubeVideoDetailApi = axios.create({
+  baseURL: "https://www.googleapis.com/youtube/v3/",
+  params: {
+    part: "snippet,contentDetails",
+    key: "AIzaSyAWONe5t-o1_5JSMpaF2wqU35R35fKDaks",
+  },
+});
+
+const getVideoIdFroUrl = (url) => {
+  const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+  const match = url.match(regExp);
+  return match && match[2].length === 11 ? match[2] : null;
+};
+
+const isUrl = (url) => {
+  return url.match(
+    /^(http:\/\/www\.|https:\/\/www\.|http:\/\/|https:\/\/)?[a-z0-9]+([\-\.]{1}[a-z0-9]+)*\.[a-z]{2,5}(:[0-9]{1,5})?(\/.*)?$/gm
+  );
+};
+
+const getDurationText = (duration) => {
+  try {
+    const durationInSeconds = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = durationInSeconds[1]
+      ? durationInSeconds[1].replace("H", "")
+      : 0;
+    const minutes = durationInSeconds[2]
+      ? durationInSeconds[2].replace("M", "")
+      : 0;
+    const seconds = durationInSeconds[3]
+      ? durationInSeconds[3].replace("S", "")
+      : 0;
+    return `${hours}h ${minutes}m ${seconds}s`;
+  } catch (error) {
+    console.log(error);
+    return "";
+  }
+};
+
+const SelectYoutubeVideoModal = ({
+  visible,
+  setVisible,
+  media,
+  setQuestionMediaTime,
+  setQuestionMedia,
+}) => {
+  const [search, setSearch] = useState("");
+  const [videos, setVideos] = useState([]);
+
+  const timeout = useRef(null);
+
+  useEffect(() => {
+    if (timeout.current) {
+      clearTimeout(timeout.current);
+    }
+
+    timeout.current = setTimeout(() => {
+      searchYoutubeVideos();
+    }, 300);
+  }, [search]);
+
+  const searchYoutubeVideos = async () => {
+    const response = await youtubeSearchApi.get("/search", {
+      params: {
+        q: isUrl(search) ? getVideoIdFroUrl(search) : search,
+        maxResults: isUrl(search) ? 1 : 15,
+      },
+    });
+    const details = await youtubeVideoDetailApi.get("/videos", {
+      params: {
+        id: response.data.items.map((item) => item.id.videoId).join(","),
+      },
+    });
+    const contentDetails = details.data.items.map(
+      (item) => item.contentDetails
+    );
+    const result = response.data.items.map((item, index) => ({
+      ...item,
+      contentDetails: contentDetails[index],
+    }));
+    console.log(result);
+    setVideos(result);
+  };
+
+  return (
+    <Modal visible={visible} onCancel={() => setVisible(false)} footer={null}>
+      <div>
+        <div className="youtube-search-input">
+          <Input
+            placeholder="Search"
+            onChange={(e) => setSearch(e.target.value)}
+            value={search}
+          />
+        </div>
+        <div className="youtube-search-result">
+          {videos.length &&
+            videos.map((video) => (
+              <div
+                key={video.id.videoId}
+                className="youtube-search-result-item"
+                onClick={() => {
+                  setQuestionMedia({
+                    // startTime: 0,
+                    // endTime: video.snippet.duration,
+                    fileType: "video",
+                    url: video.id.videoId,
+                  });
+                  setVisible(false);
+                }}
+              >
+                <img
+                  src={video.snippet.thumbnails.default.url}
+                  alt={video.snippet.title}
+                />
+                <div className="youtube-search-result-item-info">
+                  <div className="youtube-search-result-item-title">
+                    {video.snippet.title}
+                  </div>
+                  <div className="youtube-search-result-item-duration">
+                    {getDurationText(video.contentDetails.duration)}
+                  </div>
+                </div>
+              </div>
+            ))}
+        </div>
+      </div>
+    </Modal>
+  );
+};
+
+export default SelectYoutubeVideoModal;

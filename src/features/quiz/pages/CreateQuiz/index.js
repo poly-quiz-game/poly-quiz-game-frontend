@@ -93,7 +93,11 @@ const CreateQuiz = () => {
       const questionCopy = questions[question];
       delete questionCopy.id;
       const newQuestions = [...questions];
-      newQuestions.splice(activeQuestion + 1, 0, questionCopy || defaultQuestion);
+      newQuestions.splice(
+        activeQuestion + 1,
+        0,
+        questionCopy || defaultQuestion
+      );
       setQuestions(newQuestions);
       setActiveQuestion(activeQuestion + 1);
       return;
@@ -133,18 +137,26 @@ const CreateQuiz = () => {
       setIsShowSetting("save");
       return;
     }
-    const newQuiz = { ...quiz, questions, ...customData };
+    const newQuiz = {
+      ...quiz,
+      questions: questions.map((q) => ({
+        ...q,
+        media: q.media ? q.media : undefined,
+      })),
+      ...customData,
+    };
 
     try {
       setLoading(true);
       if (!params.id) {
-        await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+        const res = await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+        navigate("/quiz/detail/" + res.id);
       } else {
         newQuiz.id = Number(params.id);
-        await dispatch(fetchUpdateQuiz(newQuiz)).unwrap();
+        const res = await dispatch(fetchUpdateQuiz(newQuiz)).unwrap();
+        navigate("/quiz/detail/" + res.id);
       }
       setLoading(false);
-      navigate("/quiz");
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -185,6 +197,7 @@ const CreateQuiz = () => {
                 timeLimit,
                 question,
                 correctAnswer,
+                media,
               }) => ({
                 id,
                 type,
@@ -192,6 +205,7 @@ const CreateQuiz = () => {
                 timeLimit,
                 question,
                 correctAnswer,
+                media,
                 answers: [...answers.map((a) => a.answer)],
               })
             )

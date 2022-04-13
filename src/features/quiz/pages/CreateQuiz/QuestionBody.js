@@ -1,15 +1,25 @@
-import React, { useState } from "react";
-import { Button, Input } from "antd";
-import { FileImageOutlined } from "@ant-design/icons";
+import React, { useState, useRef, useEffect } from "react";
+import { Button, Radio, Input } from "antd";
+import {
+  FileImageOutlined,
+  PlayCircleOutlined,
+  SoundOutlined,
+} from "@ant-design/icons";
 import { questionTypes } from "consts";
+import questionTimeApi from "api/questionTimeApi";
 import { handleUploadImage } from "../../../../utils";
 import QuestionOption from "./QuestionOption";
+import Audio from "./Audio";
+import Video from "./Video";
+import SelectYoutubeVideoModal from "./SelectYoutubeVideoModal";
 import {
   MultipleAnswer,
   SingleAnswer,
   TrueFalseAnswer,
   TypeAnswer,
 } from "./components";
+import { baseURL } from "../../../../api/axiosClient";
+import axios from "axios";
 
 const QuestionAnswers = ({ question, onChangeQuestion }) => {
   switch (question?.type?.name) {
@@ -38,16 +48,76 @@ const QuestionAnswers = ({ question, onChangeQuestion }) => {
   }
 };
 
+function uploadAudioAsync(file) {
+  console.log("Uploading " + file);
+  const apiUrl = `${baseURL}/audio/upload`;
+
+  const formData = new FormData();
+  formData.append("file", file);
+
+  return axios.post(apiUrl, formData);
+}
+
+const Media = ({ media, setQuestionMedia, setQuestionMediaTime }) => {
+  switch (media.type) {
+    case "image":
+      return (
+        <div className="image-container">
+          <div className="image">
+            <img src={media.url} />
+            <div className="image-actions">
+              <Button onClick={() => setQuestionMedia()}>Xoá</Button>
+            </div>
+          </div>
+        </div>
+      );
+    case "audio":
+      return (
+        <div className="image-container">
+          <Audio
+            media={media}
+            setQuestionMedia={setQuestionMedia}
+            setQuestionMediaTime={setQuestionMediaTime}
+          />
+        </div>
+      );
+    case "video":
+      return (
+        <div className="video-container">
+          <Video
+            media={media}
+            setQuestionMedia={setQuestionMedia}
+            setQuestionMediaTime={setQuestionMediaTime}
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
 const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
   const [loading, setLoading] = useState(false);
+  const [showSelectYoutubVideoModal, setShowSelectYoutubVideoModal] =
+    useState(false);
+  const [questionTimes, setQuestionTimes] = useState([]);
 
-  const handleSubmitFile = async (e) => {
+  useEffect(() => {
+    const getQuestionTimes = async () => {
+      const questionTimes = await questionTimeApi.getAll();
+      setQuestionTimes(questionTimes.data.sort((a, b) => a.value - b.value));
+    };
+    getQuestionTimes();
+  }, []);
+
+  const handleSubmitImage = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
+    const fileType = e.target.name;
     try {
       setLoading(true);
-      const imageUrl = await handleUploadImage(file);
-      setQuestionImage(imageUrl);
+      const url = await handleUploadImage(file);
+      setQuestionMedia({ url, fileType });
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -55,11 +125,60 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     }
   };
 
-  const setQuestionImage = (imageUrl) => {
+  const handleSubmitAudio = async (e) => {
+    e.preventDefault();
+    const file = e.target.files[0];
+    const fileType = e.target.name;
+    try {
+      setLoading(true);
+      const {
+        data: {
+          file: { url },
+        },
+      } = await uploadAudioAsync(file);
+      console.log({ url });
+      setQuestionMedia({ url, fileType });
+      setLoading(false);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
+  };
+
+  const setQuestionMedia = ({ url, fileType } = {}) => {
+    let media = {};
+    if (url && fileType) {
+      media = {
+        url,
+        type: fileType,
+        startTime: 0,
+        endTime: question.timeLimit / 1000,
+      };
+    }
     onChangeQuestion({
       ...question,
-      image: imageUrl,
+      media,
     });
+  };
+
+  const setQuestionMediaTime = ({ startTime, endTime }) => {
+    const duration = (endTime - startTime) * 1000;
+    const newQuestion = {
+      ...question,
+
+      media: {
+        ...question.media,
+        startTime,
+        endTime,
+      },
+    };
+    if (duration > question.timeLimit) {
+      const minHigher = questionTimes.find(
+        (questionTime) => questionTime.value > duration
+      );
+      newQuestion.timeLimit = minHigher.value;
+    }
+    onChangeQuestion(newQuestion);
   };
 
   const onChangeQuestionType = (type) => {
@@ -76,6 +195,9 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     onChangeQuestion({ ...question, timeLimit });
   };
 
+  const inputImageRef = useRef(null);
+  const inputAudioRef = useRef(null);
+
   return (
     <>
       <div className="question-body-container">
@@ -89,35 +211,57 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
             />
           </div>
           <div className="question-body-image">
-            <div className="image-container">
-              <div className="image">
-                {question.image && !loading ? (
-                  <>
-                    <img src={question.image} />
-                    <div className="image-actions">
-                      <Button>
-                        <label htmlFor="upload-image">Thay ảnh</label>
-                      </Button>
-                      <Button onClick={() => setQuestionImage("")}>Xoá</Button>
-                    </div>
-                  </>
-                ) : (
-                  <label htmlFor="upload-image">
-                    <div className="image-upload-button">
-                      <FileImageOutlined />
-                      <p>{!loading ? "Thêm ảnh" : "Đang tải ảnh lên..."}</p>
-                    </div>
-                  </label>
-                )}
-                <input
-                  id="upload-image"
-                  type="file"
-                  name="image"
-                  onChange={handleSubmitFile}
-                  className="form-input"
-                />
+            {question.media && question.media.url ? (
+              <Media
+                media={question.media}
+                setQuestionMedia={setQuestionMedia}
+                setQuestionMediaTime={setQuestionMediaTime}
+              />
+            ) : (
+              <div className="image-container">
+                <div className="image-upload-buttons">
+                  <img src="/soundtrack.png" width={60} />
+                  <div style={{ marginBottom: "12px" }}>
+                    Thêm ảnh, video, âm thanh
+                  </div>
+                  <div>
+                    <Button onClick={() => inputImageRef.current.click()}>
+                      <FileImageOutlined /> Hình ảnh
+                    </Button>
+                    <Button onClick={() => setShowSelectYoutubVideoModal(true)}>
+                      <PlayCircleOutlined /> Video
+                    </Button>
+                    <Button onClick={() => inputAudioRef.current.click()}>
+                      <SoundOutlined /> Âm thanh
+                    </Button>
+                  </div>
+                  <input
+                    type="file"
+                    name="image"
+                    onChange={handleSubmitImage}
+                    className="form-input"
+                    accept="image/*"
+                    style={{ display: "none" }}
+                    ref={inputImageRef}
+                  />
+                  <input
+                    type="file"
+                    name="audio"
+                    onChange={handleSubmitAudio}
+                    className="form-input"
+                    accept="audio/*"
+                    style={{ display: "none" }}
+                    ref={inputAudioRef}
+                  />
+                  <SelectYoutubeVideoModal
+                    visible={showSelectYoutubVideoModal}
+                    setVisible={setShowSelectYoutubVideoModal}
+                    setQuestionMedia={setQuestionMedia}
+                    setQuestionMediaTime={setQuestionMediaTime}
+                  />
+                </div>
               </div>
-            </div>
+            )}
           </div>
           <QuestionAnswers
             onChangeQuestion={onChangeQuestion}

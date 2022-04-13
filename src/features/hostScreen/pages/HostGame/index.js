@@ -15,6 +15,7 @@ import TotalAnswerResult from "./components/TotalAnswerResult";
 import ScoreBoard from "./components/ScoreBoard";
 import GameAnswers from "./components/GameAnswers";
 import EndGame from "./components/EndGame";
+import Media from "./components/Media";
 import liveQuestionSound from "../../../../assets/question_live_sound_2.mp3";
 import endQuestionSound from "../../../../assets/end_question_sound.mp3";
 
@@ -88,7 +89,7 @@ const HostGame = ({ socket }) => {
 
   useEffect(() => {
     window.addEventListener("beforeunload", () => {
-      console.log('quit game')
+      console.log("quit game");
     });
 
     return () => {
@@ -160,7 +161,7 @@ const HostGame = ({ socket }) => {
     }
     prevTime.current = time;
     if (time === 0) {
-      socket.emit("time-up");
+      // socket.emit("time-up");
     }
     return () => {
       clearInterval(timer.current);
@@ -194,7 +195,9 @@ const HostGame = ({ socket }) => {
       return (
         <div
           className="game__screen"
-          style={{ backgroundImage: `url(${game?.quizData?.backgroundImage}); backgroundSize: cover` }}
+          style={{
+            backgroundImage: `url(${game?.quizData?.backgroundImage}); backgroundSize: cover`,
+          }}
         >
           {audioOn && gameState === gameStateTypes.LIVE_QUESTION && (
             <audio autoPlay loop>
@@ -229,9 +232,13 @@ const HostGame = ({ socket }) => {
             ) : (
               <div className="question-image">
                 <div className="time">{time}</div>
-                <div className={`image ${!question.image ? "no-image" : ""}`}>
-                  <img src={question?.image || "/img/logo-large.png}"} />
-                </div>
+                {question.media ? (
+                  <Media media={question.media} />
+                ) : (
+                  <div className={`image ${!question.image ? "no-image" : ""}`}>
+                    <img src={question?.image || "/img/logo-large.png"} />
+                  </div>
+                )}
                 <div className="player-answered">
                   {players.playersAnswered}/{players.playersInGame}
                   <br /> người đã trả lời
