@@ -84,9 +84,9 @@ const Media = ({ media }) => {
             title="YouTube video player"
             width="100%"
             height="100%"
-            src={`https://www.youtube.com/embed/${media.url}?mute=0&controls=0&start=${media.startTime}&end=${media.endTime}&playsinline=0&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&fs=1&enablejsapi=1&widgetid=43`}
+            src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${media.startTime}&end=${media.endTime}&mute=0&controls=0&showinfo=0&rel=0&modestbranding=1&widgetid=43`}
             id="widget46"
-          ></iframe>
+          />
         </div>
       );
     default:

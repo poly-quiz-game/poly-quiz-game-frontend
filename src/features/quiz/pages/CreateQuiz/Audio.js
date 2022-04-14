@@ -1,6 +1,7 @@
 import { Button, Modal } from "antd";
 import React, { useState } from "react";
 import ReactHowler from "react-howler";
+import { SettingStartEndTimePlayModal } from "./Video";
 
 const containerStyle = {
   display: "flex",
@@ -56,111 +57,14 @@ const timeFromSeconds = (seconds) => {
   return date.toISOString().substr(14, 5);
 };
 
-const SettingStartEndTimePlayModal = ({
-  visible,
-  setVisible,
-  media,
-  setQuestionMediaTime,
-}) => {
-  const { startTime: start, endTime: end } = media;
-  const [startTime, setStartTime] = useState(timeFromSeconds(start));
-  const [endTime, setEndTime] = useState(timeFromSeconds(end));
-
-  const onChangeStartTime = (e) => {
-    setStartTime(e.target.value);
-  };
-
-  const onChangeEndTime = (e) => {
-    setEndTime(e.target.value);
-  };
-
-  const onSubmit = () => {
-    setQuestionMediaTime({
-      startTime: startTime.split(":").reduce((acc, cur) => acc * 60 + cur),
-      endTime: endTime.split(":").reduce((acc, cur) => acc * 60 + cur),
-    });
-    setVisible(false);
-  };
-
-  return (
-    <Modal
-      visible={visible}
-      onCancel={() => setVisible(false)}
-      footer={null}
-      width="400px"
-    >
-      <div>
-        <div
-          style={{
-            display: "flex",
-            marginBottom: "16px",
-            justifyContent: "space-between",
-          }}
-        >
-          <div style={{ width: "45%" }}>
-            <label>Bắt đầu</label>
-            <br />
-            <input
-              type="time"
-              value={startTime}
-              className="form-control"
-              onChange={onChangeStartTime}
-              min="00:00"
-              max="23:59"
-              style={{
-                fontSize: "16px",
-                padding: "10px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                width: "100%",
-              }}
-            />
-          </div>
-
-          <div style={{ width: "45%" }}>
-            <label>Kết thúc</label>
-            <br />
-            <input
-              type="time"
-              value={endTime}
-              className="form-control"
-              onChange={onChangeEndTime}
-              min="00:00"
-              max="23:59"
-              style={{
-                fontSize: "16px",
-                padding: "10px",
-                borderRadius: "4px",
-                border: "1px solid #ccc",
-                width: "100%",
-              }}
-            />
-          </div>
-        </div>
-        <div style={{ textAlign: "right" }}>
-          <Button
-            onClick={() => setVisible(false)}
-            danger
-            style={{ marginRight: "10px" }}
-          >
-            Hủy
-          </Button>
-          <Button onClick={onSubmit} type="primary">
-            OK
-          </Button>
-        </div>
-      </div>
-    </Modal>
-  );
-};
-
 const Audio = ({
   media,
   setQuestionMedia,
   setQuestionMediaTime,
   editable = true,
+  autoplay = false,
 }) => {
-  const [play, setPlay] = useState(false);
+  const [play, setPlay] = useState(autoplay);
   const [setupModal, setSetupModal] = useState(false);
 
   return (

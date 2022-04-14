@@ -277,7 +277,7 @@
     position: absolute;
     width: 100%;
     bottom: 7vh;
-    min-height: 35vh;
+    min-height: 30vh;
     display: flex;
     flex: 4 1 0%;
     flex-wrap: wrap;
@@ -422,4 +422,8 @@
       width: 100%;
     }
   }
+}
+
+.ytp-gradient-top, .ytp-title {
+  display: none !important;
 }

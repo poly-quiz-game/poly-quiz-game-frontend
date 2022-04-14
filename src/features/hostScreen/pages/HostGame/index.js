@@ -10,16 +10,74 @@ import {
   useParams,
   UNSAFE_NavigationContext as NavigationContext,
 } from "react-router-dom";
+import ReactHowler from "react-howler";
+
+import Audio from "../../../quiz/pages/CreateQuiz/Audio";
 
 import TotalAnswerResult from "./components/TotalAnswerResult";
 import ScoreBoard from "./components/ScoreBoard";
 import GameAnswers from "./components/GameAnswers";
 import EndGame from "./components/EndGame";
-import Media from "./components/Media";
 import liveQuestionSound from "../../../../assets/question_live_sound_2.mp3";
 import endQuestionSound from "../../../../assets/end_question_sound.mp3";
 
 import "../../styles.scss";
+
+const Media = ({ media }) => {
+  switch (media.type) {
+    case "image":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+          }}
+        >
+          <div className="image">
+            <img src={media.url} width="100%" height="auto" />
+          </div>
+        </div>
+      );
+    case "audio":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Audio media={media} editable={false} autoplay />
+        </div>
+      );
+    case "video":
+      return (
+        <div
+          style={{
+            width: "500px",
+            height: "300px",
+            position: "relative",
+          }}
+        >
+          <iframe
+            frameBorder="0"
+            allowFullScreen="1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            width="100%"
+            height="100%"
+            src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${media.startTime}&end=${media.endTime}&autoplay=1&mute=0&controls=0&playsinline=0&showinfo=0&rel=0&modestbranding=1&fs=1&enablejsapi=1&widgetid=43`}
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
+};
 
 export function useBlocker(blocker, when = true) {
   const { navigator } = useContext(NavigationContext);
@@ -199,15 +257,19 @@ const HostGame = ({ socket }) => {
             backgroundImage: `url(${game?.quizData?.backgroundImage}); backgroundSize: cover`,
           }}
         >
-          {audioOn && gameState === gameStateTypes.LIVE_QUESTION && (
-            <audio autoPlay loop>
-              <source src={liveQuestionSound} type="audio/mpeg" />
-            </audio>
-          )}
+          {!question.media &&
+            audioOn &&
+            gameState === gameStateTypes.LIVE_QUESTION && (
+              <ReactHowler
+                src={liveQuestionSound}
+                playing
+                loop
+                type="audio/mpeg"
+                volume={0.2}
+              />
+            )}
           {audioOn && gameState === gameStateTypes.QUESTION_RESULT && (
-            <audio autoPlay>
-              <source src={endQuestionSound} type="audio/mpeg" />
-            </audio>
+            <ReactHowler src={endQuestionSound} playing type="audio/mpeg" />
           )}
           <div className="question-info">
             <h1 className="question">{question.question}</h1>

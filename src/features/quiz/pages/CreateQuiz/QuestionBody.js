@@ -4,6 +4,7 @@ import {
   FileImageOutlined,
   PlayCircleOutlined,
   SoundOutlined,
+  CloudUploadOutlined,
 } from "@ant-design/icons";
 import { questionTypes } from "consts";
 import questionTimeApi from "api/questionTimeApi";
@@ -129,6 +130,25 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     e.preventDefault();
     const file = e.target.files[0];
     const fileType = e.target.name;
+
+    setLoading(true);
+    const duration = await new Promise((resolve, reject) => {
+      const reader = new FileReader();
+
+      reader.onload = function (event) {
+        const audioContext = new (window.AudioContext ||
+          window.webkitAudioContext)();
+
+        audioContext.decodeAudioData(event.target.result, function (buffer) {
+          const duration = buffer.duration;
+          resolve(duration | 0);
+        });
+      };
+      reader.onerror = function (event) {
+        console.error("An error ocurred reading the file: ", event);
+      };
+      reader.readAsArrayBuffer(file);
+    });
     try {
       setLoading(true);
       const {
@@ -137,7 +157,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
         },
       } = await uploadAudioAsync(file);
       console.log({ url });
-      setQuestionMedia({ url, fileType });
+      setQuestionMedia({ url, fileType, duration });
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -145,12 +165,13 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     }
   };
 
-  const setQuestionMedia = ({ url, fileType, thumbnail } = {}) => {
+  const setQuestionMedia = ({ url, fileType, thumbnail, duration } = {}) => {
     let media = {};
     if (url && fileType) {
       media = {
         url,
         thumbnail,
+        duration,
         type: fileType,
         startTime: 0,
         endTime: question.timeLimit / 1000,
@@ -212,55 +233,74 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
             />
           </div>
           <div className="question-body-image">
-            {question.media && question.media.url ? (
-              <Media
-                media={question.media}
-                setQuestionMedia={setQuestionMedia}
-                setQuestionMediaTime={setQuestionMediaTime}
-              />
-            ) : (
-              <div className="image-container">
-                <div className="image-upload-buttons">
-                  <img src="/soundtrack.png" width={60} />
-                  <div style={{ marginBottom: "12px" }}>
-                    Thêm ảnh, video, âm thanh
+            {loading && (
+              <div
+                className="image-container"
+                style={{ fontSize: "20px", textAlign: "center" }}
+              >
+                <label htmlFor="upload-image">
+                  <div className="image-upload-button">
+                    <CloudUploadOutlined style={{ fontSize: "60px" }} />
+                    <p>Đang tải lên...</p>
                   </div>
-                  <div>
-                    <Button onClick={() => inputImageRef.current.click()}>
-                      <FileImageOutlined /> Hình ảnh
-                    </Button>
-                    <Button onClick={() => setShowSelectYoutubVideoModal(true)}>
-                      <PlayCircleOutlined /> Video
-                    </Button>
-                    <Button onClick={() => inputAudioRef.current.click()}>
-                      <SoundOutlined /> Âm thanh
-                    </Button>
-                  </div>
-                  <input
-                    type="file"
-                    name="image"
-                    onChange={handleSubmitImage}
-                    className="form-input"
-                    accept="image/*"
-                    style={{ display: "none" }}
-                    ref={inputImageRef}
-                  />
-                  <input
-                    type="file"
-                    name="audio"
-                    onChange={handleSubmitAudio}
-                    className="form-input"
-                    accept="audio/*"
-                    style={{ display: "none" }}
-                    ref={inputAudioRef}
-                  />
-                  <SelectYoutubeVideoModal
-                    visible={showSelectYoutubVideoModal}
-                    setVisible={setShowSelectYoutubVideoModal}
+                </label>
+              </div>
+            )}
+            {!loading && (
+              <div>
+                {question.media && question.media.url ? (
+                  <Media
+                    media={question.media}
                     setQuestionMedia={setQuestionMedia}
                     setQuestionMediaTime={setQuestionMediaTime}
                   />
-                </div>
+                ) : (
+                  <div className="image-container">
+                    <div className="image-upload-buttons">
+                      <img src="/soundtrack.png" width={60} />
+                      <div style={{ marginBottom: "12px" }}>
+                        Thêm ảnh, video, âm thanh
+                      </div>
+                      <div>
+                        <Button onClick={() => inputImageRef.current.click()}>
+                          <FileImageOutlined /> Hình ảnh
+                        </Button>
+                        <Button
+                          onClick={() => setShowSelectYoutubVideoModal(true)}
+                        >
+                          <PlayCircleOutlined /> Video
+                        </Button>
+                        <Button onClick={() => inputAudioRef.current.click()}>
+                          <SoundOutlined /> Âm thanh
+                        </Button>
+                      </div>
+                      <input
+                        type="file"
+                        name="image"
+                        onChange={handleSubmitImage}
+                        className="form-input"
+                        accept="image/*"
+                        style={{ display: "none" }}
+                        ref={inputImageRef}
+                      />
+                      <input
+                        type="file"
+                        name="audio"
+                        onChange={handleSubmitAudio}
+                        className="form-input"
+                        accept="audio/*"
+                        style={{ display: "none" }}
+                        ref={inputAudioRef}
+                      />
+                      <SelectYoutubeVideoModal
+                        visible={showSelectYoutubVideoModal}
+                        setVisible={setShowSelectYoutubVideoModal}
+                        setQuestionMedia={setQuestionMedia}
+                        setQuestionMediaTime={setQuestionMediaTime}
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
             )}
           </div>

@@ -18,34 +18,52 @@ const deleteButtonStyle = {
   padding: "0 10px",
 };
 
-const timeFromSeconds = (seconds) => {
+const secondsToTime = (seconds) => {
   const date = new Date(null);
   date.setSeconds(seconds);
   return date.toISOString().substr(14, 5);
 };
 
-const SettingStartEndTimePlayModal = ({
+const timesToSeconds = (times) => {
+  const [minutes, seconds] = times.split(":");
+  return Number(minutes) * 60 + Number(seconds);
+};
+
+export const SettingStartEndTimePlayModal = ({
   visible,
   setVisible,
   media,
   setQuestionMediaTime,
 }) => {
   const { startTime: start, endTime: end } = media;
-  const [startTime, setStartTime] = useState(timeFromSeconds(start));
-  const [endTime, setEndTime] = useState(timeFromSeconds(end));
+  const [startTime, setStartTime] = useState(secondsToTime(start));
+  const [endTime, setEndTime] = useState(secondsToTime(end));
+  const [error, setError] = useState(false);
 
   const onChangeStartTime = (e) => {
+    setError();
     setStartTime(e.target.value);
   };
 
   const onChangeEndTime = (e) => {
+    setError();
     setEndTime(e.target.value);
   };
 
   const onSubmit = () => {
+    if (timesToSeconds(startTime) >= timesToSeconds(endTime)) {
+      setError("Thời gian bắt đầu phải nhỏ hơn thời gian kết thúc");
+      return;
+    }
+    if (timesToSeconds(endTime) > media.duration) {
+      setError(
+        "Thời gian kết thúc phải nhỏ hơn " + secondsToTime(media.duration)
+      );
+      return;
+    }
     setQuestionMediaTime({
-      startTime: startTime.split(":").reduce((acc, cur) => acc * 60 + cur),
-      endTime: endTime.split(":").reduce((acc, cur) => acc * 60 + cur),
+      startTime: timesToSeconds(startTime),
+      endTime: timesToSeconds(endTime),
     });
     setVisible(false);
   };
@@ -61,7 +79,6 @@ const SettingStartEndTimePlayModal = ({
         <div
           style={{
             display: "flex",
-            marginBottom: "16px",
             justifyContent: "space-between",
           }}
         >
@@ -103,9 +120,11 @@ const SettingStartEndTimePlayModal = ({
                 width: "100%",
               }}
             />
+            <div>Tối đa: {secondsToTime(media.duration)}</div>
           </div>
         </div>
-        <div style={{ textAlign: "right" }}>
+        {error && <div style={{ color: "red" }}>{error}</div>}
+        <div style={{ textAlign: "right", marginTop: "16px" }}>
           <Button
             onClick={() => setVisible(false)}
             danger
@@ -123,7 +142,6 @@ const SettingStartEndTimePlayModal = ({
 };
 
 const Video = ({ media, setQuestionMedia, setQuestionMediaTime }) => {
-  const [play, setPlay] = useState(false);
   const [setupModal, setSetupModal] = useState(false);
 
   return (
@@ -132,17 +150,17 @@ const Video = ({ media, setQuestionMedia, setQuestionMediaTime }) => {
         <iframe
           frameBorder="0"
           allowFullScreen="1"
-          allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
           title="YouTube video player"
           width="400px"
           height="250px"
-          src={`https://www.youtube.com/embed/${media.url}?autoplay=0&mute=0&controls=0&start=${media.startTime}&end=${media.endTime}&showinfo=0&rel=0&iv_load_policy=3&modestbranding=1&fs=1&enablejsapi=1&widgetid=45`}
+          src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${media.startTime}&end=${media.endTime}&mute=0&controls=0&showinfo=0&rel=0&modestbranding=1&widgetid=43`}
           id="widget46"
-        ></iframe>
+        />
       </div>
       <div style={deleteButtonStyle}>
         <div>
-          {timeFromSeconds(media.startTime)} - {timeFromSeconds(media.endTime)}
+          {secondsToTime(media.startTime)} - {secondsToTime(media.endTime)}
         </div>
         <div>
           <Button
@@ -157,12 +175,14 @@ const Video = ({ media, setQuestionMedia, setQuestionMediaTime }) => {
           </Button>
         </div>
       </div>
-      <SettingStartEndTimePlayModal
-        media={media}
-        visible={setupModal}
-        setVisible={setSetupModal}
-        setQuestionMediaTime={setQuestionMediaTime}
-      />
+      {setupModal && (
+        <SettingStartEndTimePlayModal
+          media={media}
+          visible={setupModal}
+          setVisible={setSetupModal}
+          setQuestionMediaTime={setQuestionMediaTime}
+        />
+      )}
     </div>
   );
 };

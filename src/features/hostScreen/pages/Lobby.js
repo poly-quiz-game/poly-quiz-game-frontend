@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Popover, Tooltip } from "antd";
 import { UserOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
+import ReactHowler from "react-howler";
+
 import music from "../../../assets/game_theme.mp3";
 
 import "../styles.scss";
@@ -68,11 +70,7 @@ const Lobby = ({ socket }) => {
 
   return (
     <div className="lobby__screen">
-      {playing && (
-        <audio autoPlay loop>
-          <source src={music} type="audio/mpeg" />
-        </audio>
-      )}
+      {playing && <ReactHowler src={music} loop playing type="audio/mpeg" volume={0.2} />}
       <div className="game-info">
         <div className="game-pin">
           <h2>Mã phòng:</h2>

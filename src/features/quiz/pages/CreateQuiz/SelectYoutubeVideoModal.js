@@ -53,6 +53,25 @@ const getDurationText = (duration) => {
   }
 };
 
+const getSecondsDuration = (duration) => {
+  try {
+    const durationInSeconds = duration.match(/PT(\d+H)?(\d+M)?(\d+S)?/);
+    const hours = durationInSeconds[1]
+      ? durationInSeconds[1].replace("H", "")
+      : 0;
+    const minutes = durationInSeconds[2]
+      ? durationInSeconds[2].replace("M", "")
+      : 0;
+    const seconds = durationInSeconds[3]
+      ? durationInSeconds[3].replace("S", "")
+      : 0;
+    return parseInt(hours) * 3600 + parseInt(minutes) * 60 + parseInt(seconds);
+  } catch (error) {
+    console.log(error);
+    return 0;
+  }
+};
+
 const SelectYoutubeVideoModal = ({ visible, setVisible, setQuestionMedia }) => {
   const [search, setSearch] = useState("");
   const [videos, setVideos] = useState([]);
@@ -129,6 +148,7 @@ const SelectYoutubeVideoModal = ({ visible, setVisible, setQuestionMedia }) => {
                   setQuestionMedia({
                     fileType: "video",
                     url: video.id.videoId,
+                    duration: getSecondsDuration(video.contentDetails.duration),
                     thumbnail: video.snippet.thumbnails.default.url,
                   });
                   setVisible(false);
