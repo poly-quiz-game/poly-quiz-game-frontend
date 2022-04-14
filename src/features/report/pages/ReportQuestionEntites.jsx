@@ -8,7 +8,8 @@ import {getIconChose} from './utils'
 import {ReactComponent as IconNoImg} from '../../../assets/images/report/no-image.svg'
 import {ReactComponent as IconCorrect} from '../../../assets/images/report/correct.svg'
 import {ReactComponent as IconIncorrect} from '../../../assets/images/report/incorrect.svg'
-import RowQuestionDetail from "../components/RowQuestionDetail";
+import RowQuestionDetailMultiple from "../components/RowQuestionDetailMultiple";
+import {ReactComponent as Chose1} from "../../../assets/images/report/chose1.svg";
 
 const Container = styled.div`
   -webkit-box-flex: 1;
@@ -57,7 +58,7 @@ const InfoWrap = styled.div`
   flex: 1 1 0%;
   flex-direction: column;
 `
-const RowDetail = styled.div`
+export const RowDetail = styled.div`
   border-bottom: 1px solid rgb(178, 178, 178);
   margin: 0 15px;
   padding: 0.5rem 1rem;
@@ -148,18 +149,19 @@ const ReportPlayerEntities = ({id, question}) => {
                                     {questionDetail ? <img src={questionDetail.image} width='100%' alt={questionDetail.question}/> : <IconNoImg width='32px'/>}
                                 </FlexImg>
                             </ImageWrap>
-                            <p>a</p>
                         </DetailLeft>
 
                         <DetailCorrectALl>
                             <InfoWrap>
                                 <RowDetail>
-                                    <RowQuestionDetail answerCorrects={questionDetail.correct} questionTypeId={questionDetail.questionTypeId} correct={true}/>
+                                    <RowQuestionDetailMultiple answerCorrects={questionDetail.correct} questionTypeId={questionDetail.questionTypeId} correct={true}/>
                                 </RowDetail>
 
                                 <RowDetail>
+                                    <RowQuestionDetailMultiple answerCorrects={questionDetail.correct} questionTypeId={questionDetail.questionTypeId} correct={false}/>
+                                </RowDetail>
+                                <RowDetail>
                                     <div>Final score</div>
-                                    {/* <div>{player.totalPoints}</div> */}
                                 </RowDetail>
                             </InfoWrap>
                         </DetailCorrectALl>
