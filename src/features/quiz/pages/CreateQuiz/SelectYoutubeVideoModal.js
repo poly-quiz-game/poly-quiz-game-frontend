@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { Button, Modal, Input } from "antd";
+import { Modal, Input, Skeleton } from "antd";
 import axios from "axios";
 
 const youtubeSearchApi = axios.create({
@@ -53,15 +53,10 @@ const getDurationText = (duration) => {
   }
 };
 
-const SelectYoutubeVideoModal = ({
-  visible,
-  setVisible,
-  media,
-  setQuestionMediaTime,
-  setQuestionMedia,
-}) => {
+const SelectYoutubeVideoModal = ({ visible, setVisible, setQuestionMedia }) => {
   const [search, setSearch] = useState("");
   const [videos, setVideos] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const timeout = useRef(null);
 
@@ -76,26 +71,32 @@ const SelectYoutubeVideoModal = ({
   }, [search]);
 
   const searchYoutubeVideos = async () => {
-    const response = await youtubeSearchApi.get("/search", {
-      params: {
-        q: isUrl(search) ? getVideoIdFroUrl(search) : search,
-        maxResults: isUrl(search) ? 1 : 15,
-      },
-    });
-    const details = await youtubeVideoDetailApi.get("/videos", {
-      params: {
-        id: response.data.items.map((item) => item.id.videoId).join(","),
-      },
-    });
-    const contentDetails = details.data.items.map(
-      (item) => item.contentDetails
-    );
-    const result = response.data.items.map((item, index) => ({
-      ...item,
-      contentDetails: contentDetails[index],
-    }));
-    console.log(result);
-    setVideos(result);
+    setLoading(true);
+    try {
+      const response = await youtubeSearchApi.get("/search", {
+        params: {
+          q: isUrl(search) ? getVideoIdFroUrl(search) : search,
+          maxResults: isUrl(search) ? 1 : 15,
+        },
+      });
+      const details = await youtubeVideoDetailApi.get("/videos", {
+        params: {
+          id: response.data.items.map((item) => item.id.videoId).join(","),
+        },
+      });
+      setLoading(false);
+      const contentDetails = details.data.items.map(
+        (item) => item.contentDetails
+      );
+      const result = response.data.items.map((item, index) => ({
+        ...item,
+        contentDetails: contentDetails[index],
+      }));
+      setVideos(result);
+    } catch (error) {
+      console.log(error);
+      setLoading(false);
+    }
   };
 
   return (
@@ -116,7 +117,9 @@ const SelectYoutubeVideoModal = ({
           />
         </div>
         <div className="youtube-search-result">
-          {videos.length &&
+          {loading && <Skeleton />}
+          {!loading &&
+            videos.length !== 0 &&
             videos.map((video) => (
               <div
                 key={video.id.videoId}
@@ -126,6 +129,7 @@ const SelectYoutubeVideoModal = ({
                   setQuestionMedia({
                     fileType: "video",
                     url: video.id.videoId,
+                    thumbnail: video.snippet.thumbnails.default.url,
                   });
                   setVisible(false);
                 }}

@@ -139,9 +139,10 @@ const CreateQuiz = () => {
     }
     const newQuiz = {
       ...quiz,
-      questions: questions.map((q) => ({
+      questions: questions.map((q, index) => ({
         ...q,
         media: q.media ? q.media : undefined,
+        index,
       })),
       ...customData,
     };

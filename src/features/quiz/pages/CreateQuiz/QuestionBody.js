@@ -145,11 +145,12 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     }
   };
 
-  const setQuestionMedia = ({ url, fileType } = {}) => {
+  const setQuestionMedia = ({ url, fileType, thumbnail } = {}) => {
     let media = {};
     if (url && fileType) {
       media = {
         url,
+        thumbnail,
         type: fileType,
         startTime: 0,
         endTime: question.timeLimit / 1000,
