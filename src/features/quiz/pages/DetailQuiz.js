@@ -1,243 +1,340 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router";
-import { Space, Button, Layout, Menu, Image, Collapse } from "antd";
+import { Button, Collapse, Skeleton } from "antd";
 import { DeleteOutlined } from "@ant-design/icons";
-import { FaUserAlt, FaEllipsisV, FaPencilAlt } from "react-icons/fa";
-import { CheckCircleFilled, CloseCircleFilled,CaretRightOutlined,FieldTimeOutlined } from "@ant-design/icons";
-import { questionTypeLabels, questionTypes } from "consts";
+import { questionTypeLabels } from "consts";
+import {
+  PlayCircleOutlined,
+  QuestionCircleOutlined,
+  CalendarOutlined,
+  EditOutlined,
+  LockOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
+import { getTimeString } from "../../../utils";
 
 import MainLayout from "layouts/main.layout";
 import { Link } from "react-router-dom";
 
+import Audio from "./CreateQuiz/Audio";
+
 import { fetchQuiz, selectQuiz, remove } from "../quizSlice";
 
-import "./detail.css";
+import "./detail.scss";
 import { showDeleteConfirm } from "../../../confirm/DeleteConfirm";
-const { Content, Sider } = Layout;
-const { Panel } = Collapse;
-const CorrectIcon = (
-  <span style={{ color: "#52c41a" }}>
-    <CheckCircleFilled />
-  </span>
-);
 
-const IncorretIcocn = (
-  <span style={{ color: "#eb2f96" }}>
-    <CloseCircleFilled />
-  </span>
-);
+const { Panel } = Collapse;
+
+const QUESTION_COLORS = [
+  "rgb(226, 27, 60)",
+  "rgb(19, 104, 206)",
+  "rgb(216, 158, 0)",
+  "rgb(38, 137, 12)",
+];
+
 const QUESTION_LABELS = ["A", "B", "C", "D"];
+
+const Media = ({ media }) => {
+  switch (media.type) {
+    case "image":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+          }}
+        >
+          <div className="image">
+            <img src={media.url} width="100%" height="auto" />
+          </div>
+        </div>
+      );
+    case "audio":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Audio media={media} editable={false} />
+        </div>
+      );
+    case "video":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+          }}
+        >
+          <iframe
+            frameBorder="0"
+            allowFullScreen="1"
+            allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            title="YouTube video player"
+            width="100%"
+            height="100%"
+            src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${media.startTime}&end=${media.endTime}&mute=0&controls=0&showinfo=0&rel=0&modestbranding=1&widgetid=43`}
+            id="widget46"
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
+};
 
 const DetailQuiz = () => {
   let params = useParams();
   const dispatch = useDispatch();
-  const user = JSON.parse(localStorage.getItem("user"));
   const quiz = useSelector(selectQuiz);
   const navigate = useNavigate();
-  const test = quiz.questions;
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    dispatch(fetchQuiz(params.id));
+    const fetchApi = async () => {
+      await dispatch(fetchQuiz(params.id));
+      setLoading(false);
+    };
+    fetchApi();
   }, [dispatch, params]);
+
   return (
-    <MainLayout>
-      <Layout>
-        <Layout>
-          <Sider width={200} className="site-layout-background">
-            <Menu
-              mode="inline"
-              defaultSelectedKeys={["1"]}
-              defaultOpenKeys={["sub1"]}
-              style={{ height: "100%", borderRight: 0, width: "332px" }}
-            >
-              <div className="quiz-img">
-                <Image
-                  style={{
-                    width: "332px",
-                    height: "218px",
-                  }}
-                  src={
-                    quiz.coverImage === ""
-                      ? "https://tintuckhanhhoa.com/uploads/no_image_available.jpg"
-                      : quiz.coverImage
-                  }
-                />
-                <div className="title">
-                  <h2>
-                    Tên:{" "}
-                    {quiz.name?.length > 18
-                      ? quiz.name.substring(0, 15) + "..."
-                      : quiz.name}
-                  </h2>
+    <MainLayout
+      title={quiz.name ? `${quiz.name} | Poly Quiz Game` : ""}
+      loading={quiz.loading}
+      active
+    >
+      <div style={{ padding: "24px 0" }} className="detail-quiz">
+        {loading ? (
+          <div className="loading">
+            <Skeleton title={false} loading={loading} active></Skeleton>
+            <Skeleton title={false} loading={loading} active></Skeleton>
+          </div>
+        ) : (
+          <div>
+            <div className="question-header">
+              <div className="question-header-top" style={{ padding: "12px" }}>
+                <div>
+                  <img src={quiz.coverImage || "/quiz.png"} width="200px" />
                 </div>
-                <div className="number-play">
-                  <div className="content">
-                    <h4>{quiz.reports?.length} lượt</h4>
-                  </div>
-                  <div className="button-icon">
-                    <div>
-                      <Link
-                        to={`/quiz/update/${quiz.id}`}
-                        style={{ color: "black", fontSize: "14px" }}
-                      >
-                        <FaPencilAlt />
+                <div className="header-title-content">
+                  <div
+                    style={{
+                      padding: "12px",
+                      display: "flex",
+                      justifyContent: "space-between",
+                    }}
+                  >
+                    <div style={{ maxWidth: "70%" }}>
+                      <h2>{quiz.name}</h2>
+                    </div>
+                    <div className="button-icon">
+                      <Link to={`/quiz/update/${quiz.id}`}>
+                        <Button icon={<EditOutlined />}>Sửa</Button>
                       </Link>
-                    </div>
-                    <div>
-                      <Space size="middle">
-                        <DeleteOutlined
-                          style={{ cursor: "pointer", color: "black" }}
-                          onClick={() => {
-                            showDeleteConfirm(quiz.name, async () => {
-                              await dispatch(remove(quiz.id));
-                              await dispatch(fetchQuiz());
-                              await navigate("/quiz");
-                            });
-                          }}
-                        />
-                      </Space>
-                    </div>
-                    <div>
-                      <FaEllipsisV />
-                    </div>
-                  </div>
-                </div>
-                <div className="button">
-                  <div className="button1">
-                    <Button
-                      className="button-start"
-                      style={{ backgroundColor: "#416CDA" }}
-                    >
-                      <Link
-                        to={`/host/start/${quiz.id}`}
-                        style={{ color: "#fff", fontSize: "14px" }}
+                      <Button
+                        danger
+                        style={{ marginLeft: "8px" }}
+                        onClick={() =>
+                          showDeleteConfirm(quiz.name, async () => {
+                            await dispatch(remove(quiz.id));
+                            navigate("/quiz");
+                          })
+                        }
+                        icon={<DeleteOutlined />}
                       >
-                        Bắt đầu game
-                      </Link>
-                    </Button>
+                        Xóa
+                      </Button>
+                    </div>
                   </div>
-                </div>
-                <div className="description">
-                  <h5>
-                    Mô tả: <span>{quiz.description}</span>
-                  </h5>
-                </div>
-                <div className="user">
-                  <div>
-                    <FaUserAlt />
+                  <div className="description">
+                    <h5>{quiz.description}</h5>
                   </div>
-                  <div className="user-content">{user.email}</div>
+                  <div
+                    style={{
+                      padding: "12px",
+                      display: "flex",
+                      flexWrap: "wrap",
+                    }}
+                  >
+                    <div style={{ marginRight: "16px" }}>
+                      <PlayCircleOutlined /> {quiz?.reports?.length} lượt chơi
+                    </div>
+                    <div style={{ marginRight: "16px" }}>
+                      <QuestionCircleOutlined /> {quiz?.questions?.length} câu
+                      hỏi
+                    </div>
+                    <div style={{ marginRight: "16px" }}>
+                      <CalendarOutlined /> {getTimeString(quiz.updatedAt)}
+                    </div>
+                    <div style={{ marginRight: "16px" }}>
+                      <UserOutlined /> Tối đa {quiz.numberOfPlayer} người
+                    </div>
+                    {quiz.needLogin && (
+                      <div style={{ marginRight: "16px" }}>
+                        <LockOutlined /> Bắt buộc đăng nhập
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
-            </Menu>
-          </Sider>
-          <Layout style={{ padding: "0 24px 24px", paddingLeft: "150px" }}>
-            <div className="question">
-              <h3>
-                Câu hỏi <span>({quiz.questions?.length})</span>
-              </h3>
+              <div style={{ padding: "12px", textAlign: "right" }}>
+                <Link
+                  to={`/host/start/${quiz.id}`}
+                  style={{ color: "#fff", fontSize: "14px" }}
+                >
+                  <Button type="primary">Bắt đầu game</Button>
+                </Link>
+              </div>
             </div>
-            {(quiz.questions || []).map((qt, i) => (
-            <Collapse
-              bordered={false}
-              defaultActiveKey={["1"]}
-              expandIcon={({ isActive }) => (
-                <CaretRightOutlined rotate={isActive ? 90 : 0} />
-              )}
-              className="site-collapse-custom-collapse"
+
+            <div
+              style={{
+                margin: "0px auto 24px",
+                width: "80%",
+                maxWidth: "1000px",
+              }}
             >
-              <Panel
-                header={questionTypeLabels[qt.type.name]}
-                key="1"
-                className="site-collapse-custom-panel"
+              <div
+                className="question"
+                style={{
+                  marginBottom: "12px",
+                  display: "flex",
+                  justifyContent: "space-between",
+                }}
               >
-                <div className="quizzquestion-top">
-                     <div className="quizquestion-left">
-                       <h5>{qt.question?.length > 80 ? (qt.question.substring(0,75)+"...") : qt.question}</h5>
-                       <div className="timeLimit"><FieldTimeOutlined style={{ fontSize: '32px',marginRight:"20px" }} />  Thời gian trả lời: {qt.timeLimit/1000} giây </div>
-                     </div>
-                     <div className="quizquestion-right">
-                       <Image
-                         style={{
-                           width: "234px",
-                           height: "119px",
-                           paddingTop: "5px",
-                           borderRadius: "4px",
-                           marginRight: "20px",
-                           display: "block",
-                         }}
-                         src={
-                           qt.image === ""
-                             ? "https://tintuckhanhhoa.com/uploads/no_image_available.jpg"
-                             : qt.image
-                         }
-                       ></Image>
-                     </div>
-                   </div>
-                <div className="quizzquestion-bottom">
-               {(qt.type.name == 'TRUE_FALSE_ANSWER') ? (qt.answers.slice(0, 2) || []).map((as, index) => (
-                   <div className="answer" key={index}>
-                     <div className="answer-question">
-                       <div className="answer-question-left">
-                         <h3>{QUESTION_LABELS[index]}</h3>
-                       </div>
-                       <div className="answer-question-right">
+                <div>
+                  Câu hỏi <span>({quiz.questions?.length})</span>
+                </div>
+              </div>
+              {(quiz.questions || []).map((qt, i) => (
+                <Collapse
+                  key={i}
+                  expandIconPosition="right"
+                  style={{ marginBottom: "16px" }}
+                >
+                  <Panel
+                    header={
+                      <div
+                        style={{
+                          display: "flex",
+                          width: "100%",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <div>
+                          <div style={{ color: "#444" }}>
+                            {i + 1 + ". " + questionTypeLabels[qt.type.name]} -{" "}
+                            {qt.timeLimit / 1000} giây
+                          </div>
+                          <h1>
+                            {qt.question?.length > 80
+                              ? qt.question.substring(0, 75) + "..."
+                              : qt.question}
+                          </h1>
+                        </div>
 
-                         <h4>{as.answer}</h4>
-                       </div>
-                     </div>
-                     <div className="answer-icon">
-                       {Number(qt.correctAnswer) === as.index
-                        ? CorrectIcon
-                         : IncorretIcocn}
-                     </div>
-                   </div>
-                 )) : (qt.type.name == 'SINGLE_CORRECT_ANSWER' || 'MULTIPLE_CORRECT_ANSWER') ? (qt.answers || []).map((as, index) => (
-                   <div className="answer" key={index}>
-                     <div className="answer-question">
-                       <div className="answer-question-left">
-                         <h3>{QUESTION_LABELS[index]}</h3>
-                       </div>
-                       <div className="answer-question-right">
+                        {qt.media && <Media media={qt.media} />}
+                      </div>
+                    }
+                    style={{ marginButton: "16px" }}
+                  >
+                    <div className="quizzquestion-bottom">
+                      {qt.type.name == "TRUE_FALSE_ANSWER"
+                        ? (qt.answers.slice(0, 2) || []).map((as, index) => (
+                            <div className="answer" key={index}>
+                              <div className="answer-question">
+                                <div
+                                  className="answer-question-left"
+                                  style={{ background: QUESTION_COLORS[index] }}
+                                >
+                                  <h3 style={{ color: "#fff" }}>
+                                    {QUESTION_LABELS[index]}
+                                  </h3>
+                                </div>
+                                <div className="answer-question-right">
+                                  <h4>{as.answer}</h4>
+                                </div>
+                              </div>
 
-                         <h4>{as.answer}</h4>
-                       </div>
-                     </div>
-                     <div className="answer-icon">
-                     {(qt.type.name == 'SINGLE_CORRECT_ANSWER') ? (Number(qt.correctAnswer) === as.index
-                         ? CorrectIcon
-                         : IncorretIcocn):(qt.correctAnswer.search(index) != (-1)) ? CorrectIcon
-                         : IncorretIcocn}
-                     </div>
-                   </div>
-                 )) : (qt.answers.slice(0, 1) || []).map((as, index) => (
-                   <div className="answer" key={index}>
-                     <div className="answer-question">
-                       <div className="answer-question-left">
-                         <h3>{QUESTION_LABELS[index]}</h3>
-                       </div>
-                       <div className="answer-question-right">
-
-                         <h4>{as.answer}</h4>
-                       </div>
-                     </div>
-                     <div className="answer-icon">
-                    {Number(qt.correctAnswer) === as.index
-                         ? CorrectIcon
-                         : IncorretIcocn}
-                     </div>
-                   </div>
-                ))}
-
-               </div>
-              </Panel>
-            </Collapse>))}
-            
-          </Layout>
-        </Layout>
-      </Layout>
+                              {Number(qt.correctAnswer) === as.index ? (
+                                <i className="fas fa-check"></i>
+                              ) : (
+                                <i className="fas fa-times"></i>
+                              )}
+                            </div>
+                          ))
+                        : qt.type.name === "SINGLE_CORRECT_ANSWER" ||
+                          qt.type.name === "MULTIPLE_CORRECT_ANSWER"
+                        ? (qt.answers || []).map((as, index) => (
+                            <div className="answer" key={index}>
+                              <div className="answer-question">
+                                <div
+                                  className="answer-question-left"
+                                  style={{ background: QUESTION_COLORS[index] }}
+                                >
+                                  <h3 style={{ color: "#fff" }}>
+                                    {QUESTION_LABELS[index]}
+                                  </h3>
+                                </div>
+                                <div className="answer-question-right">
+                                  <div>{as.answer}</div>
+                                </div>
+                              </div>
+                              {qt.type.name == "SINGLE_CORRECT_ANSWER" ? (
+                                Number(qt.correctAnswer) === as.index ? (
+                                  <i className="fas fa-check"></i>
+                                ) : (
+                                  <i className="fas fa-times"></i>
+                                )
+                              ) : qt.correctAnswer.search(index) != -1 ? (
+                                <i className="fas fa-check"></i>
+                              ) : (
+                                <i className="fas fa-times"></i>
+                              )}
+                            </div>
+                          ))
+                        : (qt.answers.slice(0, 1) || []).map((as, index) => (
+                            <div className="answer" key={index}>
+                              <div className="answer-question">
+                                <div
+                                  className="answer-question-left"
+                                  style={{ background: QUESTION_COLORS[index] }}
+                                >
+                                  <h3 style={{ color: "#fff" }}>
+                                    {QUESTION_LABELS[index]}
+                                  </h3>
+                                </div>
+                                <div className="answer-question-right">
+                                  <h4>{as.answer}</h4>
+                                </div>
+                              </div>
+                              {Number(qt.correctAnswer) === as.index ? (
+                                <i className="fas fa-check"></i>
+                              ) : (
+                                <i className="fas fa-times"></i>
+                              )}
+                            </div>
+                          ))}
+                    </div>
+                  </Panel>
+                </Collapse>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </MainLayout>
   );
 };

@@ -12,6 +12,8 @@ import { Skeleton, List, Button, Divider, Input, Select } from "antd";
 import { Link } from "react-router-dom";
 import MainLayout from "layouts/main.layout";
 
+import { getTimeString } from "../../../utils";
+
 import {
   fetchQuizzes,
   selectQuizList,
@@ -70,7 +72,7 @@ const Quizzes = () => {
   const { initLoading, loading } = loadingState;
 
   return (
-    <MainLayout>
+    <MainLayout title="Danh sách quiz | Poly Quiz Game">
       <div className="quizzes" id="quizzesDiv">
         <div className="quizzes-header">
           <div className="quizzes-search">
@@ -144,10 +146,7 @@ const Quizzes = () => {
                             câu hỏi
                           </div>
                           <div>
-                            <CalendarOutlined />{" "}
-                            {moment(quiz.updatedAt).format(
-                              "DD/MM/YYYY - HH:mm"
-                            )}
+                            <CalendarOutlined /> {getTimeString(quiz.updatedAt)}
                           </div>
                         </div>
                       </div>

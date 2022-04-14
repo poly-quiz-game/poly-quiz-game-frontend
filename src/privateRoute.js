@@ -4,7 +4,7 @@ import { getToken } from "./api/axiosClient";
 
 const PrivateRoute = ({ children }) => {
   const token = getToken();
-  return token ? children : <Navigate to="/auth/login" />;
+  return token ? children : <Navigate to="/" />;
 };
 
 export default PrivateRoute;

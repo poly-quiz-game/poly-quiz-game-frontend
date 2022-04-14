@@ -1,0 +1,260 @@
+.detail-quiz {
+  table {
+    border-collapse: collapse;
+  }
+
+  th,
+  td {
+    border: 1px solid black;
+    padding: 10px;
+  }
+  .title {
+    padding-top: 20px;
+    padding-left: 20px;
+  }
+  .title h2 {
+    font-size: 24px;
+    text-overflow: clip;
+  }
+  .title > h2 > span {
+    margin-right: 5px;
+  }
+  .title h3 {
+    font-size: 24px;
+    font-weight: 600;
+  }
+  .number-play {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .number-play .content h4 {
+    font-size: 14px;
+    font-weight: 300;
+    margin-top: 5px;
+  }
+  .button-icon {
+    display: flex;
+    justify-content: end;
+  }
+  .button-atribute h3 {
+    color: #111111;
+
+    font-size: 14px;
+  }
+  .button2 {
+    padding-left: 20px;
+  }
+  .description {
+    padding-left: 20px;
+  }
+  .description h5 {
+    font-size: 14px;
+    font-weight: 300;
+  }
+  .user {
+    padding-top: 20px;
+    padding-left: 20px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+  }
+  .user-content {
+    font-weight: normal;
+    font-size: 14px;
+
+    padding-left: 15px;
+    padding-top: 3px;
+  }
+  .question {
+    padding-top: 20px;
+  }
+  .question h3 {
+    font-size: 24px;
+    font-weight: 500;
+  }
+  .quizquestion {
+    padding: 24px 33px;
+    background-color: #fff;
+    border-radius: 10px;
+    margin-bottom: 28px;
+  }
+  .quizzquestion-top {
+    display: flex;
+    justify-content: space-between;
+    margin: 0 10px 20px;
+  }
+  .quizquestion-left {
+    padding-left: 20px;
+  }
+  .quizquestion-left h4 {
+    font-weight: 300;
+    font-size: 24px;
+    padding-top: 10px;
+  }
+  .quizquestion-left h5 {
+    font-weight: 500;
+    font-size: 24px;
+  }
+  .quizquestion-right {
+    position: relative;
+    max-width: 300px;
+  }
+  .answer {
+    padding: 8px 16px 8px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    &:not(:last-child) {
+      border-bottom: 1px solid #efefef;
+    }
+    i {
+      font-size: 16px;
+      &.fa-times {
+        color: red;
+      }
+      &.fa-check {
+        color: green;
+      }
+    }
+  }
+  .quizzquestion-bottom {
+    width: 100%;
+    background-color: #fff;
+  }
+  .answer-question {
+    // padding-left: 20px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    padding-top: 5px;
+    padding-bottom: 5px;
+  }
+  .answer-icon {
+    margin-right: 20px;
+    border: 1px solid #ccc;
+    border-radius: 50%;
+    width: 15px;
+    height: 15px;
+  }
+  .answer-icon.active {
+    background-color: rgb(82, 196, 26);
+  }
+  .answer-question-right {
+    margin-left: 20px;
+  }
+  .answer-question-left {
+    border-radius: 25px;
+    width: 30px;
+    height: 30px;
+  }
+  .answer-question-left h3 {
+    font-size: 18px;
+    text-align: center;
+  }
+  .answer-question-right {
+    font-size: 18px;
+  }
+  .timeLimit {
+    display: flex;
+    font-size: 14px;
+    margin-top: 30px;
+  }
+  .quiz-img {
+    display: inline-flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .question-header {
+    border: 1px solid #f3f3f3;
+    margin: auto;
+    border-radius: 4px;
+    max-width: 1000px;
+    width: 80%;
+  }
+
+  .header-title-content {
+    flex: 1;
+  }
+
+  .question-header-top {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  .content-title {
+    padding-left: 20px;
+  }
+
+  .quiz-edit-delete {
+    cursor: pointer;
+    background-color: #f3f3f3;
+    border: 1px solid #eae2e2;
+    border-radius: 3px;
+    padding: 4px 10px;
+  }
+
+  .avata > img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+  }
+
+  .avata > span {
+    margin-left: 15px;
+  }
+
+  .question-header-bottom {
+    display: flex;
+    justify-content: space-between;
+    padding: 15px 30px;
+  }
+
+  .loading {
+    padding: 40px 250px 0;
+  }
+
+  .image {
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      max-width: 100%;
+      max-height: 100%;
+    }
+    .image-upload-button {
+      cursor: pointer;
+      width: 100%;
+      height: 100%;
+      border: 1px dashed #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #aaa;
+      flex-direction: column;
+
+      svg {
+        font-size: 30px;
+        margin-bottom: 10px;
+      }
+    }
+    .image-actions {
+      bottom: 10px;
+      right: 10px;
+      position: absolute;
+      button {
+        margin-left: 10px;
+      }
+    }
+    #upload-image {
+      display: none;
+    }
+  }
+  .ant-collapse-content-box {
+    padding: 0 !important;
+  }
+}

@@ -5,6 +5,7 @@ import _ from "lodash";
 import { Button, Modal } from "antd";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router";
+import { Helmet } from "react-helmet";
 
 import ListQuestions from "./ListQuestions";
 import QuestionBody from "./QuestionBody";
@@ -88,6 +89,19 @@ const CreateQuiz = () => {
   }, [questions]);
 
   const addQuestion = (question) => {
+    if (typeof question === "number") {
+      const questionCopy = questions[question];
+      delete questionCopy.id;
+      const newQuestions = [...questions];
+      newQuestions.splice(
+        activeQuestion + 1,
+        0,
+        questionCopy || defaultQuestion
+      );
+      setQuestions(newQuestions);
+      setActiveQuestion(activeQuestion + 1);
+      return;
+    }
     const newQuestions = [...questions];
     newQuestions.splice(activeQuestion + 1, 0, question || defaultQuestion);
 
@@ -97,7 +111,10 @@ const CreateQuiz = () => {
 
   const deleteQuestion = (index) => {
     if (questions.length === 1) return;
-    if (activeQuestion === index && activeQuestion > 0)
+    if (
+      (activeQuestion === index && activeQuestion > 0) ||
+      activeQuestion === questions.length - 1
+    )
       setActiveQuestion(activeQuestion - 1);
     setQuestions(questions.filter((q, i) => i !== index));
   };
@@ -120,18 +137,27 @@ const CreateQuiz = () => {
       setIsShowSetting("save");
       return;
     }
-    const newQuiz = { ...quiz, questions, ...customData };
+    const newQuiz = {
+      ...quiz,
+      questions: questions.map((q, index) => ({
+        ...q,
+        media: q.media ? q.media : undefined,
+        index,
+      })),
+      ...customData,
+    };
 
     try {
       setLoading(true);
       if (!params.id) {
-        await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+        const res = await dispatch(fetchCreateQuiz(newQuiz)).unwrap();
+        navigate("/quiz/detail/" + res.id);
       } else {
         newQuiz.id = Number(params.id);
-        await dispatch(fetchUpdateQuiz(newQuiz)).unwrap();
+        const res = await dispatch(fetchUpdateQuiz(newQuiz)).unwrap();
+        navigate("/quiz/detail/" + res.id);
       }
       setLoading(false);
-      navigate("/quiz");
     } catch (error) {
       setLoading(false);
       console.log(error);
@@ -172,6 +198,7 @@ const CreateQuiz = () => {
                 timeLimit,
                 question,
                 correctAnswer,
+                media,
               }) => ({
                 id,
                 type,
@@ -179,6 +206,7 @@ const CreateQuiz = () => {
                 timeLimit,
                 question,
                 correctAnswer,
+                media,
                 answers: [...answers.map((a) => a.answer)],
               })
             )
@@ -190,10 +218,15 @@ const CreateQuiz = () => {
 
   return (
     <div className="create-quiz">
+      <Helmet>
+        <title>Tạo quiz | Poly Quiz</title>
+      </Helmet>
       <div className="header">
         <div className="header-content">
           <div className="left">
-            <div className="logo">LOGO</div>
+            <div className="logo">
+              <img style={{ width: "100%" }} src="/img/logo.png" />
+            </div>
             <div className="quiz-settings">
               <div className={`${!quiz.name ? "blured " : ""}quiz-name`}>
                 {quiz.name || "Nhập tên quiz"}

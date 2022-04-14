@@ -6,7 +6,6 @@ import Auth from "./features/auth";
 
 import PrivateRoute from "./privateRoute";
 import AuthLayout from "layouts/auth.layout";
-
 import "antd/dist/antd.min.css";
 import Report from "./features/report";
 import HostScreen from "./features/hostScreen";

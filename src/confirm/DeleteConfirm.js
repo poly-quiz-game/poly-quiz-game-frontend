@@ -6,18 +6,14 @@ const { confirm } = Modal;
 
 export const showDeleteConfirm = (content, callback) => {
   confirm({
-    title: "Có không giữ mất đừng tìm?",
     icon: <ExclamationCircleOutlined />,
     content: `Bạn có chắc muốn xóa: ${content}`,
-    okText: "Yes",
+    okText: "Xoá",
     okType: "danger",
-    cancelText: "No",
-    onOk() {
-      callback();
+    cancelText: "Huỷ",
+    async onOk() {
+      await callback();
       message.success(`Xóa ${content} thành công`);
-    },
-    onCancel() {
-      message.error(`xóa ${content} thất bại`);
     },
   });
 };

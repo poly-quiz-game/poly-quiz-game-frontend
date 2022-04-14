@@ -1,87 +1,76 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector, useDispatch } from "react-redux";
-import moment from "moment";
-import InfiniteScroll from "react-infinite-scroll-component";
+import React, { useEffect, useState, useRef } from 'react'
+import { useSelector, useDispatch } from 'react-redux'
+import moment from 'moment'
+import InfiniteScroll from 'react-infinite-scroll-component'
 
-import { Skeleton, List, Space, Divider, Input, Select, Avatar } from "antd";
-import {
-  CalendarOutlined,
-  QuestionCircleOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { Skeleton, List, Space, Divider, Input, Select, Avatar } from 'antd'
+import { CalendarOutlined, QuestionCircleOutlined, UserOutlined } from '@ant-design/icons'
 
-import { Link } from "react-router-dom";
-import MainLayout from "layouts/main.layout";
+import { Link } from 'react-router-dom'
+import MainLayout from 'layouts/main.layout'
 
-import "./styles.scss";
-import {
-  selectReportList,
-  selectReportTotal,
-  fetchReports,
-  reportActions,
-} from "../reportSlice";
+import './styles.scss'
+import { selectReportList, selectReportTotal, fetchReports, reportActions } from '../reportSlice'
+import { getTimeString } from "../../../utils";
 
-const LIMIT = 20;
+const LIMIT = 20
 
 const IconText = ({ icon, text }) => (
   <Space>
     {React.createElement(icon)}
     {text}
   </Space>
-);
+)
 
 const Report = () => {
-  const ref = useRef();
+  const ref = useRef()
   const [metadata, setMetadata] = useState({
     offset: 0,
     limit: LIMIT,
-    search: "",
-    sortDirection: "desc",
-    sortField: "createdAt",
-  });
+    search: '',
+    sortDirection: 'desc',
+    sortField: 'createdAt',
+  })
   const [loadingState, setLoadingState] = useState({
     initLoading: true,
     loading: false,
-  });
+  })
 
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
 
-  const reports = useSelector(selectReportList);
-  const total = useSelector(selectReportTotal);
+  const reports = useSelector(selectReportList)
+  const total = useSelector(selectReportTotal)
 
   const fetchData = () => {
     if (!loadingState.initLoading) {
-      setLoadingState({ ...loadingState, loading: true });
+      setLoadingState({ ...loadingState, loading: true })
     }
     dispatch(fetchReports(metadata)).then(() => {
-      setLoadingState({ initLoading: false, loading: false });
-    });
-  };
+      setLoadingState({ initLoading: false, loading: false })
+    })
+  }
 
   useEffect(() => {
-    if (
-      ref?.current?.sortDirection !== metadata.sortDirection ||
-      ref?.current?.search !== metadata.search
-    ) {
-      dispatch(reportActions.resetReports()); // reset quizzes
+    if (ref?.current?.sortDirection !== metadata.sortDirection || ref?.current?.search !== metadata.search) {
+      dispatch(reportActions.resetReports()) // reset quizzes
     }
-    fetchData();
-    ref.current = metadata;
-  }, [dispatch, metadata]);
+    fetchData()
+    ref.current = metadata
+  }, [dispatch, metadata])
 
-  const { initLoading, loading } = loadingState;
+  const { initLoading, loading } = loadingState
 
   return (
-    <MainLayout>
-      <div className="reports" id="reportsDiv">
-        <div className="header">
-          <div className="title-top-list-quiz">
-            <i className="fas fa-list"></i> {total} bản ghi
+    <MainLayout title="Danh sách báo cáo | Poly Quiz Game">
+      <div className='reports' id='reportsDiv'>
+        <div className='header'>
+          <div className='title-top-list-quiz'>
+            <i className='fas fa-list'></i> {total} bản ghi
           </div>
-          <div className="right-header">
-            <div className="search">
+          <div className='right-header'>
+            <div className='search'>
               <Input
-                placeholder="Tìm kiếm"
+                placeholder='Tìm kiếm'
                 value={metadata.search}
                 onChange={(e) =>
                   setMetadata({
@@ -92,7 +81,7 @@ const Report = () => {
               />
             </div>
 
-            <div className="report-sort">
+            <div className='report-sort'>
               <Select
                 value={metadata.sortDirection}
                 onChange={(value) =>
@@ -103,13 +92,13 @@ const Report = () => {
                   })
                 }
               >
-                <Select.Option value="desc">Mới nhất</Select.Option>
-                <Select.Option value="asc">Cũ nhất</Select.Option>
+                <Select.Option value='desc'>Mới nhất</Select.Option>
+                <Select.Option value='asc'>Cũ nhất</Select.Option>
               </Select>
             </div>
           </div>
         </div>
-        <div className="list-report">
+        <div className='list-report'>
           <InfiniteScroll
             dataLength={reports.length}
             next={() =>
@@ -119,10 +108,8 @@ const Report = () => {
               })
             }
             hasMore={reports.length < total}
-            endMessage={
-              !loading && !initLoading && <Divider plain>Hết</Divider>
-            }
-            scrollableTarget="reportsDiv"
+            endMessage={!loading && !initLoading && <Divider plain>Hết</Divider>}
+            scrollableTarget='reportsDiv'
           >
             <List
               bordered
@@ -133,56 +120,25 @@ const Report = () => {
                   actions={
                     !report.loading
                       ? [
-                          <div
-                            className="report-players"
-                            key="list-vertical-user-o"
-                          >
-                            <IconText
-                              icon={UserOutlined}
-                              text={report?.players?.length}
-                            />
+                          <div className='report-players' key='list-vertical-user-o'>
+                            <IconText icon={UserOutlined} text={report?.players?.length} />
                           </div>,
-                          <div
-                            className="report-questions"
-                            key="list-vertical-like-o"
-                          >
-                            <IconText
-                              icon={QuestionCircleOutlined}
-                              text={report?.reportQuestions?.length}
-                            />
+                          <div className='report-questions' key='list-vertical-like-o'>
+                            <IconText icon={QuestionCircleOutlined} text={report?.reportQuestions?.length} />
                           </div>,
-                          <div
-                            className="report-createdAt"
-                            key="list-vertical-message"
-                          >
-                            <IconText
-                              icon={CalendarOutlined}
-                              text={moment(report.createdAt).format("DD-MM")}
-                            />
+                          <div className='report-createdAt' key='list-vertical-message'>
+                            <IconText icon={CalendarOutlined} text={getTimeString(report.createdAt)} />
                           </div>,
                         ]
                       : []
                   }
                 >
-                  <Skeleton
-                    avatar
-                    title={false}
-                    loading={report.loading}
-                    active
-                  >
+                  <Skeleton avatar title={false} loading={report.loading} active>
                     <List.Item.Meta
-                      avatar={
-                        <Avatar
-                          src={report?.quiz?.coverImage || "report.jpg"}
-                        />
-                      }
+                      avatar={<Avatar src={report?.quiz?.coverImage || 'report.jpg'} />}
                       title={
-                        <Link
-                          to={`/report/detail/${report.id}`}
-                          key={report.id}
-                          className="quiz-item-link"
-                        >
-                          {report.name}{" "}
+                        <Link to={`/report/detail/${report.id}`} key={report.id} className='quiz-item-link'>
+                          {report.name}
                         </Link>
                       }
                     />
@@ -194,7 +150,7 @@ const Report = () => {
         </div>
       </div>
     </MainLayout>
-  );
-};
+  )
+}
 
-export default Report;
+export default Report

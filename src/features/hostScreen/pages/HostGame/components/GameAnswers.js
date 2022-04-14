@@ -2,9 +2,10 @@ import React from "react";
 import { questionTypes } from "consts";
 import { gameStateTypes } from "../index";
 
+const QUESTION_LABELS = ["A", "B", "C", "D"];
+
 const GameAnswers = ({ question, gameState }) => {
   const { type } = question;
-  console.log(111, question);
   if (type.name === questionTypes.TYPE_ANSWER) {
     if (gameState === gameStateTypes.QUESTION_RESULT) {
       return null;
@@ -19,7 +20,7 @@ const GameAnswers = ({ question, gameState }) => {
   }
 
   let answers = question.answers;
-  if (type === questionTypes.TRUE_FALSE_ANSWER) {
+  if (type.name === questionTypes.TRUE_FALSE_ANSWER) {
     answers = question.answers.slice(0, 2);
   }
 
@@ -38,7 +39,7 @@ const GameAnswers = ({ question, gameState }) => {
               (isCorrect ? "correct" : "in-correct")
             }`}
           >
-            <div className="answer-label">A</div>
+            <div className="answer-label">{QUESTION_LABELS[i]}</div>
             <div className="answer-content">{answer.answer}</div>
             {gameState === gameStateTypes.QUESTION_RESULT && isCorrect && (
               <div className="correct-checkbox">

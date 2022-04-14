@@ -8,6 +8,28 @@ import StartGame from "./pages/StartGame";
 
 const port = process.env.ENDPOINT || "ws://localhost:3005";
 
+const OnConnect = ({ socket, ...props }) => {
+  useEffect(() => {
+    return () => {
+      console.log("disconnect");
+      socket.disconnect();
+    };
+  }, [socket]);
+
+  return (
+    <Routes>
+      <Route
+        path="/lobby/:hostSocketId"
+        element={<Lobby {...props} socket={socket} />}
+      />
+      <Route
+        path="/game/:id"
+        element={<HostGame {...props} socket={socket} />}
+      />
+    </Routes>
+  );
+};
+
 const HostScreen = (props) => {
   const [socket, setSocket] = useState(null);
 
@@ -23,16 +45,14 @@ const HostScreen = (props) => {
   return (
     <Routes>
       <Route
-        path="/lobby/:hostSocketId"
-        element={<Lobby {...props} socket={socket} />}
-      />
-      <Route
         path="/start/:id"
         element={<StartGame {...props} socket={socket} />}
       />
       <Route
-        path="/game/:id"
-        element={<HostGame {...props} socket={socket} />}
+        element={<OnConnect {...props} socket={socket} />}
+        path="/play/*"
+        {...props}
+        socket={socket}
       />
     </Routes>
   );
