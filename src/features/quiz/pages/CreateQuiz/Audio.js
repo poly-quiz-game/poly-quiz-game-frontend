@@ -102,12 +102,14 @@ const Audio = ({
           </Button>
         </div>
       )}
-      <SettingStartEndTimePlayModal
-        media={media}
-        visible={setupModal}
-        setVisible={setSetupModal}
-        setQuestionMediaTime={setQuestionMediaTime}
-      />
+      {setupModal && (
+        <SettingStartEndTimePlayModal
+          media={media}
+          visible={setupModal}
+          setVisible={setSetupModal}
+          setQuestionMediaTime={setQuestionMediaTime}
+        />
+      )}
     </div>
   );
 };

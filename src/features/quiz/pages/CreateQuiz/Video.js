@@ -18,7 +18,7 @@ const deleteButtonStyle = {
   padding: "0 10px",
 };
 
-const secondsToTime = (seconds) => {
+const secondsToTime = (seconds = 0) => {
   const date = new Date(null);
   date.setSeconds(seconds);
   return date.toISOString().substr(14, 5);
