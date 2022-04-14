@@ -30,10 +30,6 @@ const OnLobby = ({ socket }) => {
     socket.on("game-started", function () {
       navigate(`/play/play-game/${socket.id}`);
     });
-
-    return () => {
-      socket.emit("disconnect", socket.id);
-    };
   }, []);
 
   return (

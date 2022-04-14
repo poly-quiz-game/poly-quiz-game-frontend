@@ -1,11 +1,119 @@
-import React, { useEffect, useState, useRef } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import React, {
+  useEffect,
+  useState,
+  useRef,
+  useCallback,
+  useContext,
+} from "react";
+import {
+  useNavigate,
+  useParams,
+  UNSAFE_NavigationContext as NavigationContext,
+} from "react-router-dom";
+import ReactHowler from "react-howler";
+
+import Audio from "../../../quiz/pages/CreateQuiz/Audio";
+
 import TotalAnswerResult from "./components/TotalAnswerResult";
 import ScoreBoard from "./components/ScoreBoard";
 import GameAnswers from "./components/GameAnswers";
 import EndGame from "./components/EndGame";
+import liveQuestionSound from "../../../../assets/question_live_sound_2.mp3";
+import endQuestionSound from "../../../../assets/end_question_sound.mp3";
 
 import "../../styles.scss";
+
+const Media = ({ media }) => {
+  switch (media.type) {
+    case "image":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+          }}
+        >
+          <div className="image">
+            <img src={media.url} width="100%" height="auto" />
+          </div>
+        </div>
+      );
+    case "audio":
+      return (
+        <div
+          style={{
+            width: "180px",
+            height: "120px",
+            position: "relative",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <Audio media={media} editable={false} autoplay />
+        </div>
+      );
+    case "video":
+      return (
+        <div
+          style={{
+            width: "500px",
+            height: "300px",
+            position: "relative",
+          }}
+        >
+          <iframe
+            frameBorder="0"
+            allowFullScreen="1"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            width="100%"
+            height="100%"
+            src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${media.startTime}&end=${media.endTime}&autoplay=1&mute=0&controls=0&playsinline=0&showinfo=0&rel=0&modestbranding=1&fs=1&enablejsapi=1&widgetid=43`}
+          />
+        </div>
+      );
+    default:
+      return null;
+  }
+};
+
+export function useBlocker(blocker, when = true) {
+  const { navigator } = useContext(NavigationContext);
+
+  useEffect(() => {
+    if (!when) return;
+
+    const unblock = navigator.block((tx) => {
+      const autoUnblockingTx = {
+        ...tx,
+        retry() {
+          // Automatically unblock the transition so it can play all the way
+          // through before retrying it. TODO: Figure out how to re-enable
+          // this block if the transition is cancelled for some reason.
+          unblock();
+          tx.retry();
+        },
+      };
+
+      blocker(autoUnblockingTx);
+    });
+
+    return unblock;
+  }, [navigator, blocker, when]);
+}
+export function usePrompt(message, when = true) {
+  const blocker = useCallback(
+    (tx) => {
+      // eslint-disable-next-line no-alert
+      if (window.confirm(message)) tx.retry();
+    },
+    [message]
+  );
+
+  useBlocker(blocker, when);
+}
 
 export const gameStateTypes = {
   LIVE_QUESTION: "liveQuestion",
@@ -18,6 +126,7 @@ const HostGame = ({ socket }) => {
   const [question, setQuestion] = useState(null);
   const [game, setGame] = useState({});
   const [time, setTime] = useState(-1);
+  const [audioOn, setAudioOn] = useState(true);
 
   const [players, setPlayers] = React.useState([]);
   const [gameState, setGameState] = React.useState(
@@ -30,6 +139,21 @@ const HostGame = ({ socket }) => {
   const navigate = useNavigate();
   const timer = useRef(null);
   const prevTime = useRef(null);
+
+  usePrompt(
+    "Bạn có chắc muốn thoát game này không?",
+    socket.connected && gameState !== gameStateTypes.GAME_OVER
+  );
+
+  useEffect(() => {
+    window.addEventListener("beforeunload", () => {
+      console.log("quit game");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
+  }, []);
 
   useEffect(() => {
     socket.emit("host-start-game", { id: params.id });
@@ -79,10 +203,11 @@ const HostGame = ({ socket }) => {
     socket.on("game-over-host", (rank, playersInGame, report) => {
       setReport(report);
       setGameState(gameStateTypes.GAME_OVER);
+      socket.disconnect();
     });
 
     return () => {
-      socket.emit("disconnect", socket.id);
+      socket.disconnect();
     };
   }, []);
 
@@ -94,7 +219,7 @@ const HostGame = ({ socket }) => {
     }
     prevTime.current = time;
     if (time === 0) {
-      socket.emit("time-up");
+      // socket.emit("time-up");
     }
     return () => {
       clearInterval(timer.current);
@@ -102,7 +227,7 @@ const HostGame = ({ socket }) => {
   }, [time]);
 
   const endGame = () => {
-    socket.emit("disconnect", socket.id);
+    socket.disconnect();
     navigate(`/quiz`);
   };
 
@@ -128,8 +253,24 @@ const HostGame = ({ socket }) => {
       return (
         <div
           className="game__screen"
-          style={{ backgroundImage: `url(${game?.quizData?.backgroundImage})` }}
+          style={{
+            backgroundImage: `url(${game?.quizData?.backgroundImage}); backgroundSize: cover`,
+          }}
         >
+          {!question.media &&
+            audioOn &&
+            gameState === gameStateTypes.LIVE_QUESTION && (
+              <ReactHowler
+                src={liveQuestionSound}
+                playing
+                loop
+                type="audio/mpeg"
+                volume={0.2}
+              />
+            )}
+          {audioOn && gameState === gameStateTypes.QUESTION_RESULT && (
+            <ReactHowler src={endQuestionSound} playing type="audio/mpeg" />
+          )}
           <div className="question-info">
             <h1 className="question">{question.question}</h1>
           </div>
@@ -153,9 +294,13 @@ const HostGame = ({ socket }) => {
             ) : (
               <div className="question-image">
                 <div className="time">{time}</div>
-                <div className={`image ${!question.image ? "no-image" : ""}`}>
-                  <img src={question?.image || "/img/logo-large.png}"} />
-                </div>
+                {question.media ? (
+                  <Media media={question.media} />
+                ) : (
+                  <div className={`image ${!question.image ? "no-image" : ""}`}>
+                    <img src={question?.image || "/img/logo-large.png"} />
+                  </div>
+                )}
                 <div className="player-answered">
                   {players.playersAnswered}/{players.playersInGame}
                   <br /> người đã trả lời

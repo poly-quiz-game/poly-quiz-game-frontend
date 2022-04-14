@@ -124,7 +124,7 @@ const columns = [
     },
 ]
 function correctAnswer (user) {
-    return user?.playerAnswers.reduce((acc, cur) => {
+    return (user?.playerAnswers || []).reduce((acc, cur) => {
         const result =  user.report.reportQuestions.filter(reportQ => reportQ.id === cur.questionId)
         return result[0].correctAnswer === cur.answer ? acc + 1 : acc
     }, 0)

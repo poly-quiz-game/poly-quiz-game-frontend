@@ -8,13 +8,16 @@ import { selectUser } from "../auth/authSlice";
 import "./style.scss";
 import moment from "moment";
 import { fetchCount, profile, selectUserCount, selectUserProfile } from "./userProfileSlice";
+import { useNavigate } from "react-router-dom";
 
 const { Title } = Typography;
 
 const UserProfile = (props) => {
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
   const user = useSelector(selectUser);
   return (
-    <MainLayout>
+    <MainLayout title={`${user.name} | Poly Quiz Game`}>
       <div className="profile">
         <div className="profile-header">
           <div className="profile-avatar">
@@ -23,7 +26,7 @@ const UserProfile = (props) => {
           <div>
             <h1>{user.name}</h1>
             <p className="email">{user.email}</p>
-            <Button onClick={logout} danger>
+            <Button onClick={async () => { await dispatch(logout()); await navigate("/");}} danger>
               Đăng xuất
             </Button>
           </div>

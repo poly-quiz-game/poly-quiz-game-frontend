@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Select } from "antd";
 import questionTypeApi from "api/questionTypeApi";
-import { questionTypeLabels, questionTimeLimitOptions } from "consts";
+import questionTimeApi from "api/questionTimeApi";
+import { questionTypeLabels } from "consts";
 
 const QuestionOption = ({
   onChangeQuestionType,
@@ -9,13 +10,21 @@ const QuestionOption = ({
   question,
 }) => {
   const [questionTypes, setQuestionTypes] = useState([]);
+  const [questionTimes, setQuestionTimes] = useState([]);
 
   useEffect(() => {
     const getQuestionTypes = async () => {
       const questionTypes = await questionTypeApi.getAll();
-      setQuestionTypes(questionTypes.data.filter((q) => q.isActive));
+      setQuestionTypes(
+        questionTypes.data.filter((q) => q.isActive).sort((a, b) => a.id - b.id)
+      );
+    };
+    const getQuestionTimes = async () => {
+      const questionTimes = await questionTimeApi.getAll();
+      setQuestionTimes(questionTimes.data);
     };
     getQuestionTypes();
+    getQuestionTimes();
   }, [questionTypeLabels]);
 
   return (
@@ -70,12 +79,12 @@ const QuestionOption = ({
         </div>
         <div className="question-option-item-content">
           <Select
-            defaultValue={questionTimeLimitOptions[2]}
+            defaultValue={questionTimes[2]}
             style={{ width: "100%" }}
             onChange={onChangeQuestionTime}
             value={question.timeLimit}
           >
-            {questionTimeLimitOptions.map((option) => (
+            {questionTimes.map((option) => (
               <Select.Option key={option.value} value={option.value}>
                 {option.label}
               </Select.Option>

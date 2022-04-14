@@ -11,6 +11,7 @@ import MainLayout from 'layouts/main.layout'
 
 import './styles.scss'
 import { selectReportList, selectReportTotal, fetchReports, reportActions } from '../reportSlice'
+import { getTimeString } from "../../../utils";
 
 const LIMIT = 20
 
@@ -60,7 +61,7 @@ const Report = () => {
   const { initLoading, loading } = loadingState
 
   return (
-    <MainLayout>
+    <MainLayout title="Danh sách báo cáo | Poly Quiz Game">
       <div className='reports' id='reportsDiv'>
         <div className='header'>
           <div className='title-top-list-quiz'>
@@ -126,7 +127,7 @@ const Report = () => {
                             <IconText icon={QuestionCircleOutlined} text={report?.reportQuestions?.length} />
                           </div>,
                           <div className='report-createdAt' key='list-vertical-message'>
-                            <IconText icon={CalendarOutlined} text={moment(report.createdAt).format('DD-MM')} />
+                            <IconText icon={CalendarOutlined} text={getTimeString(report.createdAt)} />
                           </div>,
                         ]
                       : []

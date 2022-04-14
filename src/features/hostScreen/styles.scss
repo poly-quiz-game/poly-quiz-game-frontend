@@ -70,6 +70,7 @@
   height: 100vh;
   position: relative;
   overflow: hidden;
+  background: no-repeat;
   .question-info {
     z-index: 100;
     width: 100%;
@@ -256,7 +257,7 @@
 
       .image {
         max-height: 100%;
-        width: 60%;
+        width: 100%;
         text-align: center;
 
         &.no-image {
@@ -276,7 +277,7 @@
     position: absolute;
     width: 100%;
     bottom: 7vh;
-    min-height: 35vh;
+    min-height: 30vh;
     display: flex;
     flex: 4 1 0%;
     flex-wrap: wrap;
@@ -421,4 +422,8 @@
       width: 100%;
     }
   }
+}
+
+.ytp-gradient-top, .ytp-title {
+  display: none !important;
 }

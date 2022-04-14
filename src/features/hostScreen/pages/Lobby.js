@@ -1,35 +1,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button, Popover, Tooltip } from "antd";
-import { UserOutlined } from "@ant-design/icons";
-import music from "../../../assets/Welcome-to-Planet-Urf.mp3";
+import { UserOutlined, LockOutlined, UnlockOutlined } from "@ant-design/icons";
+import ReactHowler from "react-howler";
+
+import music from "../../../assets/game_theme.mp3";
 
 import "../styles.scss";
 
-const useAudio = (url) => {
-  const [audio] = useState(new Audio(url));
-  const [playing, setPlaying] = useState(true);
-
-  const toggle = () => setPlaying(!playing);
-
-  useEffect(() => {
-    playing ? audio.play() : audio.pause();
-  }, [playing]);
-
-  useEffect(() => {
-    audio.addEventListener("ended", () => setPlaying(false));
-    return () => {
-      audio.removeEventListener("ended", () => setPlaying(false));
-    };
-  }, []);
-
-  return [playing, toggle];
-};
-
 const Lobby = ({ socket }) => {
   const [game, setGame] = useState(null);
+  const [isLocked, setIsLocked] = useState(false);
   const [players, setPlayers] = useState([]);
-  const [playing, toggle] = useAudio(music);
+  const [playing, setPlaying] = useState(true);
 
   const navigate = useNavigate();
 
@@ -40,16 +23,26 @@ const Lobby = ({ socket }) => {
       navigate(-1);
     });
 
+    socket.on("game-stoped", () => {
+      navigate(-1);
+    });
+
     socket.on("game-info", (game) => {
       setGame(game);
+    });
+
+    socket.on("lobby-locked", (value) => {
+      setIsLocked(value);
     });
 
     socket.on("lobby-players", (players) => {
       setPlayers(players);
     });
 
+    if (socket?.disconnected) {
+      socket.connect();
+    }
     return () => {
-      socket.emit("disconnect", socket.id);
       socket.off("no-game-found");
       socket.off("game-info");
       socket.off("lobby-players");
@@ -57,7 +50,11 @@ const Lobby = ({ socket }) => {
   }, []);
 
   const startGame = () => {
-    navigate(`/host/game/${socket.id}`);
+    navigate(`/host/play/game/${socket.id}`);
+  };
+
+  const onLockLobby = () => {
+    socket.emit("host-lock-lobby", !isLocked);
   };
 
   const kickPlayer = (playerSocketId) => {
@@ -73,6 +70,7 @@ const Lobby = ({ socket }) => {
 
   return (
     <div className="lobby__screen">
+      {playing && <ReactHowler src={music} loop playing type="audio/mpeg" volume={0.2} />}
       <div className="game-info">
         <div className="game-pin">
           <h2>Mã phòng:</h2>
@@ -81,7 +79,7 @@ const Lobby = ({ socket }) => {
               className="pin"
               onClick={() => navigator.clipboard.writeText(game.pin)}
             >
-              {game?.pin}
+              {isLocked ? "------" : game?.pin}
             </h1>
           </Tooltip>
         </div>
@@ -90,6 +88,7 @@ const Lobby = ({ socket }) => {
         <div className="game-header">
           <div style={{ display: "flex" }}>
             <Button
+              size="large"
               type="primary"
               style={{
                 width: "100%",
@@ -102,8 +101,11 @@ const Lobby = ({ socket }) => {
               <UserOutlined /> {players?.length}
             </Button>
             <Button
+              size="large"
               type="primary"
-              onClick={toggle}
+              onClick={() => {
+                setPlaying(!playing);
+              }}
               style={{
                 width: "100%",
                 margin: "0 auto",
@@ -118,8 +120,23 @@ const Lobby = ({ socket }) => {
               )}
             </Button>
           </div>
-          <div>
+          <div style={{ display: "flex" }}>
             <Button
+              size="large"
+              type="primary"
+              style={{
+                width: "100%",
+                margin: "0 auto",
+                backgroundColor: "#1F0B40",
+                border: "none",
+                marginRight: "10px",
+              }}
+              onClick={onLockLobby}
+            >
+              {isLocked ? <LockOutlined /> : <UnlockOutlined />}
+            </Button>
+            <Button
+              size="large"
               style={{
                 width: "100%",
                 margin: "0 auto",

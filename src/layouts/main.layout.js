@@ -1,10 +1,11 @@
-import React, {useEffect} from "react";
+import React from "react";
 import { Layout, Menu, Dropdown } from "antd";
 import { Link, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser, logout } from "features/auth/authSlice";
 import { useDispatch } from "react-redux";
-import { ProfileOutlined, HomeOutlined } from "@ant-design/icons";
+import { ProfileOutlined } from "@ant-design/icons";
+import { Helmet } from "react-helmet";
 
 import "./styles.scss";
 
@@ -30,7 +31,7 @@ const PuzzleIcon = (
   </svg>
 );
 
-const MainLayout = ({ children }) => {
+const MainLayout = ({ children, title }) => {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -40,10 +41,15 @@ const MainLayout = ({ children }) => {
 
   const handleLogout = async () => {
     await dispatch(logout());
-    navigate("/auth/login");
+    navigate("/");
   };
   return (
     <Layout>
+      <Helmet>
+        <meta charSet="utf-8" />
+        <title>{title || "Poly Quiz Game"}</title>
+      </Helmet>
+
       <Header className="main-header">
         <div className="main-menu">
           <Link to="/quiz">
@@ -57,9 +63,6 @@ const MainLayout = ({ children }) => {
             mode="horizontal"
             defaultSelectedKeys={[tab]}
           >
-            <Menu.Item key="home" icon={<HomeOutlined />}>
-              <Link to="/">Trang chủ</Link>
-            </Menu.Item>
             <Menu.Item key="quiz" icon={PuzzleIcon}>
               <Link to="/quiz">Quiz</Link>
             </Menu.Item>
