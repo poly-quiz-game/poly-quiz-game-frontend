@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react'
-import {Menu, Row, Table, Input, Modal, Progress, Col} from 'antd'
+import {Menu, Row, Table, Input, Modal, Progress, Skeleton, Col} from 'antd'
 import {Link, useParams} from 'react-router-dom'
 import ReportDetail from './ReportDetail'
 import styled from 'styled-components'
@@ -8,8 +8,8 @@ import {getIconChose} from './utils'
 import {ReactComponent as IconNoImg} from '../../../assets/images/report/no-image.svg'
 import {ReactComponent as IconCorrect} from '../../../assets/images/report/correct.svg'
 import {ReactComponent as IconIncorrect} from '../../../assets/images/report/incorrect.svg'
-import RowQuestionDetailMultiple from "../components/RowQuestionDetailMultiple";
-import {ReactComponent as Chose1} from "../../../assets/images/report/chose1.svg";
+import RowQuestionDetailMultiple from '../components/RowQuestionDetailMultiple'
+import {ReactComponent as Chose1} from '../../../assets/images/report/chose1.svg'
 
 const Container = styled.div`
   -webkit-box-flex: 1;
@@ -34,7 +34,7 @@ const Wrapper = styled.div`
   box-shadow: rgb(0 0 0 / 15%) 0px 1px 4px 0px;
   background-color: rgb(255, 255, 255);
   border-radius: 5px;
-  margin: 2rem;
+  margin: 2rem 0;
 `
 const StyledTable = styled((props) => <Table {...props} />)`
   && tbody > tr:hover > td {
@@ -102,6 +102,31 @@ const columns = [
         title: 'Câu trả lời',
         sorter: true,
         dataIndex: 'answer',
+        render: (answer, {answerDetail}) => {
+            return (
+                <>
+                    <Row gutter={[10, 10]} justify='start' align='middle'>
+                        {answerDetail && answerDetail.length && answerDetail.map((i) => (
+                            <Col key={i.index} span={24}>
+                                <Row gutter={[10, 6]} justify='start' align='middle'>
+                                    <Col>{getIconChose(i.index)}</Col>
+                                    <Col>{i.answer}</Col>
+                                </Row>
+                            </Col>
+                        ))}
+                        {!answerDetail && (
+                            <Col span={24}>
+                                <Row gutter={[10, 6]} justify='start' align='middle'>
+                                    <Col>{getIconChose(5)}</Col>
+                                    <Col>No answer</Col>
+                                </Row>
+                            </Col>
+                        )}
+                    </Row>
+
+                </>
+            )
+        },
         width: '25%',
     },
     {
@@ -125,19 +150,37 @@ const columns = [
     // },
 ]
 const ReportPlayerEntities = ({id, question}) => {
-    const [questionDetail, setQuestionDetail] = useState([])
+    const [questionDetail, setQuestionDetail] = useState()
     const [loading, setLoading] = useState(false)
     const fetchData = async () => {
         setLoading(true)
         const data = await reportApi.getAllAnswerOfOneQuestion(id, question?.id)
-        setQuestionDetail(data)
-        console.log('questionDetail', data)
+        if (question?.type === 'Nhiều đáp án') {
+            const correctTotal = data.playerAnswers.filter(
+                (i) =>
+                    i.answer
+                        .split('|')
+                        .sort((a, b) => a - b)
+                        .join('|') === data.correct.map((i) => i.index).join('|')
+            ).length
+            const noAnswerTotal = data.playerAnswers.filter((i) => i.answer === '').length
+            setQuestionDetail({
+                ...data,
+                correctTotal,
+                incorrectTotal: data.playerAnswers.length - correctTotal - noAnswerTotal,
+                noAnswerTotal
+            })
+        } else {
+            setQuestionDetail(data)
+        }
+
 
         setLoading(false)
     }
     useEffect(() => {
         question?.id && fetchData && fetchData()
     }, [setQuestionDetail])
+
     return (
         <>
             <TableWrapper>
@@ -146,27 +189,66 @@ const ReportPlayerEntities = ({id, question}) => {
                         <DetailLeft>
                             <ImageWrap>
                                 <FlexImg>
-                                    {questionDetail ? <img src={questionDetail.image} width='100%' alt={questionDetail.question}/> : <IconNoImg width='32px'/>}
+                                    {questionDetail ? (
+                                        <img src={questionDetail.image} width='100%' alt={questionDetail.question}/>
+                                    ) : (
+                                        <IconNoImg width='32px'/>
+                                    )}
                                 </FlexImg>
                             </ImageWrap>
                         </DetailLeft>
-
                         <DetailCorrectALl>
-                            <InfoWrap>
-                                <RowDetail>
-                                    <RowQuestionDetailMultiple answerCorrects={questionDetail.correct} questionTypeId={questionDetail.questionTypeId} correct={true}/>
-                                </RowDetail>
+                            {questionDetail && <Skeleton avatar title={false} loading={loading} active>
+                                {questionDetail.questionTypeId === 2 ?
+                                    <InfoWrap>
+                                        <RowDetail>
+                                            <RowQuestionDetailMultiple
+                                                questionDetail={questionDetail}
+                                                answerCorrects={questionDetail.correct}
+                                                type='correct'
+                                            />
+                                        </RowDetail>
+                                        <RowDetail>
+                                            <RowQuestionDetailMultiple
+                                                questionDetail={questionDetail}
+                                                answerCorrects={questionDetail.correct}
+                                                type='incorrect'
+                                            />
+                                        </RowDetail>
+                                        <RowDetail>
+                                            <RowQuestionDetailMultiple
+                                                questionDetail={questionDetail}
+                                                answerCorrects={questionDetail.correct}
+                                                type='no_answer'
+                                            />
+                                        </RowDetail>
+                                    </InfoWrap>
+                                    :
+                                    <InfoWrap>
+                                        {questionDetail.reportQuestionAnswers.map(i =>
+                                            <React.Fragment key={i.index}>
+                                                <RowDetail>
+                                                    <RowQuestionDetailMultiple
+                                                        questionDetail={questionDetail}
+                                                        answerCorrects={i}
+                                                        type={i.index === questionDetail.correct.index ? 'correct' : 'incorrect'}
+                                                    />
+                                                </RowDetail>
+                                            </React.Fragment>
+                                        )}
 
-                                <RowDetail>
-                                    <RowQuestionDetailMultiple answerCorrects={questionDetail.correct} questionTypeId={questionDetail.questionTypeId} correct={false}/>
-                                </RowDetail>
-                                <RowDetail>
-                                    <div>Final score</div>
-                                </RowDetail>
-                            </InfoWrap>
+                                        <RowDetail>
+                                            <RowQuestionDetailMultiple
+                                                questionDetail={questionDetail}
+                                                answerCorrects={questionDetail.noAnswerTotal}
+                                                type='no_answer'
+                                            />
+                                        </RowDetail>
+                                    </InfoWrap>
+                                }
+                            </Skeleton>}
                         </DetailCorrectALl>
                     </QuestionDetail>
-
                     <Wrapper>
                         <StyledTable
                             columns={columns}
@@ -178,7 +260,7 @@ const ReportPlayerEntities = ({id, question}) => {
                                 }
                             }}
                             rowKey={(record) => record.id}
-                            dataSource={questionDetail.playerAnswers}
+                            dataSource={questionDetail?.playerAnswers}
                             pagination={false}
                             loading={loading}
                             // onChange={this.handleTableChange}
