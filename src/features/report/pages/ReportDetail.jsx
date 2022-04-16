@@ -144,7 +144,9 @@ const ReportDetail = ({children}) => {
     const [info, setInfo] = useState()
     const fetchData = async () => {
         const data = await reportApi.getOne(id)
-        setInfo({createdAt: data.createdAt, name: data.name})
+        setInfo({createdAt: data.createdAt, name: data.name, players: data.players, reportQuestions: data.reportQuestions})
+        console.log('data', data)
+
     }
     useEffect(() => {
         fetchData && fetchData()
@@ -177,10 +179,10 @@ const ReportDetail = ({children}) => {
                         }
                       }}
                     > */}
-                                        <ButtonTab to={`/report/detail/${id}/players`}>Players</ButtonTab>
+                                        <ButtonTab to={`/report/detail/${id}/players`}>Người chơi ({info ? info?.players?.length : ''})</ButtonTab>
                                         {/* </NavLink> */}
                                         {/* <Link to={`/report/detail/${params.id}/questions`}> */}
-                                        <ButtonTab to={`/report/detail/${id}/questions`}>Questions</ButtonTab>
+                                        <ButtonTab to={`/report/detail/${id}/questions`}>Câu hỏi ({info ? info?.reportQuestions?.length : ''})</ButtonTab>
                                         {/* </Link> */}
                                     </ListItem>
                                 </List>
