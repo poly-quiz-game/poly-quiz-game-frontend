@@ -219,7 +219,7 @@ const HostGame = ({ socket }) => {
     }
     prevTime.current = time;
     if (time === 0) {
-      // socket.emit("time-up");
+      socket.emit("time-up");
     }
     return () => {
       clearInterval(timer.current);
