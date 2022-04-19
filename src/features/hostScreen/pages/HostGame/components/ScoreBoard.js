@@ -12,14 +12,14 @@ const FlashIcon = () => (
   </svg>
 );
 
-const ScoreBoard = ({ playersInGame, nextQuestion, endGame, game }) => {
+const ScoreBoard = ({ playersInGame, nextQuestion, endGame, game, loading }) => {
   return (
     <div className="game__screen">
       <div className="question-info">
         <h1 className="question">Bảng điểm</h1>
       </div>
       <div className="question-body-container">
-        <div className="next-btn" onClick={endGame || nextQuestion}>
+        <div className={`next-btn ${loading ? 'loading' : ''}`} onClick={endGame || nextQuestion}>
           {!endGame ? "Tiếp" : "Kết thúc"}
         </div>
         <div className="score-bars">

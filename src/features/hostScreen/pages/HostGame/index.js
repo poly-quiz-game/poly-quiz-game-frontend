@@ -127,6 +127,7 @@ const HostGame = ({ socket }) => {
   const [game, setGame] = useState({});
   const [time, setTime] = useState(-1);
   const [audioOn, setAudioOn] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const [players, setPlayers] = React.useState([]);
   const [gameState, setGameState] = React.useState(
@@ -163,6 +164,7 @@ const HostGame = ({ socket }) => {
     });
 
     socket.on("question-info", (question, game) => {
+      setLoading(false);
       if (game) {
         setGame(game);
       }
@@ -236,6 +238,7 @@ const HostGame = ({ socket }) => {
   };
 
   const nextQuestion = () => {
+    setLoading(true);
     socket.emit("next-question");
   };
 
@@ -276,12 +279,12 @@ const HostGame = ({ socket }) => {
           </div>
           <div className="question-body-container">
             {gameState !== gameStateTypes.LIVE_QUESTION && (
-              <div className="next-btn" onClick={showScoreBoard}>
+              <div className={`next-btn ${loading ? 'loading' : ''}`} onClick={showScoreBoard}>
                 Tiếp
               </div>
             )}
             {gameState === gameStateTypes.LIVE_QUESTION && (
-              <div className="next-btn" onClick={skipQuestion}>
+              <div className={`next-btn ${loading ? 'loading' : ''}`} onClick={skipQuestion}>
                 Bỏ qua
               </div>
             )}
@@ -325,6 +328,7 @@ const HostGame = ({ socket }) => {
           nextQuestion={nextQuestion}
           endGame={gameState === gameStateTypes.GAME_OVER ? endGame : null}
           game={game}
+          loading={loading}
         />
       );
     case gameStateTypes.GAME_OVER:
