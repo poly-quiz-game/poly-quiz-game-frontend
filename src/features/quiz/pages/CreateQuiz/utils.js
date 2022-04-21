@@ -1,7 +1,6 @@
 import { questionTypes } from "consts";
 
 export const validateQuestion = (question) => {
-  console.log(question);
   const err = {};
   const correctAnswer = question.correctAnswer.split("|").filter((a) => a);
   if (question?.type?.name === questionTypes.SINGLE_CORRECT_ANSWER) {

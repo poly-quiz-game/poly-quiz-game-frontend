@@ -146,7 +146,7 @@ const SelectYoutubeVideoModal = ({ visible, setVisible, setQuestionMedia }) => {
                 style={{ display: "flex", marginBottom: "4px" }}
                 onClick={() => {
                   setQuestionMedia({
-                    fileType: "video",
+                    type: "video",
                     url: video.id.videoId,
                     duration: getSecondsDuration(video.contentDetails.duration),
                     thumbnail: video.snippet.thumbnails.default.url,

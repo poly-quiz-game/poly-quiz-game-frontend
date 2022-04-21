@@ -114,11 +114,11 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
   const handleSubmitImage = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    const fileType = e.target.name;
+    const type = e.target.name;
     try {
       setLoading(true);
       const url = await handleUploadImage(file);
-      setQuestionMedia({ url, fileType });
+      setQuestionMedia({ url, type });
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -129,7 +129,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
   const handleSubmitAudio = async (e) => {
     e.preventDefault();
     const file = e.target.files[0];
-    const fileType = e.target.name;
+    const type = e.target.name;
 
     setLoading(true);
     const duration = await new Promise((resolve, reject) => {
@@ -156,8 +156,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
           file: { url },
         },
       } = await uploadAudioAsync(file);
-      console.log({ url });
-      setQuestionMedia({ url, fileType, duration });
+      setQuestionMedia({ url, type, duration });
       setLoading(false);
     } catch (error) {
       console.log(error);
@@ -165,16 +164,25 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     }
   };
 
-  const setQuestionMedia = ({ url, fileType, thumbnail, duration } = {}) => {
+  const setQuestionMedia = ({
+    url,
+    type,
+    thumbnail,
+    duration,
+    autoCountDown,
+    autoPlay,
+  } = {}) => {
     let media = {};
-    if (url && fileType) {
+    if (url && type) {
       media = {
         url,
         thumbnail,
         duration,
-        type: fileType,
+        type,
         startTime: 0,
         endTime: question.timeLimit / 1000,
+        autoCountDown,
+        autoPlay,
       };
     }
     onChangeQuestion({
@@ -315,6 +323,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
         onChangeQuestionTime={onChangeQuestionTime}
         question={question}
         deleteQuestion={deleteQuestion}
+        setQuestionMedia={setQuestionMedia}
       />
     </>
   );

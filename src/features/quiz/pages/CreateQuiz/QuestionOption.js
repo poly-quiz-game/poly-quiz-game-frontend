@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Select } from "antd";
+import { Checkbox, Select } from "antd";
 import questionTypeApi from "api/questionTypeApi";
 import questionTimeApi from "api/questionTimeApi";
 import { questionTypeLabels } from "consts";
@@ -8,6 +8,7 @@ const QuestionOption = ({
   onChangeQuestionType,
   onChangeQuestionTime,
   question,
+  setQuestionMedia,
 }) => {
   const [questionTypes, setQuestionTypes] = useState([]);
   const [questionTimes, setQuestionTimes] = useState([]);
@@ -92,6 +93,47 @@ const QuestionOption = ({
           </Select>
         </div>
       </div>
+      {question.media && (
+        <>
+          <div
+            className="question-option-item"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <div className="question-option-item-title">
+              <Checkbox
+                style={{ marginRight: "10px" }}
+                id="autoCountDown"
+                value={question.media.autoCountDown}
+                onChange={(val) =>
+                  setQuestionMedia({
+                    ...question.media,
+                    autoCountDown: val.target.checked,
+                  })
+                }
+              />
+              <label htmlFor="autoCountDown">Tự động đếm ngược</label>
+            </div>
+          </div>
+          <div
+            className="question-option-item"
+            style={{ display: "flex", alignItems: "center" }}
+          >
+            <div className="question-option-item-title">
+              <Checkbox
+                style={{ marginRight: "10px" }}
+                id="controlVideo"
+                onChange={(val) =>
+                  setQuestionMedia({
+                    ...question.media,
+                    autoPlay: val.target.checked,
+                  })
+                }
+              />
+              <label htmlFor="controlVideo">Điều khiển video</label>
+            </div>
+          </div>
+        </>
+      )}
     </div>
   );
 };

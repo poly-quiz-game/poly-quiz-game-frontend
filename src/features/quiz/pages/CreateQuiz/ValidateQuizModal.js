@@ -24,9 +24,6 @@ const ValidateQuizModal = ({
         !_.isEmpty(err) ? (
           <div className="question-error-item" key={`error-${index}`}>
             <div className="question-error-header">
-              <div className="question-error-image">
-                <FileImageOutlined width="50" />
-              </div>
               <div className="question-error-content">
                 <div className="question-error-index">Câu hỏi {index + 1}</div>
                 <div className="question-error-title">
