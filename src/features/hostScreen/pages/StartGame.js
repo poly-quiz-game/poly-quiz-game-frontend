@@ -44,12 +44,6 @@ const StartGame = ({ socket }) => {
     socket.emit("host-create-lobby", { id: quiz.id, user });
   };
 
-  const sound = new Howl({
-    src: ["https://polyquizstorage.blob.core.windows.net/primary/sound-test.mp3"],
-  });
-
-  sound.play();
-
   return (
     <div className="start-quiz__screen">
       {loading ? (

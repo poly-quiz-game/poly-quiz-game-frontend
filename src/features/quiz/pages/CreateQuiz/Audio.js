@@ -1,5 +1,5 @@
 import { Button, Modal } from "antd";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ReactHowler from "react-howler";
 import { SettingStartEndTimePlayModal } from "./Video";
 
@@ -42,7 +42,7 @@ const waveAnimationStyle = {
   left: "0",
   width: "100%",
   height: "100%",
-  background: "#fff",
+  background: "#aaa",
   borderRadius: "50%",
 };
 
@@ -66,10 +66,30 @@ const Audio = ({
 }) => {
   const [play, setPlay] = useState(autoplay);
   const [setupModal, setSetupModal] = useState(false);
+  const [time, setTime] = useState(0);
+
+  const timer = React.useRef(null);
+  const player = React.useRef(null);
+
+  useEffect(() => {
+    if (play) {
+      timer.current = setInterval(() => {
+        setTime((time) => time + 1);
+      }, 1000);
+    }
+    if (!play) {
+      setTime(0);
+      clearInterval(timer.current);
+      player.current.stop();
+    }
+    return () => {
+      clearInterval(timer.current);
+    };
+  }, [play]);
 
   return (
     <div style={containerStyle} className="audio-field">
-      <ReactHowler src={media.url} playing={play} />
+      <ReactHowler src={media.url} playing={play} loop={false} ref={player} />
       <div style={audioContentStyle}>
         <div onClick={() => setPlay(!play)} style={playButtonStyle}>
           {play ? (
@@ -84,15 +104,15 @@ const Audio = ({
             <i className="fas fa-play" style={playIconStyle} />
           )}
         </div>
-        {editable && (
-          <div>
-            {timeFromSeconds(media.startTime)} -{" "}
-            {timeFromSeconds(media.endTime)}
-          </div>
-        )}
-        {editable && (
+        {/* {editable && ( */}
+        <div>
+          {timeFromSeconds(time)} - {/* {timeFromSeconds(media.endTime)} */}
+          {timeFromSeconds(media.duration)}
+        </div>
+        {/* )} */}
+        {/* {editable && (
           <Button onClick={() => setSetupModal(!setupModal)}>Cài đặt</Button>
-        )}
+        )} */}
       </div>
       {editable && (
         <div style={deleteButtonStyle}>

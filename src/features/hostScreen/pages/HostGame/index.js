@@ -22,6 +22,7 @@ import liveQuestionSound from "../../../../assets/question_live_sound_2.mp3";
 import endQuestionSound from "../../../../assets/end_question_sound.mp3";
 
 import "../../styles.scss";
+import { Button } from "antd";
 
 const Media = ({ media }) => {
   switch (media.type) {
@@ -70,7 +71,11 @@ const Media = ({ media }) => {
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             width="100%"
             height="100%"
-            src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${media.startTime}&end=${media.endTime}&autoplay=1&mute=0&controls=0&playsinline=0&showinfo=0&rel=0&modestbranding=1&fs=1&enablejsapi=1&widgetid=43`}
+            src={`https://www.youtube-nocookie.com/embed/${media.url}?start=${
+              media.startTime
+            }&end=${media.endTime}&autoplay=1&mute=0&controls=${
+              media.control ? "1" : "0"
+            }&playsinline=0&showinfo=0&rel=0&modestbranding=1&fs=1&enablejsapi=1&widgetid=43`}
           />
         </div>
       );
@@ -127,6 +132,7 @@ const HostGame = ({ socket }) => {
   const [game, setGame] = useState({});
   const [time, setTime] = useState(-1);
   const [audioOn, setAudioOn] = useState(true);
+  const [runningTime, setRunningTime] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const [players, setPlayers] = React.useState([]);
@@ -168,6 +174,7 @@ const HostGame = ({ socket }) => {
       if (game) {
         setGame(game);
       }
+      setRunningTime(!question?.media?.control);
       setGameState(gameStateTypes.LIVE_QUESTION);
       setQuestion(question);
       setPlayersInGame([]);
@@ -214,7 +221,12 @@ const HostGame = ({ socket }) => {
   }, []);
 
   useEffect(() => {
-    if (time !== prevTime.current && time !== null) {
+    if (
+      (time !== prevTime.current &&
+        time !== null &&
+        !question?.media?.control) ||
+      runningTime
+    ) {
       timer.current = setInterval(() => {
         setTime((prevTime) => prevTime - 1);
       }, 1000);
@@ -222,15 +234,20 @@ const HostGame = ({ socket }) => {
     prevTime.current = time;
     if (time === 0) {
       socket.emit("time-up");
+      clearInterval(timer.current);
     }
     return () => {
       clearInterval(timer.current);
     };
-  }, [time]);
+  }, [time, runningTime]);
 
   const endGame = () => {
     socket.disconnect();
     navigate(`/quiz`);
+  };
+
+  const startTimer = () => {
+    setRunningTime(true);
   };
 
   const showScoreBoard = () => {
@@ -272,19 +289,27 @@ const HostGame = ({ socket }) => {
               />
             )}
           {audioOn && gameState === gameStateTypes.QUESTION_RESULT && (
-            <ReactHowler src={endQuestionSound} playing type="audio/mpeg" />
+            <audio autoPlay>
+              <source src={endQuestionSound} type="audio/mpeg" />
+            </audio>
           )}
           <div className="question-info">
             <h1 className="question">{question.question}</h1>
           </div>
           <div className="question-body-container">
             {gameState !== gameStateTypes.LIVE_QUESTION && (
-              <div className={`next-btn ${loading ? 'loading' : ''}`} onClick={showScoreBoard}>
+              <div
+                className={`next-btn ${loading ? "loading" : ""}`}
+                onClick={showScoreBoard}
+              >
                 Tiếp
               </div>
             )}
             {gameState === gameStateTypes.LIVE_QUESTION && (
-              <div className={`next-btn ${loading ? 'loading' : ''}`} onClick={skipQuestion}>
+              <div
+                className={`next-btn ${loading ? "loading" : ""}`}
+                onClick={skipQuestion}
+              >
                 Bỏ qua
               </div>
             )}
@@ -296,12 +321,21 @@ const HostGame = ({ socket }) => {
               />
             ) : (
               <div className="question-image">
-                <div className="time">{time}</div>
-                {question.media ? (
+                <div className="time">
+                  <div className="value">{time}</div>
+                  {question?.media?.control && !runningTime && (
+                    <Button onClick={startTimer}>Bắt đầu</Button>
+                  )}
+                </div>
+                {question?.media && Object.keys(question.media).length ? (
                   <Media media={question.media} />
                 ) : (
-                  <div className={`image ${!question.image ? "no-image" : ""}`}>
-                    <img src={question?.image || "/img/logo-large.png"} />
+                  <div
+                    className={`image ${
+                      !question?.media?.url ? "no-image" : ""
+                    }`}
+                  >
+                    <img src={question?.media?.url || "/img/logo-large.png"} />
                   </div>
                 )}
                 <div className="player-answered">

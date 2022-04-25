@@ -93,7 +93,7 @@ const QuestionOption = ({
           </Select>
         </div>
       </div>
-      {question.media && (
+      {Object.keys(question.media).length > 0 && (
         <>
           <div
             className="question-option-item"
@@ -102,19 +102,19 @@ const QuestionOption = ({
             <div className="question-option-item-title">
               <Checkbox
                 style={{ marginRight: "10px" }}
-                id="autoCountDown"
-                value={question.media.autoCountDown}
+                id="control"
+                checked={question.media.control}
                 onChange={(val) =>
                   setQuestionMedia({
                     ...question.media,
-                    autoCountDown: val.target.checked,
+                    control: val.target.checked,
                   })
                 }
               />
-              <label htmlFor="autoCountDown">Tự động đếm ngược</label>
+              <label htmlFor="control">Điều khiển câu hỏi</label>
             </div>
           </div>
-          <div
+          {/* <div
             className="question-option-item"
             style={{ display: "flex", alignItems: "center" }}
           >
@@ -131,7 +131,7 @@ const QuestionOption = ({
               />
               <label htmlFor="controlVideo">Điều khiển video</label>
             </div>
-          </div>
+          </div> */}
         </>
       )}
     </div>

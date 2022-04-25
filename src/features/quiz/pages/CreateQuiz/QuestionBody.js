@@ -169,8 +169,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
     type,
     thumbnail,
     duration,
-    autoCountDown,
-    autoPlay,
+    control,
   } = {}) => {
     let media = {};
     if (url && type) {
@@ -181,8 +180,7 @@ const QuestionBody = ({ question, onChangeQuestion, deleteQuestion }) => {
         type,
         startTime: 0,
         endTime: question.timeLimit / 1000,
-        autoCountDown,
-        autoPlay,
+        control,
       };
     }
     onChangeQuestion({
