@@ -79,7 +79,7 @@ const HomeFeature = () => {
       <div className="home">
         <div className="header-banner">
           <div className="title">
-            <h1>Dự án của sinh viên FPT Polytechnich</h1>
+            <h1>Dự án của sinh viên FPT Polytechnic</h1>
             <p>
               Tìm và tạo các câu đố được đánh dấu miễn phí và các bài học tương
               tác để thu hút bất kỳ người học nào.
