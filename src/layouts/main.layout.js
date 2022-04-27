@@ -43,6 +43,12 @@ const MainLayout = ({ children, title }) => {
     await dispatch(logout());
     navigate("/");
   };
+
+  React.useEffect(() => {
+    const screenName = location.pathname.replace("/", "");
+    setTab(screenName || "home");
+  }, [location.pathname]);
+
   return (
     <Layout>
       <Helmet>
@@ -62,6 +68,7 @@ const MainLayout = ({ children, title }) => {
             style={{ paddingLeft: "76px", marginLeft: "38px" }}
             mode="horizontal"
             defaultSelectedKeys={[tab]}
+            selectedKeys={[tab]}
           >
             <Menu.Item key="quiz" icon={PuzzleIcon}>
               <Link to="/quiz">Quiz</Link>

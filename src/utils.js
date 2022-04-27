@@ -26,6 +26,7 @@ export const handleUploadImage = async (file) => {
 };
 export const formatNumber = (number) =>
   new Intl.NumberFormat("en-US", { style: "percent" }).format(number);
+
 export const getTypeQuestion = (questionId) => {
   switch (questionId) {
     case 1:

@@ -154,7 +154,7 @@ const ReportPlayerEntities = ({id, player}) => {
                                 <div>{player.rank}</div>
                             </InfoRankUserWrap>
                             <InfoRankUserWrap>
-                                <div>Final score</div>
+                                <div>Tổng điểm</div>
                                 <div>{player.totalPoints}</div>
                             </InfoRankUserWrap>
 
