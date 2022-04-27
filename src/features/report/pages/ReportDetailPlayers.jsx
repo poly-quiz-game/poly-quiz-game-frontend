@@ -185,18 +185,7 @@ const ReportDetailPlayers = ({ report }) => {
                 };
               }}
               rowKey={(record) => record.id}
-              dataSource={
-                players?.data?.length
-                  ? [
-                      ...players.data,
-                      ...players.data,
-                      ...players.data,
-                      ...players.data,
-                      ...players.data,
-                      ...players.data,
-                    ]
-                  : []
-              }
+              dataSource={players?.data?.length ? players.data : []}
               pagination={false}
               loading={players.loading}
             />
