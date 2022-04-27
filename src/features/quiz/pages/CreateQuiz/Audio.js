@@ -77,7 +77,8 @@ const Audio = ({
         setTime((time) => time + 1);
       }, 1000);
     }
-    if (!play) {
+    if (!play || time > media.duration) {
+      setPlay(false)
       setTime(0);
       clearInterval(timer.current);
       player.current.stop();
@@ -85,7 +86,7 @@ const Audio = ({
     return () => {
       clearInterval(timer.current);
     };
-  }, [play]);
+  }, [play, time]);
 
   return (
     <div style={containerStyle} className="audio-field">
@@ -105,10 +106,12 @@ const Audio = ({
           )}
         </div>
         {/* {editable && ( */}
-        <div>
-          {timeFromSeconds(time)} - {/* {timeFromSeconds(media.endTime)} */}
-          {timeFromSeconds(media.duration)}
-        </div>
+        {media.duration && (
+          <div>
+            {timeFromSeconds(time)} - {/* {timeFromSeconds(media.endTime)} */}
+            {timeFromSeconds(media.duration)}
+          </div>
+        )}
         {/* )} */}
         {/* {editable && (
           <Button onClick={() => setSetupModal(!setupModal)}>Cài đặt</Button>

@@ -7,7 +7,7 @@ const youtubeSearchApi = axios.create({
   params: {
     part: "snippet",
     maxResults: 10,
-    key: "AIzaSyAWONe5t-o1_5JSMpaF2wqU35R35fKDaks",
+    key: "AIzaSyAxKQwQvmiMhbfon4PveuYHEHn52Zrghpo",
     type: "video",
     safeSearch: "moderate",
     videoEmbeddable: true,
@@ -18,7 +18,7 @@ const youtubeVideoDetailApi = axios.create({
   baseURL: "https://www.googleapis.com/youtube/v3/",
   params: {
     part: "snippet,contentDetails",
-    key: "AIzaSyAWONe5t-o1_5JSMpaF2wqU35R35fKDaks",
+    key: "AIzaSyAxKQwQvmiMhbfon4PveuYHEHn52Zrghpo",
   },
 });
 
