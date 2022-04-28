@@ -31,10 +31,10 @@ const sumAnswers = (arr) => {
 
 const sumPlayersTypeQuestion = (question, playersInGame) => {
   let sum = 0;
-  const correctAnswer = question.answers[0].answer;
   playersInGame.forEach((item) => {
-    const answer = item.answers[item.answers.length - 1].answer;
-    if (correctAnswer === answer) {
+    const answer = item.answers[item.answers.length - 1];
+    console.log(111, answer)
+    if (answer.isCorrect) {
       sum += 1;
     }
   });
