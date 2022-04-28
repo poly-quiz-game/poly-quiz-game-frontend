@@ -80,21 +80,24 @@ const columns = [
     render: (correct, reportQuestion) => {
       return (
         <>
-          <Row gutter={[4, 4]} justify="end" align="middle">
-            <Col span={4}>
-              <Progress
-                type="circle"
-                width="35px"
-                strokeWidth="15"
-                strokeColor="rgb(38, 137, 12)"
-                percent={(correct * 100) / reportQuestion.totalReport}
-                format={() => ``}
-              />
-            </Col>
-            <Col span={4} align="center">
-              {formatNumber((correct * 0.1) / reportQuestion.totalReport)}
-            </Col>
-          </Row>
+          <div
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <Progress
+              type="circle"
+              width="35px"
+              strokeWidth="15"
+              strokeColor="rgb(38, 137, 12)"
+              percent={(correct * 100) / reportQuestion.totalReport}
+              format={() => ``}
+              style={{ marginRight: "10px" }}
+            />
+            {(correct / reportQuestion.totalReport) * 100} %
+          </div>
         </>
       );
     },

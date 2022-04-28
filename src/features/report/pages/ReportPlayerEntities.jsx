@@ -137,11 +137,11 @@ const ReportPlayerEntities = ({id, player}) => {
                         <PercentageAnswererWrap>
                             <PercentageAnswerer>
                                 <Progress type="circle" width='70px' strokeWidth='15' strokeColor="rgb(38, 137, 12)"
-                                          percent={player.correctAnswersCount} format={() => ``}/>
+                                          percent={player.correctAnswersPercent} format={() => ``}/>
                             </PercentageAnswerer>
                             <Row gutter={[2, 2]} justify='space-between'>
                                 <Col span={24}>
-                                    <span>{formatNumber(player.correctAnswersCount)} </span>
+                                    <span>{player.correctAnswersPercent} % </span>
                                 </Col>
                                 <Col span={24}>
                                     <span>Đúng</span>
